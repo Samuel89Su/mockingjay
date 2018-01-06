@@ -1,0 +1,11 @@
+{
+    "id": 1,
+    "name": "",
+    "desc": "",
+    "forwardTarget": "dev",
+    "deployment": {
+        "dev": "http://localhost:3100",
+        "beta": "",
+        "prod": ""
+    } 
+}

@@ -1,0 +1,21 @@
+{
+  "name": "fakeserver",
+  "version": "1.0.0",
+  "description": "fake server",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "fake",
+    "server",
+    "koa"
+  ],
+  "author": "Samuel Su",
+  "license": "MIT",
+  "devDependencies": {
+    "koa": "^2.4.1",
+    "koa-router": "^7.3.0"
+  }
+}

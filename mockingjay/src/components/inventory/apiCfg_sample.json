@@ -1,0 +1,45 @@
+{
+    "appId": 1,
+    "path": "/login",
+    "method": "POST",
+    "logReq": 3,
+    "mock": true,
+    "mockCfg": {
+        "validateReq": true,
+        "reqDescriptor": {
+            "queries": [{
+                "key": "id",
+                "required": true,
+                "validator": {
+                    "type": "regEx",
+                    "value": "^(\\d{2,4})$",
+                    "errMsg": "not match"
+                }
+            }],
+            "headers": [],
+            "body": {
+                "required": false
+            }
+        },
+        "resDescriptor": {
+            "headers": [{
+                "key": "token",
+                "optional": false,
+                "reactor": {
+                    "type": "custom",
+                    "value": "function(req) { return req.headers['token'];}"
+                }
+            }],
+            "body": {
+                "optional": false,
+                "reactor": {
+                    "type": "custom",
+                    "value": "function(req) { return req.body;}"
+                }
+            }
+        }
+    },
+    "proxyCfg": {
+        "bypass": false
+    }
+}

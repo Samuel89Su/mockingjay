@@ -1,0 +1,41 @@
+{
+  "name": "mockingjay",
+  "version": "0.0.1",
+  "description": "A mock server for http.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "dev"
+  },
+  "keywords": [
+    "http",
+    "response",
+    "mock",
+    "request",
+    "verification",
+    "service",
+    "interface",
+    "testing"
+  ],
+  "author": "SamuelSu",
+  "license": "MIT",
+  "dependencies": {
+    "bunyan": "^1.8.12",
+    "koa": "^2.4.1",
+    "redis": "^2.8.0"
+  },
+  "devDependencies": {
+    "ajv": "^5.5.2",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "bluebird": "^3.5.1",
+    "co-body": "^5.1.1",
+    "copy-to": "^2.0.1",
+    "koa": "^2.4.1",
+    "koa-bodyparser": "^4.2.0",
+    "koa-router": "^7.3.0",
+    "koa-static": "^4.0.2",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2"
+  }
+}

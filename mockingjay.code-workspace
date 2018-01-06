@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "fakeserver"
+		},
+		{
+			"path": "mockingjay"
+		},
+		{
+			"path": "mockingjayApp"
+		}
+	],
+	"settings": {}
+}
