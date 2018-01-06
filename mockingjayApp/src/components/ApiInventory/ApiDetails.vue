@@ -1,33 +1,55 @@
 <template>
-  <form id="fm_details">
-    <div id="pn_details">
+  <div id="pn_details">
+    <h1>General</h1>
+    <div>
       <label for="ipt_path">Path: </label>
       <input id="ipt_path" v-model="details.path" v-on:change="validPath" ><br/>
       <label for="ipt_method">Method: </label>
       <input id="ipt_method" v-model="details.method" v-on:change="validPath" ><br/>
       <label for="ck_mock">Mock: </label>
-      <input type="check" id="ck_mock" v-model="details.mock" v-on:change="validPath" ><br/>
+      <input type="checkbox" id="ck_mock" v-model="details.mock" v-on:change="validPath" ><br/>
     </div>
-  </form>
+
+    <h1>Mocking config</h1>
+    <div id="dv_mockCfg">
+      <label for="checkbox">Validate Req: </label>
+      <input type="checkbox" id="ck_valiReq" v-model="details.mockCfg.validateReq" v-on:change="validPath" ><br/>
+      <h2>Request description</h2>
+      <h3>Queries</h3>
+      <div>
+        <KeyValidationEditor></KeyValidationEditor>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+
+const keyValiEditor = require('./KeyValidationEditor')
+
+const localComponents = {};
+localComponents[keyValiEditor.name] = keyValiEditor.opts;
+
 export default {
   name: "ApiList",
   data() {
     return {
-      details: {}
     };
   },
+  computed: {
+    details: function() {
+      let detailss = this.$store.state.apiDetails
+      return detailss
+    }
+  },
   mounted: function() {
-    var dataStr = this.$route.query.data;
-    this.details = JSON.parse(dataStr);
   },
   methods: {
     validPath: function() {
       console.log(this.details.path);
     }
-  }
+  },
+  components: localComponents
 };
 </script>
 
@@ -37,4 +59,15 @@ export default {
   margin: 80px 0 80px 200px;
   text-align: left;
 }
+
+#pn_details input {
+  height: 28px;
+  margin: 5px;
+}
+
+#pn_details label {
+  display: inline-block;
+  width: 120px;
+}
+
 </style>

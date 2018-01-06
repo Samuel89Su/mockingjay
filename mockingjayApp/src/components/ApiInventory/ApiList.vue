@@ -15,14 +15,15 @@
               <td>{{ item.path }}</td>
               <td>{{ item.mock }}</td>              
               <td>{{ item.proxyCfg.bypass }}</td>
-              <td><router-link :to="{ name: 'apidetails', query: { data: JSON.stringify(item) }}">Details</router-link></td>
+              <td><a v-on:click="goToDetails($event)" href="javascript:void(0)">Details</a></td>
             </tr>
         </tbody>
     </table>
 </template>
 
 <script>
-const queryString = require("querystring");
+
+const queryString = require('querystring')
 
 export default {
   name: "ApiList",
@@ -36,7 +37,6 @@ export default {
     fetch("./inventory/api/list?".concat(query))
       .then(res => {
         var contentType = res.headers.get("content-type")
-        console.log(contentType)
         if (!res.ok) {
           return [];
         } else if (!contentType || !contentType.includes("application/json")) {
@@ -56,6 +56,18 @@ export default {
       .catch(error => {
         console.log(error);
       });
+  },
+  methods: {
+    goToDetails: function(evt) {
+      
+      let index = evt.target.parentElement.parentElement.sectionRowIndex
+
+      this.$store.commit({
+        type: 'setDetails',
+        details: this.items[index]
+      })
+      this.$router.push({name:'apidetails'})
+    }
   }
 };
 </script>
