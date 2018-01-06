@@ -12,7 +12,7 @@
               <td>{{ item.id }}</td>
               <td>{{ item.name }}</td>
               <td>{{ item.desc }}</td>
-              <td><router-link :to="{ path: $route.path + '/apilist', query: { appId: item.id }}">API list</router-link></td>
+              <td><router-link :to="{ name: 'apilist', query: { appId: item.id }}">API list</router-link></td>
             </tr>
         </tbody>
     </table>

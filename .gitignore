@@ -57,3 +57,5 @@ typings/
 # dotenv environment variables file
 .env
 
+/mockingjay/static/static
+/mockingjay/static/index.html

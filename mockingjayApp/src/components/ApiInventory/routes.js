@@ -8,17 +8,17 @@ var basePath = '/apiinventory'
 export default [
   {
     path: basePath,
-    name: 'app list',
+    name: 'applist',
     component: AppList
   },
   {
     path: join(basePath, '/apilist'),
-    name: 'api list',
+    name: 'apilist',
     component: ApiList
   },
   {
     path: join(basePath, '/apidetails'),
-    name: 'api details',
+    name: 'apidetails',
     component: ApiDetails
   }
 ]

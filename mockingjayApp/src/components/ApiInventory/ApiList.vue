@@ -15,7 +15,7 @@
               <td>{{ item.path }}</td>
               <td>{{ item.mock }}</td>              
               <td>{{ item.proxyCfg.bypass }}</td>
-              <td><router-link :to="{ path: $route.path + '../apidetails', query: { data: JSON.stringify(item) }}">Details</router-link></td>
+              <td><router-link :to="{ name: 'apidetails', query: { data: JSON.stringify(item) }}">Details</router-link></td>
             </tr>
         </tbody>
     </table>
@@ -75,18 +75,14 @@ table tr th:first-child {
 }
 
 table tr th:nth-child(2) {
-  width: 300px;
+  width: 200px;
 }
 
 table tr th:nth-child(3) {
-  width: 40px;
+  width: 300px;
 }
 
 table tr th:nth-child(4) {
-  width: 40px;
-}
-
-table tr th:nth-child(5) {
   width: 120px;
 }
 </style>
