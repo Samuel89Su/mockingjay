@@ -17,7 +17,11 @@
       <h2>Request description</h2>
       <h3>Queries</h3>
       <div>
-        <KeyValidationEditor></KeyValidationEditor>
+        <KeyValidationEditor :key="keyDesc.key" v-for="keyDesc in details.mockCfg.reqDescriptor.queries" v-bind:keyDesc="keyDesc"></KeyValidationEditor>
+      </div>
+      <h3>Headers</h3>
+      <div>
+        <KeyValidationEditor :key="keyDesc.key" v-for="keyDesc in details.mockCfg.reqDescriptor.headers" v-bind:keyDesc="keyDesc"></KeyValidationEditor>
       </div>
     </div>
   </div>
@@ -43,6 +47,7 @@ export default {
     }
   },
   mounted: function() {
+
   },
   methods: {
     validPath: function() {
