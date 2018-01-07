@@ -36,7 +36,6 @@ export default {
           return [];
         } else if (contentType && contentType.includes("application/json")) {
           var list = res.json();
-          console.log(list);
           return list;
         }
       })
