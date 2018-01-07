@@ -23,6 +23,10 @@
       <div>
         <KeyValidationEditor :key="keyDesc.key" v-for="keyDesc in details.mockCfg.reqDescriptor.headers" v-bind:keyDesc="keyDesc"></KeyValidationEditor>
       </div>
+      <h3>Body</h3>
+      <div>
+        <BodyValidationEditor v-bind:bodyDesc="details.mockCfg.reqDescriptor.body" ></BodyValidationEditor>
+      </div>
     </div>
   </div>
 </template>
@@ -30,9 +34,11 @@
 <script>
 
 const keyValiEditor = require('./KeyValidationEditor')
+const bodyValiEditor = require('./BodyValidationEditor')
 
 const localComponents = {};
 localComponents[keyValiEditor.name] = keyValiEditor.opts;
+localComponents[bodyValiEditor.name] = bodyValiEditor.opts;
 
 export default {
   name: "ApiList",
@@ -73,6 +79,17 @@ export default {
 #pn_details label {
   display: inline-block;
   width: 120px;
+}
+
+#pn_details .div-key {
+  width: 80%;
+  border: 1px dashed #000;
+  margin: 5px 0 0 20px;
+}
+
+#pn_details textarea {
+  width: 800px;
+  height: 300px;
 }
 
 </style>

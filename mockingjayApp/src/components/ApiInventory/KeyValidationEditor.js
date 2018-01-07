@@ -14,7 +14,7 @@ module.exports = {
       }
     },
     template:
-      `<div>
+      `<div class="div-key">
         <label :for="id_ipt_key">Key: </label>
         <input :id="id_ipt_key" v-model="keyDesc.key" />
         <input :id="id_ipt_required" type="checkbox" v-model="keyDesc.required" />
