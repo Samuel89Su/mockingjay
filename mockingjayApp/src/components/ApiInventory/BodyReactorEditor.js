@@ -15,7 +15,7 @@ module.exports = {
     },
     template:
       `<div class="div-key">
-        <label :for="id_body_optional">Optional</label><br/>
+        <label :for="id_body_optional">Optional</label>
         <input :id="id_body_optional" type="checkbox" v-model="bodyDesc.optional" />
         <h4>Validator</h4>
         <div>
