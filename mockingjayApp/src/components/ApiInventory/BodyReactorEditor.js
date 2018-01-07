@@ -1,17 +1,26 @@
 module.exports = {
   name: 'BodyReactorEditor',
   opts: {
-    props: ['bodyDesc'],
+    props: ['bodyDesc', 'baseId'],
     computed: {
+      id_body_optional: function () {
+        return 'ipt_' + this.baseId + '_body_optional'
+      },
+      id_body_type: function () {
+        return 'ipt_' + this.baseId + '_body_reactor_type'
+      },
+      id_body_val: function () {
+        return 'ipt_' + this.baseId + '_body_reactor_value'
+      }
     },
     template:
       `<div class="div-key">
-        <label for="ipt_req_body_required">Optional</label><br/>
-        <input id="ipt_req_body_required" type="checkbox" v-model="bodyDesc.optional" />
+        <label :for="id_body_optional">Optional</label><br/>
+        <input :id="id_body_optional" type="checkbox" v-model="bodyDesc.optional" />
         <h4>Validator</h4>
         <div>
-          <input id="ipt_body_validator_type" v-model="bodyDesc.reactor.type" /><br/>
-          <textarea id="ipt_body_validator_type" :value="bodyDesc.reactor.value" />
+          <input :id="id_body_type" v-model="bodyDesc.reactor.type" /><br/>
+          <textarea :id="id_body_val" v-model="bodyDesc.reactor.value" />
         </div>
       </div>`
   }

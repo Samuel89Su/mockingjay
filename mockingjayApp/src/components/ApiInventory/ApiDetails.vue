@@ -12,31 +12,34 @@
 
     <h1>Mocking config</h1>
     <div id="dv_mockCfg">
-      <label for="checkbox">Validate Req: </label>
+      <label for="checkbox">Validate Request: </label>
       <input type="checkbox" id="ck_valiReq" v-model="details.mockCfg.validateReq" v-on:change="validPath" ><br/>
       <h2>Request description</h2>
       <h3>Queries</h3>
       <div>
-        <KeyValidationEditor :key="keyDesc.key" v-for="keyDesc in details.mockCfg.reqDescriptor.queries" v-bind:keyDesc="keyDesc"></KeyValidationEditor>
+        <KeyValidationEditor :key="keyDesc.key" baseId="reqDescriptor_queries" v-bind:keyDesc="keyDesc" v-for="keyDesc in details.mockCfg.reqDescriptor.queries"></KeyValidationEditor>
       </div>
       <h3>Headers</h3>
       <div>
-        <KeyValidationEditor :key="keyDesc.key" v-for="keyDesc in details.mockCfg.reqDescriptor.headers" v-bind:keyDesc="keyDesc"></KeyValidationEditor>
+        <KeyValidationEditor :key="keyDesc.key" baseId="reqDescriptor_headers" v-bind:keyDesc="keyDesc" v-for="keyDesc in details.mockCfg.reqDescriptor.headers"></KeyValidationEditor>
       </div>
       <h3>Body</h3>
       <div>
-        <BodyValidationEditor v-bind:bodyDesc="details.mockCfg.reqDescriptor.body" ></BodyValidationEditor>
+        <BodyValidationEditor baseId="reqDescriptor" v-bind:bodyDesc="details.mockCfg.reqDescriptor.body" ></BodyValidationEditor>
       </div>
       <h2>Response description</h2>
       <h3>Headers</h3>
       <div>
-        <KeyReactorEditor :key="keyDesc.key" v-for="keyDesc in details.mockCfg.resDescriptor.headers" v-bind:keyDesc="keyDesc"></KeyReactorEditor>
+        <KeyReactorEditor :key="keyDesc.key" baseId="resDescriptor_headers" v-bind:keyDesc="keyDesc" v-for="keyDesc in details.mockCfg.resDescriptor.headers"></KeyReactorEditor>
       </div>
       <h3>Body</h3>
       <div>
-        <BodyReactorEditor v-bind:bodyDesc="details.mockCfg.resDescriptor.body" ></BodyReactorEditor>
+        <BodyReactorEditor baseId="resDescriptor" v-bind:bodyDesc="details.mockCfg.resDescriptor.body" ></BodyReactorEditor>
       </div>
     </div>
+
+    <button id="btn_submit" v-on:click="updateDetails">Update</button>
+
   </div>
 </template>
 
@@ -70,7 +73,9 @@ export default {
   },
   methods: {
     validPath: function() {
-      console.log(this.details.path);
+    },
+    updateDetails: function(evt) {
+      console.log(this.details)
     }
   },
   components: localComponents
@@ -80,8 +85,9 @@ export default {
 <style>
 
 #pn_details {
-  margin: 80px 0 80px 200px;
+  margin: 80px 0 80px 0px;
   text-align: left;
+  width: 100%;
 }
 
 #pn_details input {
@@ -91,18 +97,34 @@ export default {
 
 #pn_details label {
   display: inline-block;
-  width: 120px;
+  width: 170px;
+}
+
+#pn_details input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
 }
 
 #pn_details .div-key {
   width: 80%;
   border: 1px dashed #000;
   margin: 5px 0 0 20px;
+  padding: 5px;
 }
 
 #pn_details textarea {
   width: 800px;
   height: 300px;
+}
+
+#btn_submit {
+  position: fixed;
+  top: 640px;
+  left: 1500px;
+  width: 120px;
+  height: 50px;
+  background: blue;
+  color: white;
 }
 
 </style>
