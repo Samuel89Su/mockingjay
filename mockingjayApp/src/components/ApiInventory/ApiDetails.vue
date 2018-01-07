@@ -27,18 +27,31 @@
       <div>
         <BodyValidationEditor v-bind:bodyDesc="details.mockCfg.reqDescriptor.body" ></BodyValidationEditor>
       </div>
+      <h2>Response description</h2>
+      <h3>Headers</h3>
+      <div>
+        <KeyReactorEditor :key="keyDesc.key" v-for="keyDesc in details.mockCfg.resDescriptor.headers" v-bind:keyDesc="keyDesc"></KeyReactorEditor>
+      </div>
+      <h3>Body</h3>
+      <div>
+        <BodyReactorEditor v-bind:bodyDesc="details.mockCfg.resDescriptor.body" ></BodyReactorEditor>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 
-const keyValiEditor = require('./KeyValidationEditor')
-const bodyValiEditor = require('./BodyValidationEditor')
-
 const localComponents = {};
+
+const keyValiEditor = require('./KeyValidationEditor')
 localComponents[keyValiEditor.name] = keyValiEditor.opts;
+const bodyValiEditor = require('./BodyValidationEditor')
 localComponents[bodyValiEditor.name] = bodyValiEditor.opts;
+const keyReactEditor = require('./KeyReactorEditor')
+localComponents[keyReactEditor.name] = keyReactEditor.opts;
+const bodyReactEditor = require('./BodyReactorEditor')
+localComponents[bodyReactEditor.name] = bodyReactEditor.opts;
 
 export default {
   name: "ApiList",
