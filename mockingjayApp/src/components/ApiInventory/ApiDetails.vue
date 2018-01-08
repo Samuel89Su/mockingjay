@@ -30,7 +30,7 @@
       <h2>Response description</h2>
       <h3>Headers</h3>
       <div>
-        <KeyReactorEditor :key="'mockCfg_resDescriptor_headers_' + keyDesc.key" baseId="mockCfg_resDescriptor_headers" v-bind:keyDesc="keyDesc" :id="'mockCfg_resDescriptor_headers_' + keyDesc.key" v-if="keyDesc !== null" v-for="keyDesc in details.mockCfg.resDescriptor.headers"></KeyReactorEditor>
+        <KeyReactorEditor :key="'mockCfg_resDescriptor_headers_' + keyDesc.key" :keyPostfix="keyDesc.key" :id="'mockCfg_resDescriptor_headers_' + keyDesc.key" v-if="keyDesc !== null" v-for="keyDesc in details.mockCfg.resDescriptor.headers"></KeyReactorEditor>
       </div>
       <h3>Body</h3>
       <div>
