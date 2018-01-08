@@ -17,11 +17,11 @@
       <h2>Request description</h2>
       <h3>Queries</h3>
       <div>
-        <KeyValidationEditor :key="keyDesc.key" baseId="reqDescriptor_queries" v-bind:keyDesc="keyDesc" v-for="keyDesc in details.mockCfg.reqDescriptor.queries"></KeyValidationEditor>
+        <KeyValidationEditor :key="keyDesc.key" baseId="reqDescriptor_queries" v-bind:keyDesc="keyDesc" v-if="keyDesc !== null" v-for="keyDesc in details.mockCfg.reqDescriptor.queries"></KeyValidationEditor>
       </div>
       <h3>Headers</h3>
       <div>
-        <KeyValidationEditor :key="keyDesc.key" baseId="reqDescriptor_headers" v-bind:keyDesc="keyDesc" v-for="keyDesc in details.mockCfg.reqDescriptor.headers"></KeyValidationEditor>
+        <KeyValidationEditor :key="keyDesc.key" baseId="reqDescriptor_headers" v-bind:keyDesc="keyDesc" v-if="keyDesc !== null" v-for="keyDesc in details.mockCfg.reqDescriptor.headers"></KeyValidationEditor>
       </div>
       <h3>Body</h3>
       <div>
@@ -30,7 +30,7 @@
       <h2>Response description</h2>
       <h3>Headers</h3>
       <div>
-        <KeyReactorEditor :key="keyDesc.key" baseId="resDescriptor_headers" v-bind:keyDesc="keyDesc" v-for="keyDesc in details.mockCfg.resDescriptor.headers"></KeyReactorEditor>
+        <KeyReactorEditor :key="keyDesc.key" baseId="resDescriptor_headers" v-bind:keyDesc="keyDesc" v-if="keyDesc !== null" v-for="keyDesc in details.mockCfg.resDescriptor.headers"></KeyReactorEditor>
       </div>
       <h3>Body</h3>
       <div>
@@ -74,7 +74,8 @@ export default {
   methods: {
     validPath: function() {
     },
-    updateDetails: function(evt) {
+    updateDetails: function() {
+      this.details.reqDescriptor
       console.log(this.details)
     }
   },
@@ -120,7 +121,7 @@ export default {
 #btn_submit {
   position: fixed;
   top: 640px;
-  left: 1500px;
+  left: 1400px;
   width: 120px;
   height: 50px;
   background: blue;
