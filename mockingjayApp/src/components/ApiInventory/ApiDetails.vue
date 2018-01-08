@@ -71,7 +71,13 @@ export default {
     },
     updateDetails: function() {
       console.log(this.details)
-      fetch('./inventory/api/update')
+      var cusHeaders = new Headers();
+      cusHeaders.append("Content-Type", "application/json");
+      fetch('./inventory/api/update', {
+          method: "POST",
+          headers: cusHeaders,
+          body: JSON.stringify(this.details)
+        })
         .then(res => {
           let contentType = res.headers.get('content-type')
           if (!res.ok) {
