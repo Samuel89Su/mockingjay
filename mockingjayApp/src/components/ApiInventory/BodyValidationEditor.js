@@ -1,37 +1,44 @@
 module.exports = {
   name: 'BodyValidationEditor',
   opts: {
-    props: ['bodyDesc', 'baseId'],
+    props: ['keyPostfix', 'id'],
     data: function () {
       return {
-        body: {}
+        body: {
+          required: false,
+          validator: null
+        }
       }
     },
     computed: {
       id_body_optional: function () {
-        return 'ipt_' + this.baseId + '_body_optional'
+        return 'ipt_' + this.id
       },
       id_body_type: function () {
-        return 'ipt_' + this.baseId + '_body_reactor_type'
+        return 'ipt_' + this.id + '_validator_type'
       },
       id_body_val: function () {
-        return 'ipt_' + this.baseId + '_body_reactor_value'
+        return 'ipt_' + this.id + '_validator_value'
       }
     },
     beforeCreate: function () {},
-    created: function () {
-      if (this.bodyDesc !== undefined && this.bodyDesc !== null) {
-        this.body = this.bodyDesc
-        if (this.body.validator === undefined || this.body.validator === undefined) {
-          this.body.validator = {
-            type: 'exact',
-            value: ''
-          }
+    created: function () {},
+    beforeMount: function () {},
+    mounted: function () {
+      let details = this.$store.state.apiDetails
+      let paths = this.id.replace('_' + this.keyPostfix, '').split('_')
+      let keyData = details
+      for (let i = 0; i < paths.length; i++) {
+        let dummy = keyData[paths[i]]
+        if (dummy) {
+          keyData = dummy
+        } else {
+          break
         }
       }
+
+      this.$data.body = keyData
     },
-    beforeMount: function () {},
-    mounted: function () { console.log('mounted') },
     beforeUpdate: function () { console.log('beforeUpdate') },
     updated: function () { console.log('updated') },
     beforeDestroy: function () { console.log('beforeDestroy') },
@@ -41,7 +48,7 @@ module.exports = {
           <label :for="id_body_optional">Required</label>
           <input :id="id_body_optional" type="checkbox" v-model="body.required" />
           <h4>Validator</h4>
-          <div>
+          <div v-if="body.validator !== undefined && body.validator !== null">
             <input :id="id_body_type" v-model="body.validator.type" /><br/>
             <textarea :id="id_body_val" v-model="body.validator.value" />
           </div>

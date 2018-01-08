@@ -12,34 +12,34 @@ module.exports = {
         }
       }
     },
-    props: ['baseId'],
+    props: ['keyPostfix', 'id'],
     computed: {
-      // gg: function () {
-      //   let details = this.$store.state.apiDetails
-
-      //   return details
-      // },
       id_ipt_key: function () {
-        return 'ipt_' + this.baseId + '_' + this.keyDesc.key + '_key'
+        return this.id + '_key'
       },
       id_ipt_required: function () {
-        return 'ipt_' + this.baseId + '_' + this.keyDesc.key + '_required'
+        return this.id + '_required'
       },
       id_validator_type: function () {
-        return 'ipt_' + this.baseId + '_' + this.keyDesc.key + '_reactor_type'
+        return this.id + '_reactor_type'
       },
       id_validator_val: function () {
-        return 'ipt_' + this.baseId + '_' + this.keyDesc.key + '_reactor_value'
+        return this.id + '_reactor_value'
       }
     },
     mounted: function () {
       let details = this.$store.state.apiDetails
 
       let index = $(this.$el).index()
-      let paths = this.baseId.split('_')
+      let paths = this.id.replace('_' + this.keyPostfix, '').split('_')
       let keyData = details
       for (let i = 0; i < paths.length; i++) {
-        keyData = keyData[paths[i]]
+        let dummy = keyData[paths[i]]
+        if (dummy) {
+          keyData = dummy
+        } else {
+          break
+        }
       }
       keyData = keyData[index]
 

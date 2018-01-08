@@ -1,20 +1,49 @@
+const $ = require('jquery')
+
 module.exports = {
   name: 'KeyReactorEditor',
   opts: {
-    props: ['keyDesc', 'baseId'],
+    data: function () {
+      return {
+        keyDesc: {
+          key: 'key',
+          optional: true,
+          reactor: null
+        }
+      }
+    },
+    props: ['keyPostfix', 'id'],
     computed: {
       id_ipt_key: function () {
-        return 'ipt_' + this.baseId + '_' + this.keyDesc.key + '_key'
+        return this.id + '_key'
       },
       id_ipt_optional: function () {
-        return 'ipt_' + this.baseId + '_' + this.keyDesc.key + '_optional'
+        return this.id + '_required'
       },
       id_reactor_type: function () {
-        return 'ipt_' + this.baseId + '_' + this.keyDesc.key + '_reactor_type'
+        return this.id + '_reactor_type'
       },
       id_reactor_val: function () {
-        return 'ipt_' + this.baseId + '_' + this.keyDesc.key + '_reactor_value'
+        return this.id + '_reactor_value'
       }
+    },
+    mounted: function () {
+      let details = this.$store.state.apiDetails
+
+      let index = $(this.$el).index()
+      let paths = this.id.replace('_' + this.keyPostfix, '').split('_')
+      let keyData = details
+      for (let i = 0; i < paths.length; i++) {
+        let dummy = keyData[paths[i]]
+        if (dummy) {
+          keyData = dummy
+        } else {
+          break
+        }
+      }
+      keyData = keyData[index]
+
+      this.$data.keyDesc = keyData
     },
     template:
       `<div class="div-key">
@@ -23,7 +52,7 @@ module.exports = {
         <input :id="id_ipt_optional" type="checkbox" v-model="keyDesc.optional" />
         <label :for="id_ipt_optional">Optional</label><br/>
         <h4>Reactor</h4>
-        <div>
+        <div v-if="keyDesc.reactor !== undefined && keyDesc.reactor !== null">
           <input :id="id_reactor_type" v-model="keyDesc.reactor.type" /><br/>
           <textarea :id="id_reactor_val" v-model="keyDesc.reactor.value" />
         </div>
