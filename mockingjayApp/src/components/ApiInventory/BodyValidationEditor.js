@@ -28,15 +28,14 @@ module.exports = {
             value: ''
           }
         }
-        console.log(this.body)
       }
     },
     beforeMount: function () {},
-    mounted: function () { console.log('mounted'); console.log(this.body) },
-    beforeUpdate: function () { console.log('beforeUpdate'); console.log(this.body) },
-    updated: function () { console.log('updated'); console.log(this.body) },
-    beforeDestroy: function () { console.log('beforeDestroy'); console.log(this.body) },
-    destroyed: function () { console.log('destroyed'); console.log(this.body) },
+    mounted: function () { console.log('mounted') },
+    beforeUpdate: function () { console.log('beforeUpdate') },
+    updated: function () { console.log('updated') },
+    beforeDestroy: function () { console.log('beforeDestroy') },
+    destroyed: function () { console.log('destroyed') },
     template:
         `<div v-if="body !== undefined && body !== null" class="div-key">
           <label :for="id_body_optional">Required</label>

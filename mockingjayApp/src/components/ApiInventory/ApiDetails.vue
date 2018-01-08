@@ -16,25 +16,25 @@
       <input type="checkbox" id="ck_valiReq" v-model="details.mockCfg.validateReq" v-on:change="validPath" ><br/>
       <h2>Request description</h2>
       <h3>Queries</h3>
-      <div>
-        <KeyValidationEditor :key="keyDesc.key" baseId="reqDescriptor_queries" v-bind:keyDesc="keyDesc" v-if="keyDesc !== null" v-for="keyDesc in details.mockCfg.reqDescriptor.queries"></KeyValidationEditor>
-      </div>
+      <ul>
+        <KeyValidationEditor :key="keyDesc.key" baseId="mockCfg_reqDescriptor_queries" v-bind:keyDesc="keyDesc" v-if="keyDesc !== null" v-for="keyDesc in details.mockCfg.reqDescriptor.queries"></KeyValidationEditor>
+      </ul>
       <h3>Headers</h3>
-      <div>
-        <KeyValidationEditor :key="keyDesc.key" baseId="reqDescriptor_headers" v-bind:keyDesc="keyDesc" v-if="keyDesc !== null" v-for="keyDesc in details.mockCfg.reqDescriptor.headers"></KeyValidationEditor>
-      </div>
+      <ul>
+        <KeyValidationEditor :key="keyDesc.key" baseId="mockCfg_reqDescriptor_headers" v-bind:keyDesc="keyDesc" v-if="keyDesc !== null" v-for="keyDesc in details.mockCfg.reqDescriptor.headers"></KeyValidationEditor>
+      </ul>
       <h3>Body</h3>
       <div>
-        <BodyValidationEditor baseId="reqDescriptor" v-bind:bodyDesc="details.mockCfg.reqDescriptor.body" ></BodyValidationEditor>
+        <BodyValidationEditor baseId="mockCfg_reqDescriptor" v-bind:bodyDesc="details.mockCfg.reqDescriptor.body" ></BodyValidationEditor>
       </div>
       <h2>Response description</h2>
       <h3>Headers</h3>
       <div>
-        <KeyReactorEditor :key="keyDesc.key" baseId="resDescriptor_headers" v-bind:keyDesc="keyDesc" v-if="keyDesc !== null" v-for="keyDesc in details.mockCfg.resDescriptor.headers"></KeyReactorEditor>
+        <KeyReactorEditor :key="keyDesc.key" baseId="mockCfg_resDescriptor_headers" v-bind:keyDesc="keyDesc" v-if="keyDesc !== null" v-for="keyDesc in details.mockCfg.resDescriptor.headers"></KeyReactorEditor>
       </div>
       <h3>Body</h3>
       <div>
-        <BodyReactorEditor baseId="resDescriptor" v-bind:bodyDesc="details.mockCfg.resDescriptor.body" ></BodyReactorEditor>
+        <BodyReactorEditor baseId="mockCfg_resDescriptor" v-bind:bodyDesc="details.mockCfg.resDescriptor.body" ></BodyReactorEditor>
       </div>
     </div>
 
