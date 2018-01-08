@@ -61,7 +61,7 @@ export default {
   data() {
     return {
       details: null
-    };
+    }
   },
   mounted: function() {
     this.$data.details = this.$store.state.apiDetails
@@ -70,13 +70,20 @@ export default {
     validPath: function() {
     },
     updateDetails: function() {
-      console.log(this.details)
-      var cusHeaders = new Headers();
+
+      let children = this.$children
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i]
+        console.log(child.$data)
+      }
+
+      let cusHeaders = new Headers();
       cusHeaders.append("Content-Type", "application/json");
+      let postStr = JSON.stringify(this.details)
       fetch('./inventory/api/update', {
           method: "POST",
           headers: cusHeaders,
-          body: JSON.stringify(this.details)
+          body: postStr
         })
         .then(res => {
           let contentType = res.headers.get('content-type')
@@ -148,7 +155,7 @@ export default {
 #btn_submit {
   position: fixed;
   top: 640px;
-  left: 1400px;
+  left: 1440px;
   width: 120px;
   height: 50px;
   background: blue;
