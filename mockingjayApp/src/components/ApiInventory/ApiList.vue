@@ -30,31 +30,35 @@ export default {
   data() {
     return {
       items: []
-    };
+    }
   },
   mounted: function() {
-    var query = queryString.stringify(this.$route.query);
-    fetch("./inventory/api/list?".concat(query))
+    let query = queryString.stringify(this.$route.query);
+    fetch('./inventory/api/list?'.concat(query))
       .then(res => {
-        var contentType = res.headers.get("content-type")
+        let contentType = res.headers.get('content-type')
         if (!res.ok) {
-          return [];
-        } else if (!contentType || !contentType.includes("application/json")) {
-          return [];
-        } else if (contentType && contentType.includes("application/json")) {
-          return res.json();
+          return []
+        } else if (!contentType || !contentType.includes('application/json')) {
+          return []
+        } else if (contentType && contentType.includes('application/json')) {
+          return res.json()
         }
       })
-      .then(list => {
-        if (list && list.length > 0) {
-          for (let i = 0; i < list.length; i++) {
-            let app = list[i];
-            this.items.push(app);
+      .then(retData => {
+        if (retData.code !== 0) {
+          return
+        } else {
+          if (retData.data && retData.data.length > 0) {
+            for (let i = 0; i < retData.data.length; i++) {
+              let app = retData.data[i]
+              this.items.push(app)
+            }
           }
         }
       })
       .catch(error => {
-        console.log(error);
+        console.log(error)
       });
   },
   methods: {

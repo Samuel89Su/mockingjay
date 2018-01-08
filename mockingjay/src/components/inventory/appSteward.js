@@ -35,7 +35,7 @@ class steward {
             apps.push(JSON.parse(appDesc));
         }
 
-        ctx.response.body = apps;
+        ctx.response.body = errCode.success(apps);
         await next();
     };
 
@@ -56,17 +56,9 @@ class steward {
             // set/update cache
             let ok = await redisClient.setAsync(key, JSON.stringify(appDesc)) === 'OK';
             if (ok) {
-                ctx.response.body = {
-                    code: 0,
-                    msg: 'ok',
-                    data: appDesc
-                };
+                ctx.response.body = errCode.success(appDesc);
             } else {
-                ctx.response.body = {
-                    code: errCode.dbErr,
-                    msg: 'cache err',
-                    data: null
-                };
+                ctx.response.body = errCode.dbErr();
             }
         }
 
@@ -87,28 +79,16 @@ class steward {
         } else {
             let idMax = await redisClient.getAsync(cacheKeys.appId);
             if (appDesc.id > parseInt(idMax)) {
-                ctx.response.body = {
-                    code: errCode.resNotFound.code,
-                    msg: errCode.resNotFound.defaultMsg,
-                    data: null
-                };
+                ctx.response.body = errCode.resNotFound();
             } else {
                 let key = `${ cacheKeys.appInventory }:${ appDesc.id }`
 
                 // set/update cache
                 let ok = await redisClient.setAsync(key, JSON.stringify(appDesc)) === 'OK';
                 if (ok) {
-                    ctx.response.body = {
-                        code: 0,
-                        msg: 'ok',
-                        data: appDesc
-                    };
+                    ctx.response.body = errCode.success(appDesc);
                 } else {
-                    ctx.response.body = {
-                        code: errCode.dbErr,
-                        msg: 'cache err',
-                        data: null
-                    };
+                    ctx.response.body = errCode.dbErr();
                 }
             }
         }

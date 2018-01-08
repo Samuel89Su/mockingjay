@@ -31,19 +31,22 @@ export default {
       .then(res => {
         var contentType = res.headers.get("content-type")
         if (!res.ok) {
-          return [];
+          return []
         } else if (!contentType || !contentType.includes("application/json")) {
-          return [];
+          return []
         } else if (contentType && contentType.includes("application/json")) {
-          var list = res.json();
-          return list;
+          return res.json()
         }
       })
-      .then(list => {
-        if (list && list.length > 0) {
-          for (let i = 0; i < list.length; i++) {
-            let app = list[i];
-            this.items.push({ id: app.id, name: app.name, desc: app.desc });
+      .then(retData => {
+        if (retData.code !== 0) {
+          return
+        } else {
+          if (retData.data && retData.data.length > 0) {
+            for (let i = 0; i < retData.data.length; i++) {
+              let app = retData.data[i]
+              this.items.push({ id: app.id, name: app.name, desc: app.desc });
+            }
           }
         }
       })

@@ -1,5 +1,5 @@
 <template>
-  <div id="pn_details">
+  <div v-if="details !== undefined && details !== null" id="pn_details">
     <h1>General</h1>
     <div>
       <label for="ipt_path">Path: </label>
@@ -29,9 +29,9 @@
       </div>
       <h2>Response description</h2>
       <h3>Headers</h3>
-      <div>
+      <ul>
         <KeyReactorEditor :key="'mockCfg_resDescriptor_headers_' + keyDesc.key" :keyPostfix="keyDesc.key" :id="'mockCfg_resDescriptor_headers_' + keyDesc.key" v-if="keyDesc !== null" v-for="keyDesc in details.mockCfg.resDescriptor.headers"></KeyReactorEditor>
-      </div>
+      </ul>
       <h3>Body</h3>
       <div>
         <BodyReactorEditor keyPostfix="body" id="mockCfg_resDescriptor_body"></BodyReactorEditor>
@@ -60,23 +60,44 @@ export default {
   name: "ApiList",
   data() {
     return {
+      details: null
     };
   },
-  computed: {
-    details: function() {
-      let detailss = this.$store.state.apiDetails
-      return detailss
-    }
-  },
   mounted: function() {
-
+    this.$data.details = this.$store.state.apiDetails
   },
   methods: {
     validPath: function() {
     },
     updateDetails: function() {
-      this.details.reqDescriptor
       console.log(this.details)
+      fetch('./inventory/api/update')
+        .then(res => {
+          let contentType = res.headers.get('content-type')
+          if (!res.ok) {
+            return null
+          } else if (!contentType || !contentType.includes('application/json')) {
+            return null
+          } else {
+            return res.json()
+          }
+        })
+        .then(retData => {
+          if (retData.code !== 0) {
+            return
+          } else {
+            if (retData.data) {
+              this.$data.details = retData.data
+              this.$store.commit({
+                type: 'setDetails',
+                details: retData.data
+              })
+            }
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   },
   components: localComponents

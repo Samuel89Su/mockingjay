@@ -48,11 +48,7 @@ class Steward {
             let appCacheKey = `${ cacheKeys.appInventory }:${ appId }`
             let appDescStr = await redisClient.getAsync(appCacheKey);
             if (!appDescStr || appDescStr.length < 10) {
-                ctx.response.body = {
-                    code: errCode.resNotFound.code,
-                    msg: errCode.resNotFound.defaultMsg,
-                    data: null
-                };
+                ctx.response.body = errCode.resNotFound();
             } else {
                 let appDesc = JSON.parse(appDescStr);
                 let keyPattern = `${ cacheKeys.apiInventory }:${ appDesc.name }:*`
@@ -64,7 +60,7 @@ class Steward {
                     apis.push(JSON.parse(apiConfig));
                 }
 
-                ctx.response.body = apis;
+                ctx.response.body = errCode.success(apis);
             }
 
         }
@@ -98,17 +94,9 @@ class Steward {
         let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name }:${ validSegs.join('_') }`
         let ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiConfig)) === 'OK';
         if (ok) {
-            ctx.response.body = {
-                code: 0,
-                msg: 'ok',
-                data: apiConfig
-            };
+            ctx.response.body = errCode.success(apiConfig);
         } else {
-            ctx.response.body = {
-                code: errCode.dbErr,
-                msg: 'cache err',
-                data: null
-            };
+            ctx.response.body = errCode.dbErr();
         }
 
         await next();
@@ -140,17 +128,9 @@ class Steward {
         let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name }:${ validSegs.join('_') }`
         let ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiConfig)) === 'OK';
         if (ok) {
-            ctx.response.body = {
-                code: 0,
-                msg: 'ok',
-                data: apiConfig
-            };
+            ctx.response.body = errCode.success(apiConfig);
         } else {
-            ctx.response.body = {
-                code: errCode.dbErr,
-                msg: 'cache err',
-                data: null
-            };
+            ctx.response.body = errCode.dbErr();
         }
 
         await next();
@@ -180,17 +160,9 @@ class Steward {
         let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name }:${ validSegs.join('_') }`
         let ok = await redisClient.delAsync(cacheKey);
         if (parseInt(ok) > 0) {
-            ctx.response.body = {
-                code: 0,
-                msg: 'ok',
-                data: apiConfig
-            };
+            ctx.response.body = errCode.success(apiConfig);
         } else {
-            ctx.response.body = {
-                code: errCode.dbErr,
-                msg: 'cache err',
-                data: null
-            };
+            ctx.response.body = errCode.dbErr();
         }
 
         await next();
