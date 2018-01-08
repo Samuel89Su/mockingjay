@@ -26,7 +26,7 @@ module.exports = {
     beforeMount: function () {},
     mounted: function () {
       let details = this.$store.state.apiDetails
-      let paths = this.id.replace('_' + this.keyPostfix, '').split('_')
+      let paths = this.id.split('_')
       let keyData = details
       for (let i = 0; i < paths.length; i++) {
         let dummy = keyData[paths[i]]
