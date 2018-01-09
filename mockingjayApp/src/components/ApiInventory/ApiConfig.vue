@@ -63,9 +63,14 @@ export default {
       config: null
     }
   },
-  mounted: function() {
+  mounted: function() {    
     this.$data.sketch = this.$store.state.ApiSketch
-    let postStr = JSON.stringify(this.sketch)
+
+    let postStr = JSON.stringify({ 
+      appName: this.$store.state.AppDetails.name,
+      apiId: this.sketch.apiId,
+      path: this.sketch.path
+      });
     fetch("./inventory/api/getApiConfig", {
         method: "POST",
         headers: cusHeaders,
@@ -156,7 +161,7 @@ export default {
 
 #sp_path {
   background-color: rgb(185, 184, 184);
-  font-size: 30
+  font-size: 30 
 }
 
 #pn_details {

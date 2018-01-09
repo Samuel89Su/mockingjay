@@ -339,13 +339,7 @@ class Steward {
         //     return await next();
         // }
 
-        let appDesc = await this.getAppConfig(apiData.appId);
-        if (!appDesc) {
-            ctx.response.body = errCode.resNotFound();
-            return await next();
-        }
-
-        let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name }`
+        let baseKey = `${ cacheKeys.apiInventory }:${ apiData.appName }`
 
         let cacheKey = `${ baseKey }:${ apiData.apiId }_schema`
         let apiSchemaJson = await redisClient.getAsync(cacheKey);
@@ -377,32 +371,9 @@ class Steward {
         //     return await next();
         // }
 
-        let appDesc = await this.getAppConfig(apiData.appId);
-        if (!appDesc) {
-            ctx.response.body = errCode.resNotFound();
-            return await next();
-        }
-
-        let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name }`
-
-        // check is existed
-        let apiId = apiData.apiId;
-        let apiSketchJson = await redisClient.hgetAsync(baseKey, apiId);
-        let apiSketch = null;
-        if (!apiSketchJson) {
-            ctx.response.body = errCode.dbErr();
-            return await next();
-        } else {
-            try {
-                apiSketch = JSON.parse(apiSketchJson);
-            } catch (error) {
-                logger.error(error);
-                ctx.response.body = errCode.dbErr();
-                return await next();
-            }
-        }
+        let baseKey = `${ cacheKeys.apiInventory }:${ apiData.appName }`
         
-        let segments = apiSketch.path.split('/');
+        let segments = apiData.path.split('/');
         let validSegs = [];
         segments.forEach(seg => {
             if (seg.length > 0) {
