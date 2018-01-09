@@ -5,6 +5,7 @@
                 <th>ID</th>
                 <th>Name</th>
                 <th>Desc</th>
+                <th>API List</th>
             </tr>
         </thead>
         <tbody>
@@ -12,7 +13,10 @@
               <td>{{ item.id }}</td>
               <td>{{ item.name }}</td>
               <td>{{ item.desc }}</td>
-              <td><router-link :to="{ name: 'apilist', query: { appId: item.id }}">API list</router-link></td>
+              <td>
+                <a v-on:click="goToApiList(item)" href="javascript:void(0)">api list</a>
+              </td>
+              <!-- <td><router-link :to="{ name: 'apilist', query: { appId: item.id }}">API list</router-link></td> -->
             </tr>
         </tbody>
     </table>
@@ -53,6 +57,17 @@ export default {
       .catch(ex => {
         console.log(ex);
       });
+  },
+  methods: {
+    goToApiList: function (appDetails) {
+      this.$store.commit({
+        type: 'setApp',
+        AppDetails: appDetails
+      })
+      this.$router.push({
+        name: 'apilist'
+      })
+    }
   }
 };
 </script>

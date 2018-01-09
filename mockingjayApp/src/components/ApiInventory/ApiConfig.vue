@@ -1,27 +1,27 @@
 <template>
-  <div v-if="details !== undefined && details !== null" id="pn_details">
+  <div v-if="config !== undefined && config !== null" id="pn_details">
     <h1>General</h1>
     <div>
       <label for="ipt_path">Path: </label>
-      <input id="ipt_path" v-model="details.path" v-on:change="validPath" ><br/>
+      <input id="ipt_path" v-model="config.path" v-on:change="validPath" ><br/>
       <label for="ipt_method">Method: </label>
-      <input id="ipt_method" v-model="details.method" v-on:change="validPath" ><br/>
+      <input id="ipt_method" v-model="config.method" v-on:change="validPath" ><br/>
       <label for="ck_mock">Mock: </label>
-      <input type="checkbox" id="ck_mock" v-model="details.mock" v-on:change="validPath" ><br/>
+      <input type="checkbox" id="ck_mock" v-model="config.mock" v-on:change="validPath" ><br/>
     </div>
 
     <h1>Mocking config</h1>
     <div id="dv_mockCfg">
       <label for="checkbox">Validate Request: </label>
-      <input type="checkbox" id="ck_valiReq" v-model="details.mockCfg.validateReq" v-on:change="validPath" ><br/>
+      <input type="checkbox" id="ck_valiReq" v-model="config.mockCfg.validateReq" v-on:change="validPath" ><br/>
       <h2>Request description</h2>
       <h3>Queries</h3>
       <ul>
-        <KeyValidationEditor :key="'mockCfg_reqDescriptor_queries_' + keyDesc.key" :keyPostfix="keyDesc.key" :id="'mockCfg_reqDescriptor_queries_' + keyDesc.key" v-if="keyDesc !== null" v-for="keyDesc in details.mockCfg.reqDescriptor.queries"></KeyValidationEditor>
+        <KeyValidationEditor :key="'mockCfg_reqDescriptor_queries_' + keyDesc.key" :keyPostfix="keyDesc.key" :id="'mockCfg_reqDescriptor_queries_' + keyDesc.key" v-if="keyDesc !== null" v-for="keyDesc in config.mockCfg.reqDescriptor.queries"></KeyValidationEditor>
       </ul>
       <h3>Headers</h3>
       <ul>
-        <KeyValidationEditor :key="'mockCfg_reqDescriptor_headers_' + keyDesc.key" :keyPostfix="keyDesc.key" :id="'mockCfg_reqDescriptor_headers_' + keyDesc.key" v-if="keyDesc !== null" v-for="keyDesc in details.mockCfg.reqDescriptor.headers"></KeyValidationEditor>
+        <KeyValidationEditor :key="'mockCfg_reqDescriptor_headers_' + keyDesc.key" :keyPostfix="keyDesc.key" :id="'mockCfg_reqDescriptor_headers_' + keyDesc.key" v-if="keyDesc !== null" v-for="keyDesc in config.mockCfg.reqDescriptor.headers"></KeyValidationEditor>
       </ul>
       <h3>Body</h3>
       <div>
@@ -30,7 +30,7 @@
       <h2>Response description</h2>
       <h3>Headers</h3>
       <ul>
-        <KeyReactorEditor :key="'mockCfg_resDescriptor_headers_' + keyDesc.key" :keyPostfix="keyDesc.key" :id="'mockCfg_resDescriptor_headers_' + keyDesc.key" v-if="keyDesc !== null" v-for="keyDesc in details.mockCfg.resDescriptor.headers"></KeyReactorEditor>
+        <KeyReactorEditor :key="'mockCfg_resDescriptor_headers_' + keyDesc.key" :keyPostfix="keyDesc.key" :id="'mockCfg_resDescriptor_headers_' + keyDesc.key" v-if="keyDesc !== null" v-for="keyDesc in config.mockCfg.resDescriptor.headers"></KeyReactorEditor>
       </ul>
       <h3>Body</h3>
       <div>
@@ -56,15 +56,47 @@ localComponents[keyReactEditor.name] = keyReactEditor.opts;
 const bodyReactEditor = require('./BodyReactorEditor')
 localComponents[bodyReactEditor.name] = bodyReactEditor.opts;
 
+const cusHeaders = new Headers();
+cusHeaders.append("Content-Type", "application/json");
+
 export default {
   name: "ApiList",
   data() {
     return {
-      details: null
+      sketch: null,
+      config: null
     }
   },
   mounted: function() {
-    this.$data.details = this.$store.state.apiDetails
+    this.$data.sketch = this.$store.state.ApiSketch
+    let postStr = JSON.stringify(this.sketch)
+    fetch("./inventory/api/getApiConfig", {
+        method: "POST",
+        headers: cusHeaders,
+        body: postStr
+      })
+      .then(res => {
+        var contentType = res.headers.get("content-type")
+        if (!res.ok) {
+          return []
+        } else if (!contentType || !contentType.includes("application/json")) {
+          return []
+        } else if (contentType && contentType.includes("application/json")) {
+          return res.json()
+        }
+      })
+      .then(retData => {
+        if (retData.code !== 0) {
+          return
+        } else {
+          if (retData.data) {
+            this.$data.config = retData.data
+          }
+        }
+      })
+      .catch(ex => {
+        console.log(ex);
+      });
   },
   methods: {
     validPath: function() {
@@ -77,10 +109,10 @@ export default {
         console.log(child.$data)
       }
 
-      let cusHeaders = new Headers();
-      cusHeaders.append("Content-Type", "application/json");
+      // let cusHeaders = new Headers();
+      // cusHeaders.append("Content-Type", "application/json");
       let postStr = JSON.stringify(this.details)
-      fetch('./inventory/api/update', {
+      fetch('./inventory/api/updateConfig', {
           method: "POST",
           headers: cusHeaders,
           body: postStr
@@ -100,11 +132,7 @@ export default {
             return
           } else {
             if (retData.data) {
-              this.$data.details = retData.data
-              this.$store.commit({
-                type: 'setDetails',
-                details: retData.data
-              })
+              this.$data.config = retData.data
             }
           }
         })

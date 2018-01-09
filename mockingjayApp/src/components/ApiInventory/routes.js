@@ -1,7 +1,7 @@
 import { join } from 'path'
 import AppList from './AppList'
 import ApiList from './ApiList'
-import ApiDetails from './ApiDetails'
+import ApiConfig from './ApiConfig'
 
 var basePath = '/apiinventory'
 
@@ -17,8 +17,13 @@ export default [
     component: ApiList
   },
   {
-    path: join(basePath, '/apidetails'),
-    name: 'apidetails',
-    component: ApiDetails
+    path: join(basePath, '/apiSchema'),
+    name: 'apiSchema',
+    component: ApiConfig
+  },
+  {
+    path: join(basePath, '/apiConfig'),
+    name: 'apiConfig',
+    component: ApiConfig
   }
 ]

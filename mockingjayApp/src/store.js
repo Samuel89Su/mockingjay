@@ -12,8 +12,11 @@ export default new Vuex.Store({
   state: {
   },
   mutations: {
-    setDetails: function (state, payload) {
-      state.apiDetails = payload.details
+    setApp: function (state, payload) {
+      state.AppDetails = payload.AppDetails
+    },
+    setApiSketch: function (state, payload) {
+      state.ApiSketch = payload.ApiSketch
     }
   },
   plugins: [vuexSession.plugin]

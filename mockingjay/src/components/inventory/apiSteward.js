@@ -17,6 +17,16 @@ const registerValidate = ajv.compile(apiRegisterSchema);
 class Steward {
     constructor(arg) {
         this.router = new Router();
+        this.list = this.list.bind(this);
+        this.register = this.register.bind(this);
+        this.update = this.update.bind(this);
+        this.remove = this.remove.bind(this);
+        this.config = this.config.bind(this);
+        this.updateConfig = this.updateConfig.bind(this);
+        this.removeConfig = this.removeConfig.bind(this);
+        this.getAppConfig = this.getAppConfig.bind(this);
+        this.getApiSchema = this.getApiSchema.bind(this);
+        this.getApiConfig = this.getApiConfig.bind(this);
     }
 
     getRouter() {
@@ -27,6 +37,8 @@ class Steward {
         this.router.post('/register', commonBodyParser, this.register);
         this.router.post('/update', commonBodyParser, this.update);
         this.router.post('/remove', commonBodyParser, this.remove);
+        this.router.post('/getApiSchema', commonBodyParser, this.getApiSchema);
+        this.router.post('/getApiConfig', commonBodyParser, this.getApiConfig);
         this.router.post('/config', commonBodyParser, this.config);
         this.router.post('/updateconfig', commonBodyParser, this.updateConfig);
         this.router.post('/removeconfig', commonBodyParser, this.removeConfig);
@@ -50,8 +62,8 @@ class Steward {
             ctx.response.body = 'appId CAN NOT be null or empty';
         } else {
             //TODO: check is app registered
-            
-            let appDesc = getAppConfig(arg.appId);
+
+            let appDesc = await this.getAppConfig(appId);
             if (!appDesc) {
                 ctx.response.body = errCode.resNotFound();
             } else {
@@ -64,6 +76,8 @@ class Steward {
                         apis.push(JSON.parse(apiJson));
                     }
                 }
+
+                apis = apis.sort(apiSorter);
 
                 ctx.response.body = errCode.success(apis);
             }
@@ -82,7 +96,7 @@ class Steward {
             return await next();
         }
 
-        let appDesc = getAppConfig(arg.appId);
+        let appDesc = await this.getAppConfig(apiData.appId);
         if (!appDesc) {
             ctx.response.body = errCode.resNotFound();
             return await next();
@@ -94,7 +108,8 @@ class Steward {
             name: apiData.name,
             description: apiData.description,
             path: apiData.path,
-            method: apiData.method
+            method: apiData.method,
+            appId: apiData.appId
         };
         let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name }`
         let ok = await redisClient.hsetAsync(baseKey, id, JSON.stringify(apiSketch)) >= 0;
@@ -124,7 +139,7 @@ class Steward {
             return await next();
         }
 
-        let appDesc = getAppConfig(arg.appId);
+        let appDesc = await this.getAppConfig(apiData.appId);
         if (!appDesc) {
             ctx.response.body = errCode.resNotFound();
             return await next();
@@ -145,7 +160,8 @@ class Steward {
             name: apiData.name,
             description: apiData.description,
             path: apiData.path,
-            method: apiData.method
+            method: apiData.method,
+            appId: apiData.appId
         };
         ok = await redisClient.hsetAsync(baseKey, apiId, JSON.stringify(apiSketch)) >= 0;
         if (ok) {
@@ -165,13 +181,13 @@ class Steward {
 
     async remove(ctx, next) {
         let arg = ctx.request.body;
-        if (!arg.appId || arg.appId === 0 || !arg.id || arg.id === 0) {
+        if (!arg.appId || !arg.id) {
             ctx.response.status = 400;
             ctx.response.body = "appId or id is missing.";
             return await next();
         }
 
-        let appDesc = getAppConfig(arg.appId);
+        let appDesc = await this.getAppConfig(arg.appId);
         if (!appDesc) {
             ctx.response.body = errCode.resNotFound();
             return await next();
@@ -205,7 +221,7 @@ class Steward {
             return await next();
         }
 
-        let appDesc = getAppConfig(apiConfig.appId);
+        let appDesc = await this.getAppConfig(apiConfig.appId);
         if (!appDesc) {
             ctx.response.body = errCode.resNotFound();
             return await next();
@@ -241,7 +257,7 @@ class Steward {
             return await next();
         }
 
-        let appDesc = getAppConfig(apiConfig.appId);
+        let appDesc = await this.getAppConfig(apiConfig.appId);
         if (!appDesc) {
             ctx.response.body = errCode.resNotFound();
             return await next();
@@ -275,7 +291,7 @@ class Steward {
             return await next();
         }
 
-        let appDesc = getAppConfig(apiConfig.appId);
+        let appDesc = await this.getAppConfig(apiConfig.appId);
         if (!appDesc) {
             ctx.response.body = errCode.resNotFound();
             return await next();
@@ -309,9 +325,110 @@ class Steward {
         }
 
         await next();
-    }    
+    }
 
-    getAppConfig (appId) {
+    async getApiSchema(ctx, next) {
+        let apiData = ctx.request.body;
+
+        // validate
+        // var valid = registerValidate(apiData);
+        // if (!valid) {
+        //     ctx.response.status = 400;
+        //     ctx.response.body = registerValidate.errors;
+        //     return await next();
+        // }
+
+        let appDesc = await this.getAppConfig(apiData.appId);
+        if (!appDesc) {
+            ctx.response.body = errCode.resNotFound();
+            return await next();
+        }
+
+        let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name }`
+
+        let cacheKey = `${ baseKey }:${ apiData.apiId }_schema`
+        let apiSchemaJson = await redisClient.getAsync(cacheKey);
+        if (!apiSchemaJson) {
+            ctx.response.body = errCode.dbErr();
+            return await next();
+        } else {
+            try {
+                let apiSchema = JSON.parse(apiSchemaJson);
+                ctx.response.body = errCode.success(apiSchema);
+
+            } catch (error) {
+                logger.error(error);
+                ctx.response.body = errCode.dbErr();
+            }
+        }
+
+        await next();
+    }
+    
+    async getApiConfig(ctx, next) {
+        let apiData = ctx.request.body;
+
+        // validate
+        // var valid = registerValidate(apiData);
+        // if (!valid) {
+        //     ctx.response.status = 400;
+        //     ctx.response.body = registerValidate.errors;
+        //     return await next();
+        // }
+
+        let appDesc = await this.getAppConfig(apiData.appId);
+        if (!appDesc) {
+            ctx.response.body = errCode.resNotFound();
+            return await next();
+        }
+
+        let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name }`
+
+        // check is existed
+        let apiId = apiData.apiId;
+        let apiSketchJson = await redisClient.hgetAsync(baseKey, apiId);
+        let apiSketch = null;
+        if (!apiSketchJson) {
+            ctx.response.body = errCode.dbErr();
+            return await next();
+        } else {
+            try {
+                apiSketch = JSON.parse(apiSketchJson);
+            } catch (error) {
+                logger.error(error);
+                ctx.response.body = errCode.dbErr();
+                return await next();
+            }
+        }
+        
+        let segments = apiSketch.path.split('/');
+        let validSegs = [];
+        segments.forEach(seg => {
+            if (seg.length > 0) {
+                validSegs.push(seg);
+            }
+        });
+
+        let cacheKey = `${ baseKey }:${ validSegs.join('_') }`
+        let apiConfigJson = await redisClient.getAsync(cacheKey);
+        if (!apiConfigJson) {
+            ctx.response.body = errCode.dbErr();
+            return await next();
+        } else {
+            try {
+                let apiConfig = JSON.parse(apiConfigJson);
+                ctx.response.body = errCode.success(apiConfig);
+
+            } catch (error) {
+                logger.error(error);
+                ctx.response.body = errCode.dbErr();
+            }
+        }
+
+        await next();
+    }
+
+    async getAppConfig(appId) {
         let appCacheKey = `${ cacheKeys.appInventory }:${ appId }`
         let appDescStr = await redisClient.getAsync(appCacheKey);
         if (!appDescStr) {
@@ -330,6 +447,10 @@ class Steward {
             }
         }
     }
+}
+
+function apiSorter(a, b) {
+    return a.apiId - b.apiId
 }
 
 exports = module.exports = new Steward();

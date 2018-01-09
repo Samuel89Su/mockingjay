@@ -35,6 +35,8 @@ class steward {
             apps.push(JSON.parse(appDesc));
         }
 
+        apps = apps.sort(appSorter)
+
         ctx.response.body = errCode.success(apps);
         await next();
     };
@@ -95,6 +97,10 @@ class steward {
 
         await next();
     }
+}
+
+function appSorter(a, b) {
+    return a.id - b.id;
 }
 
 exports = module.exports = new steward();
