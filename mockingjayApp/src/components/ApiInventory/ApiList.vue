@@ -105,22 +105,26 @@
   }
 
   table tr th:nth-child(2) {
-    width: 200px;
+    width: 150px;
   }
 
   table tr th:nth-child(3) {
-    width: 300px;
+    width: 120px;
   }
 
   table tr th:nth-child(4) {
-    width: 120px;
+    width: 200px;
   }
 
   table tr th:nth-child(5) {
-    width: 120px;
+    width: 300px;
   }
 
   table tr th:nth-child(6) {
+    width: 120px;
+  }
+
+  table tr th:nth-child(7) {
     width: 120px;
   }
 

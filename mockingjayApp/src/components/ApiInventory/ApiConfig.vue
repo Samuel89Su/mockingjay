@@ -2,15 +2,11 @@
   <div v-if="config !== undefined && config !== null" id="pn_details">
     <h1>General</h1>
     <div>
-      <label for="ipt_path">Path: </label>
-      <input id="ipt_path" v-model="config.path" v-on:change="validPath" ><br/>
-      <label for="ipt_method">Method: </label>
-      <input id="ipt_method" v-model="config.method" v-on:change="validPath" ><br/>
-      <label for="ck_mock">Mock: </label>
-      <input type="checkbox" id="ck_mock" v-model="config.mock" v-on:change="validPath" ><br/>
+      <span id="sp_method">{{ config.method }}</span>
+      <span id="sp_path">{{ config.path }}</span><br/>
+      <label for="ck_mock">Mock</label>
+      <input type="checkbox" id="ck_mock" v-model="config.mock" v-on:change="validPath">
     </div>
-
-    <h1>Mocking config</h1>
     <div id="dv_mockCfg">
       <label for="checkbox">Validate Request: </label>
       <input type="checkbox" id="ck_valiReq" v-model="config.mockCfg.validateReq" v-on:change="validPath" ><br/>
@@ -91,6 +87,10 @@ export default {
         } else {
           if (retData.data) {
             this.$data.config = retData.data
+            this.$store.commit({
+              type: 'setApiConfig',
+              ApiConfig: retData.data
+            })
           }
         }
       })
@@ -146,6 +146,18 @@ export default {
 </script>
 
 <style>
+
+#sp_method {
+  background-color: blue;
+  color: white;
+  font-size: 32;
+  margin-right: 20px;
+}
+
+#sp_path {
+  background-color: rgb(185, 184, 184);
+  font-size: 30
+}
 
 #pn_details {
   margin: 80px 0 80px 0px;

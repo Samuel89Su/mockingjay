@@ -17,6 +17,12 @@ export default new Vuex.Store({
     },
     setApiSketch: function (state, payload) {
       state.ApiSketch = payload.ApiSketch
+    },
+    setApiSchema: function (state, payload) {
+      state.ApiSchema = payload.ApiSchema
+    },
+    setApiConfig: function (state, payload) {
+      state.ApiConfig = payload.ApiConfig
     }
   },
   plugins: [vuexSession.plugin]

@@ -25,9 +25,9 @@ module.exports = {
     created: function () {},
     beforeMount: function () {},
     mounted: function () {
-      let details = this.$store.state.apiDetails
+      let config = this.$store.state.ApiConfig
       let paths = this.id.split('_')
-      let keyData = details
+      let keyData = config
       for (let i = 0; i < paths.length; i++) {
         let dummy = keyData[paths[i]]
         if (dummy) {

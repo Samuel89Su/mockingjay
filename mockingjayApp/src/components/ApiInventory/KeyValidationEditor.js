@@ -28,11 +28,11 @@ module.exports = {
       }
     },
     mounted: function () {
-      let details = this.$store.state.apiDetails
+      let config = this.$store.state.ApiConfig
 
       let index = $(this.$el).index()
       let paths = this.id.replace('_' + this.keyPostfix, '').split('_')
-      let keyData = details
+      let keyData = config
       for (let i = 0; i < paths.length; i++) {
         let dummy = keyData[paths[i]]
         if (dummy) {

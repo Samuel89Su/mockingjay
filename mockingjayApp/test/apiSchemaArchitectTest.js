@@ -13,6 +13,8 @@ schema = apiSchemaArchitect.setReqBody('string', schema, true, {
   'maxLength': 10
 })
 
+console.log(JSON.stringify(schema))
+
 const querySchema = schema.properties.query
 console.log(querySchema)
 
