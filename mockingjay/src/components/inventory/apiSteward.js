@@ -117,6 +117,7 @@ class Steward {
             let cacheKey = `${ baseKey }:${ id }_schema`
             ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiData.schema)) === 'OK';
             if (ok) {
+                apiData.apiId = id;
                 ctx.response.body = errCode.success(apiData);
             } else {
                 ctx.response.body = errCode.dbErr();

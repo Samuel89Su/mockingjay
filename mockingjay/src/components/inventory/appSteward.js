@@ -58,6 +58,7 @@ class steward {
             // set/update cache
             let ok = await redisClient.setAsync(key, JSON.stringify(appDesc)) === 'OK';
             if (ok) {
+                appDesc.id = id;
                 ctx.response.body = errCode.success(appDesc);
             } else {
                 ctx.response.body = errCode.dbErr();
