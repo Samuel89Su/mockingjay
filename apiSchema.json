@@ -1,0 +1,75 @@
+{
+    "name": "register",
+    "description": "new user register",
+    "path": "/register",
+    "method": "POST",
+    "appId": 1,
+    "schema": {
+        "$schema": "http://json-schema.org/draft-06/schema#",
+        "type": "object",
+        "properties": {
+            "name": {
+                "type": "string"
+            },
+            "description": {
+                "type": "string"
+            },
+            "path": {
+                "type": "string",
+                "pattern": ""
+            },
+            "method": {
+                "type": "string",
+                "pattern": "(GET|POST)"
+            },
+            "query": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 10
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            },
+            "reqHeaders": {
+                "type": "object",
+                "properties": {
+                    "content-type": {
+                        "type": "string",
+                        "pattern": "(application/json)"
+                    }
+                },
+                "required": [
+                    "content-type"
+                ]
+            },
+            "reqBody": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 20
+            },
+            "resHeaders": {
+                "type": "object",
+                "properties": {
+                    "content-type": {
+                        "type": "string",
+                        "pattern": "(application/json)"
+                    }
+                },
+                "required": [
+                    "content-type"
+                ]
+            },
+            "resBody": {
+                "type": "string"
+            }
+        },
+        "required": [
+            "reqHeaders", "resHeaders", "resBody"
+        ]
+    }
+}

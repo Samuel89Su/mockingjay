@@ -1,9 +1,12 @@
 const cfgSchema = {
-    "definitions": {},
     "$schema": "http://json-schema.org/draft-06/schema#",
     "type": "object",
     "properties": {
         "appId": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "apiId": {
             "type": "integer",
             "minimum": 1
         },
@@ -49,7 +52,7 @@ const cfgSchema = {
                                         "properties": {
                                             "type": {
                                                 "type": "string",
-                                                "pattern": "(exact|regEx|custom)"
+                                                "pattern": "(custom)"
                                             },
                                             "value": {
                                                 "type": "string"
@@ -81,7 +84,7 @@ const cfgSchema = {
                                         "properties": {
                                             "type": {
                                                 "type": "string",
-                                                "pattern": "(exact|regEx|custom)"
+                                                "pattern": "(custom)"
                                             },
                                             "value": {
                                                 "type": "string"
@@ -107,7 +110,7 @@ const cfgSchema = {
                                     "properties": {
                                         "type": {
                                             "type": "string",
-                                            "pattern": "(exact|regEx|custom|jsonSchema)"
+                                            "pattern": "(custom)"
                                         },
                                         "value": {
                                             "type": "string"
