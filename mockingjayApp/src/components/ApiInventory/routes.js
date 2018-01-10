@@ -4,6 +4,7 @@ import ApiList from './ApiList'
 import ApiConfig from './ApiConfig'
 import AppRegister from './AppRegister'
 import ApiEditor from './ApiEditor'
+import ApiSchema from './ApiSchema'
 
 var basePath = '/apiinventory'
 
@@ -30,12 +31,12 @@ export default [
   },
   {
     path: join(basePath, '/apiSchema'),
-    name: 'apiSchema',
-    component: ApiConfig
+    name: 'apischema',
+    component: ApiSchema
   },
   {
     path: join(basePath, '/apiConfig'),
-    name: 'apiConfig',
+    name: 'apiconfig',
     component: ApiConfig
   }
 ]

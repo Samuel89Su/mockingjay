@@ -100,7 +100,7 @@
           ApiSketch: apiSketch
         })
         this.$router.push({
-          name: 'apiSchema'
+          name: 'apischema'
         })
       },
       goToConfig: function (apiSketch) {
@@ -109,7 +109,7 @@
           ApiSketch: apiSketch
         })
         this.$router.push({
-          name: 'apiConfig'
+          name: 'apiconfig'
         })
       }
     }
