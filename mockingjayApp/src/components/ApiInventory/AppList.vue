@@ -1,10 +1,13 @@
 <template>
+  <div>
+    <a v-on:click="goToDetails(null)" href="javascript:void(0)">Register</a>
     <table id="tb_app">
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Name</th>
                 <th>Desc</th>
+                <th>Details</th>
                 <th>API List</th>
             </tr>
         </thead>
@@ -14,12 +17,16 @@
               <td>{{ item.name }}</td>
               <td>{{ item.desc }}</td>
               <td>
+                <a v-on:click="goToDetails(item)" href="javascript:void(0)">Details</a>
+              </td>
+              <td>
                 <a v-on:click="goToApiList(item)" href="javascript:void(0)">api list</a>
               </td>
               <!-- <td><router-link :to="{ name: 'apilist', query: { appId: item.id }}">API list</router-link></td> -->
             </tr>
         </tbody>
     </table>
+  </div>
 </template>
 
 <script>
@@ -49,7 +56,7 @@ export default {
           if (retData.data && retData.data.length > 0) {
             for (let i = 0; i < retData.data.length; i++) {
               let app = retData.data[i]
-              this.items.push({ id: app.id, name: app.name, desc: app.desc });
+              this.items.push(app);
             }
           }
         }
@@ -59,6 +66,18 @@ export default {
       });
   },
   methods: {
+    goToDetails: function (appDetails) {
+      if (!appDetails) {
+        appDetails = null
+      }
+      this.$store.commit({
+        type: 'setApp',
+        AppDetails: appDetails
+      })
+      this.$router.push({
+        name: 'appregister'
+      })
+    },
     goToApiList: function (appDetails) {
       this.$store.commit({
         type: 'setApp',
@@ -91,10 +110,14 @@ table tr th:nth-child(2) {
 }
 
 table tr th:nth-child(3) {
-  width: 300px
+  width: 500px
 }
 
 table tr th:nth-child(4) {
+  width: 120px
+}
+
+table tr th:nth-child(5) {
   width: 120px
 }
 

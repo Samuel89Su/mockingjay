@@ -116,7 +116,7 @@ export default {
 
       // let cusHeaders = new Headers();
       // cusHeaders.append("Content-Type", "application/json");
-      let postStr = JSON.stringify(this.details)
+      let postStr = JSON.stringify(this.config)
       fetch('./inventory/api/updateConfig', {
           method: "POST",
           headers: cusHeaders,

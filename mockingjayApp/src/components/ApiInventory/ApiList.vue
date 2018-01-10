@@ -1,32 +1,39 @@
 <template>
-  <table id="tb_api">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Method</th>
-        <th>Path</th>
-        <th>Desc</th>
-        <th>Schema</th>
-        <th>Config</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr :key="item.apiId" v-for="item in items">
-        <td>{{ item.apiId }}</td>
-        <td>{{ item.name }}</td>
-        <td>{{ item.method }}</td>
-        <td>{{ item.path }}</td>
-        <td>{{ item.description }}</td>
-        <td>
-          <a v-on:click="goToSchema(item)" href="javascript:void(0)">Schema</a>
-        </td>
-        <td>
-          <a v-on:click="goToConfig(item)" href="javascript:void(0)">Config</a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div>
+    <a v-on:click="goToDetails(null)" href="javascript:void(0)">Register</a>
+    <table id="tb_api">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Method</th>
+          <th>Path</th>
+          <th>Desc</th>
+          <th>Details</th>
+          <th>Schema</th>
+          <th>Config</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr :key="item.apiId" v-for="item in items">
+          <td>{{ item.apiId }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.method }}</td>
+          <td>{{ item.path }}</td>
+          <td>{{ item.description }}</td>
+          <td>
+            <a v-on:click="goToDetails(item)" href="javascript:void(0)">Details</a>
+          </td>
+          <td>
+            <a v-on:click="goToSchema(item)" href="javascript:void(0)">Schema</a>
+          </td>
+          <td>
+            <a v-on:click="goToConfig(item)" href="javascript:void(0)">Config</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
@@ -67,7 +74,27 @@
         });
     },
     methods: {
-      goToSchema: function (apiSketch) {        
+      goToDetails: function (apiSketch) {
+        if (!apiSketch) {
+          apiSketch = {
+            appId: this.appDetails.id,
+            apiId: 0,
+            name: null,
+            description: null,
+            method: "GET",
+            path: null
+          }
+        }
+
+        this.$store.commit({
+          type: 'setApiSketch',
+          ApiSketch: apiSketch
+        })
+        this.$router.push({
+          name: 'apieditor'
+        })
+      },
+      goToSchema: function (apiSketch) {
         this.$store.commit({
           type: 'setApiSketch',
           ApiSketch: apiSketch
@@ -76,7 +103,7 @@
           name: 'apiSchema'
         })
       },
-      goToConfig: function (apiSketch) {        
+      goToConfig: function (apiSketch) {
         this.$store.commit({
           type: 'setApiSketch',
           ApiSketch: apiSketch
@@ -101,7 +128,7 @@
   }
 
   table tr th:first-child {
-    width: 100px;
+    width: 70px;
   }
 
   table tr th:nth-child(2) {
@@ -109,7 +136,7 @@
   }
 
   table tr th:nth-child(3) {
-    width: 120px;
+    width: 110px;
   }
 
   table tr th:nth-child(4) {
@@ -125,6 +152,10 @@
   }
 
   table tr th:nth-child(7) {
+    width: 120px;
+  }
+
+  table tr th:nth-child(8) {
     width: 120px;
   }
 
