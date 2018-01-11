@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <button id="btn_submit" v-on:click="updateDetails">Update</button>
+    <button id="btn_submit" v-on:click="updateConfig">Update</button>
 
   </div>
 </template>
@@ -106,16 +106,8 @@ export default {
   methods: {
     validPath: function() {
     },
-    updateDetails: function() {
+    updateConfig: function() {
 
-      let children = this.$children
-      for (let i = 0; i < children.length; i++) {
-        const child = children[i]
-        console.log(child.$data)
-      }
-
-      // let cusHeaders = new Headers();
-      // cusHeaders.append("Content-Type", "application/json");
       let postStr = JSON.stringify(this.config)
       fetch('./inventory/api/updateConfig', {
           method: "POST",

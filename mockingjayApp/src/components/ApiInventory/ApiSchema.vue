@@ -5,8 +5,32 @@
       <span id="sp_method">{{ sketch.method }}</span>
       <span id="sp_path">{{ sketch.path }}</span><br/>
     </div>
-    <div id="dv_schema">
-      
+
+    <h1>Request</h1>
+    <h2>Query</h2>
+    <div id="dv_scm_query">
+      <textarea id="ipt_query" v-model="schema.properties.query" />
+    </div>
+    
+    <h2>Headers</h2>
+    <div id="dv_scm_req_header">
+      <textarea id="ipt_req_header" v-model="schema.properties.reqHeaders" />
+    </div>
+    
+    <h2>Body</h2>
+    <div id="dv_scm_req_body">
+      <textarea id="ipt_req_body" v-model="schema.properties.reqBody" />
+    </div>
+
+    <h1>Response</h1>    
+    <h2>Headers</h2>
+    <div id="dv_scm_res_header">
+      <textarea id="ipt_res_header" v-model="schema.properties.resHeaders" />
+    </div>
+    
+    <h2>Body</h2>
+    <div id="dv_scm_res_body">
+      <textarea id="ipt_res_body" v-model="schema.properties.resBody" />
     </div>
 
     <button id="btn_submit" v-on:click="updateSchema">Apply</button>
@@ -15,18 +39,7 @@
 </template>
 
 <script>
-
-const localComponents = {};
-
-const keyValiEditor = require('./KeyValidationEditor')
-localComponents[keyValiEditor.name] = keyValiEditor.opts;
-const bodyValiEditor = require('./BodyValidationEditor')
-localComponents[bodyValiEditor.name] = bodyValiEditor.opts;
-const keyReactEditor = require('./KeyReactorEditor')
-localComponents[keyReactEditor.name] = keyReactEditor.opts;
-const bodyReactEditor = require('./BodyReactorEditor')
-localComponents[bodyReactEditor.name] = bodyReactEditor.opts;
-
+const schemaTemplate = require('./ApiSchemaTemplate')
 const cusHeaders = new Headers();
 cusHeaders.append("Content-Type", "application/json");
 
@@ -40,6 +53,9 @@ export default {
       },
       schema: null
     }
+  },
+  created: function() {
+    this.$data.schema = schemaTemplate
   },
   mounted: function() {    
     this.$data.sketch = this.$store.state.ApiSketch
@@ -69,7 +85,17 @@ export default {
           return
         } else {
           if (retData.data) {
-            this.$data.schema = retData.data
+            let dummy = Object.assign({}, retData.data)
+            if (dummy && dummy.properties) {
+                for (const key in dummy.properties) {
+                    if (dummy.properties.hasOwnProperty(key)) {
+                        dummy.properties[key] = JSON.stringify(dummy.properties[key])                       
+                    }
+                }
+            }
+            console.log(dummy)
+            this.$data.schema = dummy
+
             this.$store.commit({
               type: 'setApiSchema',
               ApiSchema: retData.data
@@ -83,10 +109,43 @@ export default {
   },
   methods: {
     updateSchema: function() {
-
-      // let cusHeaders = new Headers();
-      // cusHeaders.append("Content-Type", "application/json");
-      let postStr = JSON.stringify(this.schema)
+      
+      let data = { appId: this.sketch.appId, apiId: this.sketch.apiId, schema: this.schema }
+      let postStr = JSON.stringify(data)
+      fetch('./inventory/api/updateSchema', {
+          method: "POST",
+          headers: cusHeaders,
+          body: postStr
+        })
+        .then(res => {
+          let contentType = res.headers.get('content-type')
+          if (!res.ok) {
+            return null
+          } else if (!contentType || !contentType.includes('application/json')) {
+            return null
+          } else {
+            return res.json()
+          }
+        })
+        .then(retData => {
+          if (retData.code !== 0) {
+            return
+          } else {
+            if (retData.data) {
+              if (retData.data.properties) {
+                for (const key in retData.data.properties) {
+                  if (retData.data.properties.hasOwnProperty(key)) {
+                    retData.data.properties[key] = JSON.stringify(retData.data.properties[key])                       
+                  }
+                }
+              }
+              this.$data.schema = retData.data
+            }
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
       
     }
   }
