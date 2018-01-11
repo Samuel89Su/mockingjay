@@ -1,7 +1,9 @@
 'use strict';
 
 const Http = require('http');
+const VM = require('vm');
 const cloneReq = require('../utils/cloneReq');
+const logger = require('../common/logger');
 const validationConst = require('../common/validationConst');
 
 
@@ -12,7 +14,9 @@ const reservedHeaderKeys = ['content-type', 'content-length', 'date', 'connectio
 
 class ResponseBaker {
     constructor(arg) {
-
+        this.bake = this.bake.bind(this);
+        this.processReservedHeader = this.processReservedHeader.bind(this);
+        this.responseValueFactory = this.responseValueFactory.bind(this);
     }
 
     async bake(ctx, responseDescriptor) {
@@ -119,22 +123,26 @@ class ResponseBaker {
     }
 
     // return { data: null, errMsg: null }
-    responseValueFactory(req, rawFunc) {
-        let dummyReq = cloneReq(req);
-        let tempFunc = null;
-        let result = {
-            data: null,
-            errMsg: null
-        };
+    responseValueFactory(req, rawScript) {
         try {
-            eval('tempFunc = ' + rawFunc);
-            result.data = tempFunc(dummyReq);
+            let dummyReq = cloneReq(req);
+
+            let sandbox = {
+                request: dummyReq,
+                retVal: null,
+            };
+            VM.createContext(sandbox);
+            VM.runInContext(rawScript, sandbox);
+
+            let result = {
+                data: sandbox.retVal,
+                errMsg: null
+            };
+            return result;
         } catch (error) {
             logger.error(error);
-            result.errMsg = 'error in custom value generation function: ' + rawFunc + ', msg: ' + error.message;
+            return { data: null, errMsg: `error in custom value generation { ${ rawScript } }, msg: ${ error.message }` };
         }
-
-        return result;
     }
 }
 
