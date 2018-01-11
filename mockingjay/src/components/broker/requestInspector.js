@@ -1,12 +1,15 @@
 'use strict';
 
 const Http = require('http');
-var Ajv = require('ajv');
+const Ajv = require('ajv');
+const VM = require('vm');
+const logger = require('../common/logger');
 const validationConst = require('../common/validationConst');
 
 class RequestInspector {
     constructor(arg) {
-
+        this.inspect = this.inspect.bind(this);
+        this.customValidatorSandbox = this.customValidatorSandbox.bind(this);
     }
 
     async inspect(req, requestDescriptor) {
@@ -196,18 +199,39 @@ class RequestInspector {
         return validationRes;
     }
 
-    // return error message
-    customValidatorSandbox(val, rawFunc) {
-        let tempFunc = null;
-        let errMsg = null;
+    TestRegExpSandbox(str, regexpStr) {
         try {
-            eval('tempFunc = ' + rawFunc);
-            errMsg = tempFunc(val);
-        } catch (error) {
-            errMsg = 'error in custom value generation function: ' + rawFunc + ', msg: ' + error.message;
-        }
+            let sandbox = {
+                srcStr: str,
+                regexp: regexpStr,
+                matched: false
+            };
 
-        return errMsg;
+            let rawScript = 'let regExp = new RegExp(regexp); matched = regExp.test(srcStr);';
+            VM.createContext(sandbox);
+            VM.runInContext(rawScript, sandbox);
+            return sandbox.matched;
+        } catch (error) {
+            logger.error(error);
+            return false;
+        }
+    }
+
+    // return error message
+    customValidatorSandbox(srcVal, rawScript) {
+        try {
+            let sandbox = {
+                src: srcVal,
+                valid: false,
+                errMsg: null
+            };
+            VM.createContext(sandbox);
+            VM.runInContext(rawScript, sandbox);
+            return !sandbox.valid ? sandbox.errMsg : null;
+        } catch (error) {
+            logger.error(error);
+            return `error in custom validation { ${ rawScript } }, msg: ${ error.message }`;
+        }
     }
 }
 
