@@ -10,6 +10,7 @@ class RequestInspector {
     constructor(arg) {
         this.inspect = this.inspect.bind(this);
         this.customValidatorSandbox = this.customValidatorSandbox.bind(this);
+        this.TestRegExpSandbox = this.TestRegExpSandbox.bind(this);
     }
 
     async inspect(req, requestDescriptor) {

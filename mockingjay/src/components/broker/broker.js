@@ -8,7 +8,9 @@ const mocking = require('./mocking');
 const forward = require('./forward');
 
 class Broker {
-    constructor(arg) {};
+    constructor(arg) {
+        this.set404 = this.set404.bind(this);
+    };
 
     async broke(ctx, next) {
         let subPaths = ctx.path.split('/').slice(1);
@@ -18,6 +20,9 @@ class Broker {
         } else {
             let app = subPaths[2];
             let apiPath = subPaths.slice(3).join('_');
+
+            // validate request schema at first
+            
 
             let cacheKey = cacheKeys.apiInventory + ':' + app + ':' + apiPath;
             let apiConfigCache = await redisClient.getAsync(cacheKey);
@@ -58,11 +63,11 @@ class Broker {
 
         await next();
     }
-}
 
-function set404(ctx) {
-    ctx.status = 404;
-    ctx.body = 'api not found';
+    set404(ctx) {
+        ctx.status = 404;
+        ctx.body = 'api not found';
+    }
 }
 
 
