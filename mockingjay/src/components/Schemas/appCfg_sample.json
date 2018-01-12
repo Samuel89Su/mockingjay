@@ -2,8 +2,9 @@
     "id": 1,
     "name": "",
     "desc": "",
-    "forwardTarget": "dev",
-    "deployment": {
+    "staticForwardTarget": "dev",
+    "apiForwardTarget": "dev",
+    "targets": {
         "dev": "http://localhost:3100",
         "beta": "",
         "prod": ""

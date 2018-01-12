@@ -7,12 +7,12 @@ const cacheKeys = require('../common/cacheKeys');
 const logger = require('../common/logger');
 const errCode = require('./errCode');
 const commonBodyParser = require('../common/bodyParser');
-const cfgSchema = require('./apiCfg_schema');
-const apiRegisterSchema = require('./apiRegisterSchema');
+const cfgSchema = require('../Schemas/apiCfgSchema');
+const apiSchema = require('../Schemas/apiSchema');
 
 const ajv = new Ajv(); // options can be passed, e.g. {allErrors: true}
 const cfgValidate = ajv.compile(cfgSchema);
-const registerValidate = ajv.compile(apiRegisterSchema);
+const apiSchemaValidate = ajv.compile(apiSchema);
 
 class Steward {
     constructor(arg) {
@@ -91,10 +91,10 @@ class Steward {
     async register(ctx, next) {
         let apiData = ctx.request.body;
         // validate
-        var valid = registerValidate(apiData);
+        var valid = apiSchemaValidate(apiData);
         if (!valid) {
             ctx.response.status = 400;
-            ctx.response.body = registerValidate.errors;
+            ctx.response.body = apiSchemaValidate.errors;
             return await next();
         }
 
@@ -144,10 +144,14 @@ class Steward {
         let apiData = ctx.request.body;
 
         // validate
-        var valid = registerValidate(apiData);
+        var valid = apiSchemaValidate(apiData);
         if (!valid) {
             ctx.response.status = 400;
-            ctx.response.body = registerValidate.errors;
+            ctx.response.body = apiSchemaValidate.errors;
+            return await next();
+        } else if (!apiData.apiId) {
+            ctx.response.status = 400;
+            ctx.response.body = "apiId is missing..";
             return await next();
         }
 
@@ -245,10 +249,10 @@ class Steward {
     async updateSchema(ctx, next) {        
         let apiData = ctx.request.body;
         // validate
-        var valid = registerValidate(apiData);
+        var valid = apiSchemaValidate(apiData);
         if (!apiData.appId || apiData.appId === 0 || !apiData.apiId || apiData.apiId === 0) {
             ctx.response.status = 400;
-            ctx.response.body = registerValidate.errors;
+            ctx.response.body = apiSchemaValidate.errors;
             return await next();
         }
 
@@ -312,6 +316,10 @@ class Steward {
         if (!valid) {
             ctx.response.status = 400;
             ctx.response.body = cfgValidate.errors;
+            return await next();
+        } else if (!apiConfig.apiId) {            
+            ctx.response.status = 400;
+            ctx.response.body = "apiId missing.";
             return await next();
         }
 

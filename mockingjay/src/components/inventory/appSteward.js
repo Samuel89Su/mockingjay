@@ -1,15 +1,20 @@
 'use strict';
 
 const Router = require('koa-router');
+const Ajv = require('ajv');
 const redisClient = require('../common/redisClient');
 const cacheKeys = require('../common/cacheKeys');
 const logger = require('../common/logger');
 const errCode = require('./errCode');
 const bodyParser = require('../common/bodyParser');
+const appSchema = require('../Schemas/appSchema');
+        
+const ajv = new Ajv();
 
 class steward {
     constructor(arg) {
         this.router = new Router();
+        this.validate = ajv.compile(appSchema);
     }
 
     getRouter() {
@@ -43,12 +48,12 @@ class steward {
 
     // register app
     async register(ctx, next) {
-        //TODO: validate body json schema
-
         let appDesc = ctx.request.body;
-        if (!appDesc.name) {
+
+        // validate body json schema
+        if(!this.validate(appDesc)) {            
             ctx.response.status = 400;
-            ctx.response.body = 'app name CAN NOT be null or empty';
+            ctx.response.body = validate.errors;
         } else {
             // generate id
             let id = await redisClient.incrAsync(cacheKeys.appId);
@@ -70,15 +75,15 @@ class steward {
 
     //  update app desc
     async update(ctx, next) {
-        //TODO: validate body json schema
-
         let appDesc = ctx.request.body;
-        if (!appDesc.name) {
+
+        // validate body json schema
+        if (!this.validate(appDesc)) {            
             ctx.response.status = 400;
-            ctx.response.body = 'app name CAN NOT be null or empty';
+            ctx.response.body = validate.errors;
         } else if (!appDesc.id) {
             ctx.response.status = 400;
-            ctx.response.body = 'app id CAN NOT be null or 0';
+            ctx.response.body = 'app id CAN NOT be null or empty';
         } else {
             let idMax = await redisClient.getAsync(cacheKeys.appId);
             if (appDesc.id > parseInt(idMax)) {

@@ -174,7 +174,7 @@ class RequestInspector {
                             break;
                         case validationConst.validatorTypes.jsonSchema:
                             {
-                                const ajv = new Ajv(); // options can be passed, e.g. {allErrors: true}
+                                const ajv = new Ajv();
                                 const validate = ajv.compile(JSON.parse(validator.value));
                                 // validate
                                 valid = validate(req.body);

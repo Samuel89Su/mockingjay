@@ -39,7 +39,7 @@
           name: null,
           desc: null,
           forwardTarget: "dev",
-          deployment: {
+          targets: {
             dev: null,
             beta: null,
             prod: null

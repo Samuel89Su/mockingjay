@@ -6,6 +6,6 @@ const broker = require('./broker');
 
 const router = new Router();
 
-router.all('/api/*', broker.broke);
+router.all('/*', broker.broke);
 
 exports = module.exports = router;

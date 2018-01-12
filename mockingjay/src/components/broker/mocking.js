@@ -3,9 +3,8 @@ const parserOpts = require('../common/bodyParserOpts');
 const requestInspector = require('./requestInspector');
 const responseBaker = require('./responseBaker');
 const logger = require('../common/logger');
-const requestLogger = require('../common/requestLogger');
 
-async function mocking(ctx, apiDescriptor) {
+async function mocking(ctx, mockCfg) {
     try {
 
         // parse body
@@ -14,8 +13,8 @@ async function mocking(ctx, apiDescriptor) {
         // inspect request
         let bypassReqInspect = false;
         let isReqValid = false;
-        if (apiDescriptor.mockCfg.validateReq) {
-            var inspecRes = await requestInspector.inspect(ctx.request, apiDescriptor.mockCfg.reqDescriptor);
+        if (mockCfg.validateReq) {
+            var inspecRes = await requestInspector.inspect(ctx.request, mockCfg.reqDescriptor);
             if (inspecRes.code !== 200) {
                 ctx.status = inspecRes.code;
                 ctx.body = inspecRes.msg;
@@ -30,11 +29,8 @@ async function mocking(ctx, apiDescriptor) {
         // generate response
         if (bypassReqInspect || isReqValid) {
             // generate response
-            await responseBaker.bake(ctx, apiDescriptor.mockCfg.resDescriptor);
+            await responseBaker.bake(ctx, mockCfg.resDescriptor);
         }
-
-        // logging
-        await logRequest(ctx.request, ctx.response);
     } catch (error) {
         logger.error(error);
         await set500(ctx, error);
@@ -51,20 +47,5 @@ function set500(ctx, err) {
     });
 };
 
-function logRequest(req, res) {
-    requestLogger.info({
-        request: {
-            path: req.path,
-            method: req.method,
-            queryString: req.querystring,
-            headers: req.headers,
-            body: req.body
-        },
-        response: {
-            headers: res.headers,
-            body: res.body
-        }
-    });
-};
 
 exports = module.exports = mocking;

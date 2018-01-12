@@ -2,12 +2,12 @@
 
 const promisedReq = require('request-promise');
 
-async function forward(req, appCfg, apiConfig) {
+async function forward(req, baseUrl, path) {
     let opts = {};
     opts.resolveWithFullResponse = true;
-    opts.baseUrl = appCfg.deployment[appCfg.forwardTarget];
-    opts.url = apiConfig.path;
-    opts.method = apiConfig.method;
+    opts.baseUrl = baseUrl;
+    opts.url = path;
+    opts.method = req.method;
 
     opts.headers = req.headers;
     opts.headers.host = null;

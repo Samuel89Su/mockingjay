@@ -1,4 +1,4 @@
-const cfgSchema = {
+exports = module.exports = {
     "$schema": "http://json-schema.org/draft-06/schema#",
     "type": "object",
     "properties": {
@@ -9,19 +9,6 @@ const cfgSchema = {
         "apiId": {
             "type": "integer",
             "minimum": 1
-        },
-        "path": {
-            "type": "string",
-            "minLength": 2
-        },
-        "method": {
-            "type": "string",
-            "pattern": "(GET|POST)"
-        },
-        "logReq": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 10
         },
         "mock": {
             "type": "boolean"
@@ -184,20 +171,9 @@ const cfgSchema = {
                 }
             },
             "required": ["validateReq"]
-        },
-        "proxyCfg": {
-            "type": "object",
-            "properties": {
-                "bypass": {
-                    "type": "boolean"
-                }
-            },
-            "required": ["bypass"]
         }
     },
     "required": [
-        "appId", "path", "method", "mock", "mockCfg"
+        "appId", "mock"
     ]
 }
-
- exports = module.exports = cfgSchema;

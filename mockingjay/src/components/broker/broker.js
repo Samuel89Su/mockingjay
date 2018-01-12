@@ -10,13 +10,13 @@ const forward = require('./forward');
 class Broker {
     constructor(arg) {
         this.set404 = this.set404.bind(this);
+        this.logRequest = this.logRequest.bind(this);
     };
 
     async broke(ctx, next) {
-        let subPaths = ctx.path.split('/').slice(1);
-        if (subPaths.length < 4) {
-            await set404(ctx);
-            return await next();
+        let subPaths = ctx.path.split('/');
+        if (subPaths.length < 3) {
+            await this.set404(ctx);
         } else {
             let appName = subPaths[2];
             let apiPath = subPaths.slice(3).join('_');
@@ -24,61 +24,79 @@ class Broker {
             let baseKey = `${ cacheKeys.apiInventory }:${ appName }`;
             // retrieve sketch
             let apiSketch = await redisClient.hgetAsync(baseKey, apiPath);
+            // unregistered api, return not found
             if (!apiSketch) {
-                await set404(ctx);
-                return await next();
+                await this.set404(ctx);
             } else {
                 apiSketch = JSON.parse(apiSketch);
-            }
 
-            // validate request schema at first
-            let schemaKey = `${ baseKey }:${ apiSketch.apiId }_schema`;
-            let apiSchema = await redisClient.getAsync(schemaKey);
-            if (apiSchema) {
-                apiSchema = JSON.parse(apiSchema);
+                // method not allowed
+                if (apiSketch.method !== ctx.method) {
+                    ctx.status = 405;
+                    ctx.body = 'Method Not Allowed';
+                } else {
+                    // validate request schema
+                    if (apiSketch.validate) {
+                        let schemaKey = `${ baseKey }:${ apiSketch.apiId }_schema`;
+                        let apiSchema = await redisClient.getAsync(schemaKey);
+                        if (apiSchema) {
+                            apiSchema = JSON.parse(apiSchema);
 
-                // TODO: request schema validation
-            }
+                            let valid = false;
+                            // TODO: request schema validation
 
-            let cacheKey = `${ baseKey }:${ apiPath }`;
-            let apiConfigCache = await redisClient.getAsync(cacheKey);
-            if (!apiConfigCache) {
-                await set404(ctx);
-                return await next();
-            }
-            let apiConfig = JSON.parse(apiConfigCache);
-            apiConfigCache = null;
+                            if (valid) {
+                                // forword
+                                let appDescJson = await redisClient.getAsync(`${ cacheKeys.appInventory }:${ apiConfig.appId }`);
+                                let appCfg = JSON.parse(appDescJson);
+                                appDescJson = null;
+                                if ((appCfg.apiForwardTarget && appCfg.targets && appCfg.targets[appCfg.apiForwardTarget]) ||
+                                    apiSketch.forward) {
+                                    // forward request
+                                    var targetBaseUrl = appCfg.targets[appCfg.apiForwardTarget];
+                                    // break & return                
+                                    if (!targetBaseUrl) {
+                                        ctx.status = 404;
+                                        ctx.body = 'Target not found in cfg.';
+                                    } else {
+                                        let resOpts = await forward(ctx.request, targetBaseUrl, apiConfig.path);
+                                        ctx.response.set(resOpts.headers);
+                                        ctx.body = resOpts.body;
+                                    }
+                                }
+                                // mock 
+                                else {
+                                    let cacheKey = `${ baseKey }:${ apiPath }`;
+                                    let apiConfigJson = await redisClient.getAsync(cacheKey);
+                                    if (!apiConfigJson) {
+                                        await this.set404(ctx);
+                                    } else {
+                                        let apiConfig = JSON.parse(apiConfigJson);
+                                        apiConfigJson = null;
 
-            if (!apiConfig) {
-                await set404(ctx);
-                return await next();
-            }
-            if ((!apiConfig.method && ctx.method !== 'GET') || apiConfig.method !== ctx.method) {
-                ctx.status = 405;
-                ctx.body = 'Method Not Allowed';
-                return await next();
-            }
+                                        if (!apiConfig) {
+                                            await this.set404(ctx);
+                                        }
+                                        // mocking 
+                                        else if (apiConfig.mock) {
+                                            await mocking(ctx, apiDescriptor.mockCfg);
+                                        }
+                                    }
+                                }
 
-            // forward or mock
-            if (!apiConfig.mock) {
-                let appCfgCache = await redisClient.getAsync(`${ cacheKeys.appInventory }:${ apiConfig.appId }`);
-                let appCfg = JSON.parse(appCfgCache);
-                appCfgCache = null;
+                                // TODO: response schema validation
+                                if (apiSketch.validate && ctx.status === 200) {
 
-                if (apiConfig.proxyCfg && apiConfig.proxyCfg.bypass) {
-                    // forward request
-                    let resOpts = await forward(ctx.request, appCfg, apiConfig);
-                    ctx.response.set(resOpts.headers);
-                    ctx.body = resOpts.body;
+                                }
+                            }
+                        }
+                    }
                 }
-            } else {
-                // mocking
-                await mocking(ctx, apiConfig);
             }
         }
 
-        // TODO: response schema validation
-
+        // logging
+        await this.logRequest(ctx.request, ctx.response);
         await next();
     }
 
@@ -86,6 +104,22 @@ class Broker {
         ctx.status = 404;
         ctx.body = 'api not found';
     }
+
+    logRequest(req, res) {
+        requestLogger.info({
+            request: {
+                path: req.path,
+                method: req.method,
+                queryString: req.querystring,
+                headers: req.headers,
+                body: req.body
+            },
+            response: {
+                headers: res.headers,
+                body: res.body
+            }
+        });
+    };
 }
 
 
