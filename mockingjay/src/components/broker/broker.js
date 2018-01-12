@@ -18,13 +18,29 @@ class Broker {
             await set404(ctx);
             return await next();
         } else {
-            let app = subPaths[2];
+            let appName = subPaths[2];
             let apiPath = subPaths.slice(3).join('_');
 
-            // validate request schema at first
-            
+            let baseKey = `${ cacheKeys.apiInventory }:${ appName }`;
+            // retrieve sketch
+            let apiSketch = await redisClient.hgetAsync(baseKey, apiPath);
+            if (!apiSketch) {
+                await set404(ctx);
+                return await next();
+            } else {
+                apiSketch = JSON.parse(apiSketch);
+            }
 
-            let cacheKey = cacheKeys.apiInventory + ':' + app + ':' + apiPath;
+            // validate request schema at first
+            let schemaKey = `${ baseKey }:${ apiSketch.apiId }_schema`;
+            let apiSchema = await redisClient.getAsync(schemaKey);
+            if (apiSchema) {
+                apiSchema = JSON.parse(apiSchema);
+
+                // TODO: request schema validation
+            }
+
+            let cacheKey = `${ baseKey }:${ apiPath }`;
             let apiConfigCache = await redisClient.getAsync(cacheKey);
             if (!apiConfigCache) {
                 await set404(ctx);
@@ -60,6 +76,8 @@ class Broker {
                 await mocking(ctx, apiConfig);
             }
         }
+
+        // TODO: response schema validation
 
         await next();
     }

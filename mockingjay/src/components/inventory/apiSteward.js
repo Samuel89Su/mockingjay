@@ -114,7 +114,16 @@ class Steward {
             appId: apiData.appId
         };
         let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name }`
-        let ok = await redisClient.hsetAsync(baseKey, id, JSON.stringify(apiSketch)) >= 0;
+
+        let hashKey = apiSketch.path.replace(/\//g, '_');
+        if (hashKey.indexOf('_') === 0) {
+            hashKey = hashKey.substr(1);
+        }
+        if (hashKey.lastIndexOf('_') === hashKey.length - 1) {
+            hashKey = hashKey.substring(0, hashKey.length - 1)
+        }
+
+        let ok = await redisClient.hsetAsync(baseKey, hashKey, JSON.stringify(apiSketch)) >= 0;
         if (!ok) {
             ctx.response.body = errCode.dbErr();
         } else if (apiData.schema) {
@@ -214,15 +223,15 @@ class Steward {
         }
 
         // remove cofig
-        let path = appDesc.path;
-        let segments = path.split('/');
-        let validSegs = [];
-        segments.forEach(seg => {
-            if (seg.length > 0) {
-                validSegs.push(seg);
-            }
-        });
-        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name }:${ validSegs.join('_') }`
+        let pathKey = appDesc.path.replace(/\//g, '_');
+        if (pathKey.indexOf('_') === 0) {
+            pathKey = pathKey.substr(1);
+        }
+        if (pathKey.lastIndexOf('_') === pathKey.length - 1) {
+            pathKey = pathKey.substring(0, pathKey.length - 1)
+        }
+
+        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name }:${ pathKey }`
         let ok = await redisClient.delAsync(cacheKey) >= 0;
         if (ok) {
             ctx.response.body = errCode.success();
@@ -277,16 +286,15 @@ class Steward {
             return await next();
         }
 
-        let path = apiConfig.path;
-        let segments = path.split('/');
-        let validSegs = [];
-        segments.forEach(seg => {
-            if (seg.length > 0) {
-                validSegs.push(seg);
-            }
-        });
+        let pathKey = apiConfig.path.replace(/\//g, '_');
+        if (pathKey.indexOf('_') === 0) {
+            pathKey = pathKey.substr(1);
+        }
+        if (pathKey.lastIndexOf('_') === pathKey.length - 1) {
+            pathKey = pathKey.substring(0, pathKey.length - 1)
+        }
 
-        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name }:${ validSegs.join('_') }`
+        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name }:${ pathKey }`
         let ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiConfig)) === 'OK';
         if (ok) {
             ctx.response.body = errCode.success(apiConfig);
@@ -312,17 +320,16 @@ class Steward {
             ctx.response.body = errCode.resNotFound();
             return await next();
         }
+        
+        let pathKey = apiConfig.path.replace(/\//g, '_');
+        if (pathKey.indexOf('_') === 0) {
+            pathKey = pathKey.substr(1);
+        }
+        if (pathKey.lastIndexOf('_') === pathKey.length - 1) {
+            pathKey = pathKey.substring(0, pathKey.length - 1)
+        }
 
-        let path = apiConfig.path;
-        let segments = path.split('/');
-        let validSegs = [];
-        segments.forEach(seg => {
-            if (seg.length > 0) {
-                validSegs.push(seg);
-            }
-        });
-
-        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name }:${ validSegs.join('_') }`
+        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name }:${ pathKey }`
         let ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiConfig)) === 'OK';
         if (ok) {
             ctx.response.body = errCode.success(apiConfig);
@@ -357,16 +364,15 @@ class Steward {
             return await next();
         }
 
-        let path = apiSketch.path;
-        let segments = path.split('/');
-        let validSegs = [];
-        segments.forEach(seg => {
-            if (seg.length > 0) {
-                validSegs.push(seg);
-            }
-        });
+        let pathKey = apiSketch.path.replace(/\//g, '_');
+        if (pathKey.indexOf('_') === 0) {
+            pathKey = pathKey.substr(1);
+        }
+        if (pathKey.lastIndexOf('_') === pathKey.length - 1) {
+            pathKey = pathKey.substring(0, pathKey.length - 1)
+        }
 
-        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name }:${ validSegs.join('_') }`
+        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name }:${ pathKey }`
         let ok = await redisClient.delAsync(cacheKey) >= 0;
         if (ok) {
             ctx.response.body = errCode.success();
@@ -421,16 +427,16 @@ class Steward {
         // }
 
         let baseKey = `${ cacheKeys.apiInventory }:${ apiData.appName }`
-        
-        let segments = apiData.path.split('/');
-        let validSegs = [];
-        segments.forEach(seg => {
-            if (seg.length > 0) {
-                validSegs.push(seg);
-            }
-        });
+              
+        let pathKey = apiData.path.replace(/\//g, '_');
+        if (pathKey.indexOf('_') === 0) {
+            pathKey = pathKey.substr(1);
+        }
+        if (pathKey.lastIndexOf('_') === pathKey.length - 1) {
+            pathKey = pathKey.substring(0, pathKey.length - 1)
+        }
 
-        let cacheKey = `${ baseKey }:${ validSegs.join('_') }`
+        let cacheKey = `${ baseKey }:${ pathKey }`
         let apiConfigJson = await redisClient.getAsync(cacheKey);
         if (!apiConfigJson) {
             ctx.response.body = errCode.dbErr();
