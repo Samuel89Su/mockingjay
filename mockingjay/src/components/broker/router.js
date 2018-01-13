@@ -1,11 +1,13 @@
 'use strict';
 
 const Router = require('koa-router');
-const logger = require('../common/logger');
 const broker = require('./broker');
 
 const router = new Router();
 
-router.all('/*', broker.broke);
+router.use('/*', broker)
+router.all('/*', async function (ctx, next) {
+    return await next();
+});
 
 exports = module.exports = router;

@@ -8,11 +8,11 @@ const logger = require('../common/logger');
 const errCode = require('./errCode');
 const commonBodyParser = require('../common/bodyParser');
 const cfgSchema = require('../Schemas/apiCfgSchema');
-const apiSchema = require('../Schemas/apiSchema');
+const apiRegistrationSchema = require('../Schemas/apiRegistrationSchema');
 
 const ajv = new Ajv(); // options can be passed, e.g. {allErrors: true}
 const cfgValidate = ajv.compile(cfgSchema);
-const apiSchemaValidate = ajv.compile(apiSchema);
+const apiSchemaValidate = ajv.compile(apiRegistrationSchema);
 
 class Steward {
     constructor(arg) {
@@ -69,7 +69,7 @@ class Steward {
             if (!appDesc) {
                 ctx.response.body = errCode.resNotFound();
             } else {
-                let key = `${ cacheKeys.apiInventory }:${ appDesc.name }`
+                let key = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }`
                 let jsonList = await redisClient.hgetallAsync(key);
                 let apis = [];
                 for (const id in jsonList) {
@@ -113,7 +113,7 @@ class Steward {
             method: apiData.method,
             appId: apiData.appId
         };
-        let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name }`
+        let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }`
 
         let hashKey = apiSketch.path.replace(/\//g, '_');
         if (hashKey.indexOf('_') === 0) {
@@ -122,6 +122,7 @@ class Steward {
         if (hashKey.lastIndexOf('_') === hashKey.length - 1) {
             hashKey = hashKey.substring(0, hashKey.length - 1)
         }
+        hashKey = hashKey.toLowerCase()
 
         let ok = await redisClient.hsetAsync(baseKey, hashKey, JSON.stringify(apiSketch)) >= 0;
         if (!ok) {
@@ -161,11 +162,20 @@ class Steward {
             return await next();
         }
 
-        let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name }`
+        let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }`
+
+        let pathKey = apiData.path.replace(/\//g, '_');
+        if (pathKey.indexOf('_') === 0) {
+            pathKey = pathKey.substr(1);
+        }
+        if (pathKey.lastIndexOf('_') === pathKey.length - 1) {
+            pathKey = pathKey.substring(0, pathKey.length - 1)
+        }
+        pathKey = pathKey.toLowerCase()
 
         // check is existed
         let apiId = apiData.apiId;
-        let ok = await redisClient.hexistsAsync(baseKey, apiId) === 1;
+        let ok = await redisClient.hexistsAsync(baseKey, pathKey) === 1;
         if (!ok) {
             ctx.response.body = errCode.resNotFound();
             return await next();
@@ -177,9 +187,11 @@ class Steward {
             description: apiData.description,
             path: apiData.path,
             method: apiData.method,
-            appId: apiData.appId
+            appId: apiData.appId,
+            validate: apiData.validate,
+            forward: apiData.forward
         };
-        ok = await redisClient.hsetAsync(baseKey, apiId, JSON.stringify(apiSketch)) >= 0;
+        ok = await redisClient.hsetAsync(baseKey, pathKey, JSON.stringify(apiSketch)) >= 0;
         if (!ok) {
             ctx.response.body = errCode.dbErr();
         } else if (apiData.schema) {
@@ -210,7 +222,7 @@ class Steward {
         }
 
         // remove app sketch
-        let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name }`
+        let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }`
         let ok = await redisClient.hdelAsync(baseKey, arg.id) > 0;
         if (!ok) {
             ctx.response.body = errCode.success();
@@ -227,15 +239,7 @@ class Steward {
         }
 
         // remove cofig
-        let pathKey = appDesc.path.replace(/\//g, '_');
-        if (pathKey.indexOf('_') === 0) {
-            pathKey = pathKey.substr(1);
-        }
-        if (pathKey.lastIndexOf('_') === pathKey.length - 1) {
-            pathKey = pathKey.substring(0, pathKey.length - 1)
-        }
-
-        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name }:${ pathKey }`
+        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }:${ arg.id }_mockCfg`
         let ok = await redisClient.delAsync(cacheKey) >= 0;
         if (ok) {
             ctx.response.body = errCode.success();
@@ -262,7 +266,7 @@ class Steward {
             return await next();
         }
         
-        let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name }`
+        let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }`
         let cacheKey = `${ baseKey }:${ apiData.apiId }_schema`
         let ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiData.schema)) === 'OK';
         if (ok) {
@@ -297,8 +301,9 @@ class Steward {
         if (pathKey.lastIndexOf('_') === pathKey.length - 1) {
             pathKey = pathKey.substring(0, pathKey.length - 1)
         }
+        pathKey = pathKey.toLowerCase()
 
-        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name }:${ pathKey }`
+        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }:${ apiConfig.apiId }_mockCfg`
         let ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiConfig)) === 'OK';
         if (ok) {
             ctx.response.body = errCode.success(apiConfig);
@@ -337,7 +342,7 @@ class Steward {
             pathKey = pathKey.substring(0, pathKey.length - 1)
         }
 
-        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name }:${ pathKey }`
+        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }:${ apiConfig.apiId }_mockCfg`
         let ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiConfig)) === 'OK';
         if (ok) {
             ctx.response.body = errCode.success(apiConfig);
@@ -362,7 +367,7 @@ class Steward {
             return await next();
         }
 
-        let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name }`
+        let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }`
 
         // check is existed
         let apiId = apiData.apiId;
@@ -380,7 +385,7 @@ class Steward {
             pathKey = pathKey.substring(0, pathKey.length - 1)
         }
 
-        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name }:${ pathKey }`
+        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }:${ apiConfig.apiId }_mockCfg`
         let ok = await redisClient.delAsync(cacheKey) >= 0;
         if (ok) {
             ctx.response.body = errCode.success();
@@ -402,7 +407,7 @@ class Steward {
         //     return await next();
         // }
 
-        let baseKey = `${ cacheKeys.apiInventory }:${ apiData.appName }`
+        let baseKey = `${ cacheKeys.apiInventory }:${ apiData.appName.toLowerCase() }`
 
         let cacheKey = `${ baseKey }:${ apiData.apiId }_schema`
         let apiSchemaJson = await redisClient.getAsync(cacheKey);
@@ -434,17 +439,9 @@ class Steward {
         //     return await next();
         // }
 
-        let baseKey = `${ cacheKeys.apiInventory }:${ apiData.appName }`
-              
-        let pathKey = apiData.path.replace(/\//g, '_');
-        if (pathKey.indexOf('_') === 0) {
-            pathKey = pathKey.substr(1);
-        }
-        if (pathKey.lastIndexOf('_') === pathKey.length - 1) {
-            pathKey = pathKey.substring(0, pathKey.length - 1)
-        }
+        let baseKey = `${ cacheKeys.apiInventory }:${ apiData.appName.toLowerCase() }`
 
-        let cacheKey = `${ baseKey }:${ pathKey }`
+        let cacheKey = `${ baseKey }:${ apiData.apiId }_mockCfg`
         let apiConfigJson = await redisClient.getAsync(cacheKey);
         if (!apiConfigJson) {
             ctx.response.body = errCode.dbErr();

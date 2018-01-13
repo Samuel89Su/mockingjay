@@ -26,7 +26,7 @@ async function forward(req, baseUrl, path) {
             return resOpts;
         })
         .catch((err) => {
-            return { body: { name: err.name, message: err.message } };
+            return { body: { name: err.name, message: err.message }, headers: { status: 502 } };
         });
 
     return res;

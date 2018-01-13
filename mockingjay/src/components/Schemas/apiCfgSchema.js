@@ -1,4 +1,4 @@
-exports = module.exports = {
+const schema = {
     "$schema": "http://json-schema.org/draft-06/schema#",
     "type": "object",
     "properties": {
@@ -174,6 +174,8 @@ exports = module.exports = {
         }
     },
     "required": [
-        "appId", "mock"
+        "appId", "apiId", "mock"
     ]
 }
+
+exports = module.exports = schema
