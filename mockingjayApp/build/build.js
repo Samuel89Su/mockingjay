@@ -8,7 +8,6 @@ const rm = require('rimraf')
 const path = require('path')
 const chalk = require('chalk')
 const webpack = require('webpack')
-const fs = require('fs');
 const config = require('../config')
 const webpackConfig = require('./webpack.prod.conf')
 
@@ -32,7 +31,6 @@ rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
       console.log(chalk.red('  Build failed with errors.\n'))
       process.exit(1)
     }
-
 
     console.log(chalk.cyan('  Build complete.\n'))
     console.log(chalk.yellow(
