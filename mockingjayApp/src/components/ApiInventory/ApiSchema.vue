@@ -39,7 +39,7 @@
 </template>
 
 <script>
-const schemaTemplate = require('./ApiSchemaTemplate')
+import schemaTemplate from './ApiSchemaTemplate'
 const cusHeaders = new Headers();
 cusHeaders.append("Content-Type", "application/json");
 

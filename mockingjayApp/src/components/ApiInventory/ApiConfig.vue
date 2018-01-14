@@ -13,24 +13,24 @@
       <h2>Request description</h2>
       <h3>Queries</h3>
       <ul>
-        <KeyValidationEditor :key="'mockCfg_reqDescriptor_queries_' + keyDesc.key" :keyPostfix="keyDesc.key" :id="'mockCfg_reqDescriptor_queries_' + keyDesc.key" v-if="keyDesc !== null" v-for="keyDesc in config.mockCfg.reqDescriptor.queries"></KeyValidationEditor>
+        <KeyValidationEditor :key="'mockCfg_reqDescriptor_queries_' + keyDesc.key" v-if="keyDesc !== null" v-for="(keyDesc, index) in config.mockCfg.reqDescriptor.queries" v-model="config.mockCfg.reqDescriptor.queries[index]"></KeyValidationEditor>
       </ul>
       <h3>Headers</h3>
       <ul>
-        <KeyValidationEditor :key="'mockCfg_reqDescriptor_headers_' + keyDesc.key" :keyPostfix="keyDesc.key" :id="'mockCfg_reqDescriptor_headers_' + keyDesc.key" v-if="keyDesc !== null" v-for="keyDesc in config.mockCfg.reqDescriptor.headers"></KeyValidationEditor>
+        <KeyValidationEditor :key="'mockCfg_reqDescriptor_headers_' + keyDesc.key" v-if="keyDesc !== null" v-for="(keyDesc, index) in config.mockCfg.reqDescriptor.headers" v-model="config.mockCfg.reqDescriptor.headers[index]"></KeyValidationEditor>
       </ul>
       <h3>Body</h3>
       <div>
-        <BodyValidationEditor keyPostfix="body" id="mockCfg_reqDescriptor_body"></BodyValidationEditor>
+        <BodyValidationEditor v-model="config.mockCfg.reqDescriptor.body"></BodyValidationEditor>
       </div>
       <h2>Response description</h2>
       <h3>Headers</h3>
       <ul>
-        <KeyReactorEditor :key="'mockCfg_resDescriptor_headers_' + keyDesc.key" :keyPostfix="keyDesc.key" :id="'mockCfg_resDescriptor_headers_' + keyDesc.key" v-if="keyDesc !== null" v-for="keyDesc in config.mockCfg.resDescriptor.headers"></KeyReactorEditor>
+        <KeyReactorEditor :key="'mockCfg_resDescriptor_headers_' + keyDesc.key" v-if="keyDesc !== null" v-for="(keyDesc, index) in config.mockCfg.resDescriptor.headers" v-model="config.mockCfg.resDescriptor.headers[index]"></KeyReactorEditor>
       </ul>
       <h3>Body</h3>
       <div>
-        <BodyReactorEditor keyPostfix="body" id="mockCfg_resDescriptor_body"></BodyReactorEditor>
+        <BodyReactorEditor v-model="config.mockCfg.resDescriptor.body"></BodyReactorEditor>
       </div>
     </div>
 
@@ -43,14 +43,14 @@
 
 const localComponents = {};
 
-const keyValiEditor = require('./KeyValidationEditor')
-localComponents[keyValiEditor.name] = keyValiEditor.opts;
-const bodyValiEditor = require('./BodyValidationEditor')
-localComponents[bodyValiEditor.name] = bodyValiEditor.opts;
-const keyReactEditor = require('./KeyReactorEditor')
-localComponents[keyReactEditor.name] = keyReactEditor.opts;
-const bodyReactEditor = require('./BodyReactorEditor')
-localComponents[bodyReactEditor.name] = bodyReactEditor.opts;
+import keyValiEditor from './KeyValidationEditor'
+localComponents[keyValiEditor.name] = keyValiEditor.opts
+import bodyValiEditor from './BodyValidationEditor'
+localComponents[bodyValiEditor.name] = bodyValiEditor.opts
+import keyReactEditor from './KeyReactorEditor'
+localComponents[keyReactEditor.name] = keyReactEditor.opts
+import bodyReactEditor from './BodyReactorEditor'
+localComponents[bodyReactEditor.name] = bodyReactEditor.opts
 
 const cusHeaders = new Headers();
 cusHeaders.append("Content-Type", "application/json");
@@ -120,10 +120,7 @@ export default {
       });
   },
   methods: {
-    validPath: function() {
-    },
     updateConfig: function() {
-
       let postStr = JSON.stringify(this.config)
       fetch('./inventory/api/updateConfig', {
           method: "POST",

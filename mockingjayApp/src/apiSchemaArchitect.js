@@ -1,21 +1,3 @@
-const instanceTypes = {
-  integer: {
-    minimum: '\\d{1,8}',
-    maximum: '\\d{1,8}'
-
-  },
-  number: {
-    minimum: '\\d{1,8}',
-    maximum: '\\d{1,8}'
-
-  },
-  string: {
-    minLength: '\\d{1,8}',
-    maxLength: '\\d{1,8}',
-    pattern: null
-  }
-}
-
 class APISchemaArchitect {
   constructor (arg) {
     this.baseSchema = {
