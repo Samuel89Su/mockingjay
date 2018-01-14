@@ -60,3 +60,4 @@ typings/
 /mockingjay/static/static
 /mockingjay/static/index.html
 /mockingjay/requestLogs
+/mockingjayApp/dist
