@@ -5,11 +5,11 @@
       <span id="sp_method">{{ config.method }}</span>
       <span id="sp_path">{{ config.path }}</span><br/>
       <label for="ck_mock">Mock</label>
-      <input type="checkbox" id="ck_mock" v-model="config.mock" v-on:change="validPath">
+      <input type="checkbox" id="ck_mock" v-model="config.mock">
     </div>
     <div id="dv_mockCfg">
       <label for="checkbox">Validate Request: </label>
-      <input type="checkbox" id="ck_valiReq" v-model="config.mockCfg.validateReq" v-on:change="validPath" ><br/>
+      <input type="checkbox" id="ck_valiReq" v-model="config.mockCfg.validateReq"><br/>
       <h2>Request description</h2>
       <h3>Queries</h3>
       <ul>
@@ -52,6 +52,10 @@ localComponents[keyReactEditor.name] = keyReactEditor.opts
 import bodyReactEditor from './BodyReactorEditor'
 localComponents[bodyReactEditor.name] = bodyReactEditor.opts
 
+const InventoryAPI = require('./InventoryAPI')
+
+import defaultMockCfg from './ApiMockCfgDefault'
+
 const cusHeaders = new Headers();
 cusHeaders.append("Content-Type", "application/json");
 
@@ -87,7 +91,7 @@ export default {
       apiId: this.sketch.apiId,
       path: this.sketch.path
       });
-    fetch("./inventory/api/getApiConfig", {
+    fetch(InventoryAPI.apiMockCfg, {
         method: "POST",
         headers: cusHeaders,
         body: postStr
@@ -107,10 +111,18 @@ export default {
           return
         } else {
           if (retData.data) {
-            this.$data.config = retData.data
+            console.log(retData.data)
+            let config = retData.data
+            if (!config.mockCfg.reqDescriptor.body) {
+              config.mockCfg.reqDescriptor.body = defaultMockCfg.reqDescriptor.body
+            }
+            if (!config.mockCfg.resDescriptor.body) {
+              config.mockCfg.resDescriptor.body = defaultMockCfg.resDescriptor.body
+            }
+            this.$data.config = config
             this.$store.commit({
               type: 'setApiConfig',
-              ApiConfig: retData.data
+              ApiConfig: config
             })
           }
         }
@@ -122,7 +134,7 @@ export default {
   methods: {
     updateConfig: function() {
       let postStr = JSON.stringify(this.config)
-      fetch('./inventory/api/updateConfig', {
+      fetch(InventoryAPI.apiMockCfgUpdate, {
           method: "POST",
           headers: cusHeaders,
           body: postStr

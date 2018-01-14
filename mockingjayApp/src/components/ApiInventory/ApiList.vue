@@ -41,6 +41,8 @@
 </template>
 
 <script>
+const InventoryAPI = require('./InventoryAPI')
+
   export default {
     name: "ApiList",
     data() {
@@ -51,7 +53,7 @@
     },
     mounted: function () {
       this.$data.appDetails = this.$store.state.AppDetails
-      fetch('./inventory/api/list?appId=' + this.appDetails.id)
+      fetch(InventoryAPI.apiList + this.appDetails.id)
         .then(res => {
           let contentType = res.headers.get('content-type')
           if (!res.ok) {

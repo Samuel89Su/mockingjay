@@ -4,7 +4,9 @@ const cacheKeys = {
     apiInventory: 'apiinventory',
     appInventory: 'appinventory',
     appId: 'appid',
-    apiId: 'apiId'
+    apiId: 'apiId',
+    schemaPostfix: 'schema',
+    mockCfgPostfix: 'mockCfg'
 }
 
 exports = module.exports = cacheKeys;

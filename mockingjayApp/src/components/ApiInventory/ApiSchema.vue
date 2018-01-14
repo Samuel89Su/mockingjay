@@ -39,6 +39,9 @@
 </template>
 
 <script>
+
+const InventoryAPI = require('./InventoryAPI')
+
 import schemaTemplate from './ApiSchemaTemplate'
 const cusHeaders = new Headers();
 cusHeaders.append("Content-Type", "application/json");
@@ -65,7 +68,7 @@ export default {
       apiId: this.sketch.apiId,
       path: this.sketch.path
       });
-    fetch("./inventory/api/getApiSchema", {
+    fetch(InventoryAPI.apiSchema, {
         method: "POST",
         headers: cusHeaders,
         body: postStr
@@ -111,7 +114,7 @@ export default {
       
       let data = { appId: this.sketch.appId, apiId: this.sketch.apiId, schema: this.schema }
       let postStr = JSON.stringify(data)
-      fetch('./inventory/api/updateSchema', {
+      fetch(InventoryAPI.apiSchemaUpdate, {
           method: "POST",
           headers: cusHeaders,
           body: postStr

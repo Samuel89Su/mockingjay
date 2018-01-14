@@ -20,11 +20,14 @@
     </div>
     <br/>
 
-    <button id="btn_submit" v-on:click="register">Apply</button>
+    <button id="btn_submit" v-on:click="register($event.target)">Apply</button>
+    <button id="btn_discard" v-on:click="discard($event.target)">Discard</button>
   </div>
 </template>
 
 <script>
+
+  const InventoryAPI = require('./InventoryAPI')
   const cusHeaders = new Headers();
   cusHeaders.append("Content-Type", "application/json");
 
@@ -52,8 +55,9 @@
         }
     },
     methods: {
-      register: function () {
-        let url = `./inventory/app/${ this.app.id > 0 ? 'update': 'register' }`
+      register: function (target) {
+        target.disabled = true
+        let url = this.app.id > 0 ? InventoryAPI.appUpdate : InventoryAPI.appRegister
         let postStr = JSON.stringify(this.app)
         fetch(url, {
             method: "POST",
@@ -81,6 +85,50 @@
           })
           .catch(error => {
             console.log(error)
+            target.disabled = false
+          })
+          .then(() => {
+            target.disabled = false
+          })
+      },
+      discard: function () {
+        target.disabled = true
+        if (!confirm('no chance to recover after discard, proceed ?')) {
+          return
+        } else {
+          target.disabled = false
+        }
+
+        let postData = JSON.stringify({ id: this.app.id, name: this.app.name })
+        fetch(InventoryAPI.appDiscard, 
+          {
+            method: "POST",
+            headers: cusHeaders,
+            body: postData
+          })
+          .then(res => {
+            let contentType = res.headers.get('content-type')
+            if (!res.ok) {
+              return null
+            } else if (!contentType || !contentType.includes('application/json')) {
+              return null
+            } else {
+              return res.json()
+            }
+          })
+          .then(retData => {
+            if (retData.code !== 0) {
+              return
+            } else {
+              // go back
+              this.$router.push({
+                name: 'applist'
+              })
+            }
+          })
+          .catch(error => {
+            console.log(error)
+            target.disabled = false
           })
       }
     }
@@ -96,6 +144,16 @@
     width: 120px;
     height: 50px;
     background: blue;
+    color: white;
+  }
+
+  #btn_discard {
+    position: fixed;
+    top: 720px;
+    left: 1440px;
+    width: 120px;
+    height: 50px;
+    background: rgb(122, 5, 5);
     color: white;
   }
 

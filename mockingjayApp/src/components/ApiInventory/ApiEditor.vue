@@ -29,6 +29,8 @@
 </template>
 
 <script>
+  const InventoryAPI = require('./InventoryAPI')
+
   const cusHeaders = new Headers();
   cusHeaders.append("Content-Type", "application/json");
 
@@ -54,7 +56,7 @@
     },
     methods: {
       register: function () {
-        let url = `./inventory/api/${ this.api.apiId > 0 ? 'update': 'register' }`
+        let url = this.api.apiId > 0 ? InventoryAPI.apiUpdate : InventoryAPI.apiRegister
         let postStr = JSON.stringify(this.api)
         fetch(url, {
             method: "POST",

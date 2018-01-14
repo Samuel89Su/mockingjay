@@ -27,11 +27,11 @@ export default {
     template:
         `<div v-if="value !== undefined && value !== null" class="div-key">
           <label>Required</label>
-          <input path="optional" type="checkbox" v-model="value.required" />
+          <input path="required" type="checkbox" v-model="value.required" />
           <h4>Validator</h4>
           <div v-if="value.validator !== undefined && value.validator !== null">
-            <input path="body.type" v-model="value.validator.type" /><br/>
-            <textarea path="ibody.val" v-model="value.validator.value" />
+            <input path="validator.type" v-model="value.validator.type" /><br/>
+            <textarea path="validator.val" v-model="value.validator.value" />
           </div>
         </div>`
   }

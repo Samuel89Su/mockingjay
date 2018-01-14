@@ -18,7 +18,7 @@ class steward {
         this.list = this.list.bind(this);
         this.register = this.register.bind(this);
         this.update = this.update.bind(this);
-        this.remove = this.remove.bind(this);
+        this.discard = this.discard.bind(this);
     }
 
     getRouter() {
@@ -28,6 +28,7 @@ class steward {
         this.router.get('/list', this.list);
         this.router.post('/register', bodyParser, this.register);
         this.router.post('/update', bodyParser, this.update);
+        this.router.post('/discard', bodyParser, this.discard);
 
         return this.router;
     }
@@ -108,8 +109,36 @@ class steward {
         await next();
     }
 
-    async remove(ctx, next) {
+    async discard(ctx, next) {
+        let appDesc = ctx.request.body;
 
+        // validate body json schema
+        if (!this.validate(appDesc)) {            
+            ctx.response.status = 400;
+            ctx.response.body = validate.errors;
+        } else if (!appDesc.id) {
+            ctx.response.status = 400;
+            ctx.response.body = 'app id CAN NOT be null or empty';
+        } else {
+            let key = `${ cacheKeys.appInventory }:${ appDesc.id }`
+            await redisClient.delAsync(key);
+            let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }`
+            let apiIds = await redisClient.hkeysAsync(baseKey)
+            if (apiIds && apiIds.length > 0) {
+                for (let i = 0; i < apiIds.length; i++) {
+                    const id = apiIds[i];
+                    let schemaKey = `${ baseKey }:${ id }_${ cacheKeys.schemaPostfix }`
+                    let mockCfgKey = `${ baseKey }:${ id }_${ cacheKeys.mockCfgPostfix }`
+                    await redisClient.delAsync(schemaKey)
+                    await redisClient.delAsync(mockCfgKey)
+                }
+            }
+            await redisClient.delAsync(baseKey)
+
+            ctx.response.body = errCode.success(appDesc);
+        }
+
+        await next()
     }
 }
 
