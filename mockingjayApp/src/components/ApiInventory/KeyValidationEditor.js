@@ -21,10 +21,10 @@ module.exports = {
         return this.id + '_required'
       },
       id_validator_type: function () {
-        return this.id + '_reactor_type'
+        return this.id + '_validator_type'
       },
       id_validator_val: function () {
-        return this.id + '_reactor_value'
+        return this.id + '_validator_value'
       }
     },
     mounted: function () {
@@ -54,7 +54,7 @@ module.exports = {
         <h4>Validator</h4>
         <div v-if="keyDesc.validator !== undefined && keyDesc.validator !== null">
           <input :id="id_validator_type" v-model="keyDesc.validator.type" /><br/>
-          <textarea :id="id_validator_val" :value="keyDesc.validator.value" />
+          <textarea :id="id_validator_val" v-model="keyDesc.validator.value" />
         </div>
       </li>`
   }

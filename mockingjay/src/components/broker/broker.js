@@ -7,6 +7,10 @@ const requestLogger = require('../common/requestLogger');
 const mocking = require('./mocking');
 const forward = require('./forward');
 const Router = require('koa-router');
+const Ajv = require('ajv');
+const parseBody = require('../common/parseBody');
+const parserOpts = require('../common/bodyParserOpts');
+const QueryString = require('querystring');
 
 const router = new Router();
 router
@@ -16,6 +20,8 @@ router
         validateSchema,
         forwardReq,
         mock);
+
+const ajv = new Ajv();
 
 async function log(ctx, next) {
     await next()
@@ -75,12 +81,40 @@ async function validateSchema(ctx, next) {
             apiSchema = JSON.parse(apiSchema)
 
             let valid = false
+            let errors = null
 
-            // TODO: req schema validation
+            // req schema validation
+            if (apiSchema.properties.query) {
+                let target = parseKeyVals(ctx.query, apiSchema.properties.query)
+
+                let validate = ajv.compile(apiSchema.properties.query)
+                if (validate(target)) {
+                    valid = true;
+                } else {
+                    errors = validate.errors
+                }
+            } else if (apiSchema.properties.reqHeaders) {
+                let target = parseKeyVals(ctx.request.headers, apiSchema.properties.reqHeaders)
+
+                let validate = ajv.compile(target)
+                if (validate(ctx.request.headers)) {
+                    valid = true;
+                } else {
+                    errors = validate.errors
+                }
+            } else if (apiSchema.properties.reqBody) {
+                await parseBody(ctx, parserOpts.common)
+                let validate = ajv.compile(apiSchema.properties.reqBody)
+                if (validate(ctx.request.body)) {
+                    valid = true;
+                } else {
+                    errors = validate.errors
+                }
+            }
 
             if (!valid) {
                 ctx.status = 400
-                ctx.body = 'bad request, req schema validate failed.'
+                ctx.body = errors
                 return
             }
 
@@ -88,17 +122,34 @@ async function validateSchema(ctx, next) {
 
             await next()
 
-            // TODO: res schema validation
+            // res schema validation
+            if (apiSchema.properties.resHeaders) {
+                let target = parseKeyVals(ctx.headers, apiSchema.properties.resHeaders)
+
+                let validate = ajv.compile(apiSchema.properties.resHeaders)
+                if (validate(target)) {
+                    valid = true;
+                } else {
+                    errors = validate.errors
+                }
+            } else if (apiSchema.properties.resBody) {
+                let validate = ajv.compile(apiSchema.properties.resBody)
+                if (validate(ctx.body)) {
+                    valid = true;
+                } else {
+                    errors = validate.errors
+                }
+            }
 
             if (!valid) {
                 ctx.status = 400
-                ctx.body = 'bad response, res schema validate failed.'
+                ctx.body = errors
                 return
             }
         }
+    } else {
+        await next()
     }
-
-    await next()
 }
 
 async function forwardReq(ctx, next) {
@@ -162,6 +213,23 @@ async function mock(ctx, next) {
 function set404(ctx) {
     ctx.status = 404;
     ctx.body = 'api not found';
+}
+
+function parseKeyVals(src, schema) {
+    let keys = [];
+    for (const key in schema.properties) {
+        if (schema.properties.hasOwnProperty(key)) {
+            keys.push(key)
+        }
+    }
+
+    keys.forEach(key => {
+        if (src[key]) {
+            src[key] = JSON.parse(src[key])
+        }
+    });
+
+    return src;
 }
 
 exports = module.exports = router.routes()

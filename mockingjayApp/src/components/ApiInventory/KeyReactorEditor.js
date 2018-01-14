@@ -18,7 +18,7 @@ module.exports = {
         return this.id + '_key'
       },
       id_ipt_optional: function () {
-        return this.id + '_required'
+        return this.id + '_optional'
       },
       id_reactor_type: function () {
         return this.id + '_reactor_type'

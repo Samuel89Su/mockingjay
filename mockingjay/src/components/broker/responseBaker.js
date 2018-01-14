@@ -63,7 +63,7 @@ class ResponseBaker {
                                 {
                                     let reactorResult = this.responseValueFactory(ctx.request, header.reactor.value);
                                     if (!reactorResult.errMsg) {
-                                        ctx.response.headers[header.key] = reactorResult.data;
+                                        ctx.set(header.key, reactorResult.data);
                                     } else {
                                         ctx.response.body = reactorResult.errMsg;
                                     }

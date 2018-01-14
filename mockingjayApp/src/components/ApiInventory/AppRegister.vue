@@ -8,18 +8,16 @@
     <br/>
     <h4>Deployment</h4>    
     <label for="ipt_forwardTarget">Forward: </label>
-    <select id="ipt_forwardTarget" value="dev" v-model="app.forwardTarget">
+    <select id="ipt_forwardTarget" value="dev" v-model="app.apiForwardTarget">
       <option value="dev">dev</option>
       <option value="beta">beta</option>
       <option value="prod">prod</option>
     </select>
     <br/>
-    <h5>dev</h5>
-    <input id="ipt_deployment_dev" v-model="app.deployment.dev" />
-    <h5>beta</h5>
-    <input id="ipt_deployment_beta" v-model="app.deployment.beta" />
-    <h5>prod</h5>
-    <input id="ipt_deployment_prod" v-model="app.deployment.prod" />
+    <div :key="key" v-for="(val, key) in app.targets">
+      <h5>{{ key }}</h5>
+      <input :id="'ipt_target_' + key" v-model="app.targets[key]" />
+    </div>
     <br/>
 
     <button id="btn_submit" v-on:click="register">Apply</button>
@@ -38,7 +36,7 @@
           id: 0,
           name: null,
           desc: null,
-          forwardTarget: "dev",
+          apiForwardTarget: "dev",
           targets: {
             dev: null,
             beta: null,

@@ -7,11 +7,13 @@
           <th>ID</th>
           <th>Name</th>
           <th>Method</th>
+          <th>Validate</th>
+          <th>Forward</th>
           <th>Path</th>
           <th>Desc</th>
           <th>Details</th>
           <th>Schema</th>
-          <th>Config</th>
+          <th>MockCfg</th>
         </tr>
       </thead>
       <tbody>
@@ -19,6 +21,8 @@
           <td>{{ item.apiId }}</td>
           <td>{{ item.name }}</td>
           <td>{{ item.method }}</td>
+          <td>{{ item.validate }}</td>
+          <td>{{ item.forward }}</td>
           <td>{{ item.path }}</td>
           <td>{{ item.description }}</td>
           <td>
@@ -28,7 +32,7 @@
             <a v-on:click="goToSchema(item)" href="javascript:void(0)">Schema</a>
           </td>
           <td>
-            <a v-on:click="goToConfig(item)" href="javascript:void(0)">Config</a>
+            <a v-on:click="goToConfig(item)" href="javascript:void(0)">MockCfg</a>
           </td>
         </tr>
       </tbody>
@@ -119,7 +123,7 @@
 
 <style>
   #tb_api {
-    width: 960px;
+    width: 1400px;
     text-align: left;
   }
 
@@ -127,35 +131,44 @@
     height: 30px;
   }
 
+  /* ID */
   table tr th:first-child {
     width: 70px;
   }
-
+  /* Name */
   table tr th:nth-child(2) {
     width: 150px;
   }
-
+/* Method */
   table tr th:nth-child(3) {
     width: 110px;
   }
-
+/* Validate */
   table tr th:nth-child(4) {
+    width: 110px;
+  }
+/* Forward */
+  table tr th:nth-child(5) {
+    width: 110px;
+  }
+/* Path */
+  table tr th:nth-child(6) {
     width: 200px;
   }
-
-  table tr th:nth-child(5) {
+/* Desc */
+  table tr th:nth-child(7) {
     width: 300px;
   }
-
-  table tr th:nth-child(6) {
-    width: 120px;
-  }
-
-  table tr th:nth-child(7) {
-    width: 120px;
-  }
-
+/* Details */
   table tr th:nth-child(8) {
+    width: 120px;
+  }
+/* Schema */
+  table tr th:nth-child(9) {
+    width: 120px;
+  }
+/* MockCfg */
+  table tr th:nth-child(10) {
     width: 120px;
   }
 

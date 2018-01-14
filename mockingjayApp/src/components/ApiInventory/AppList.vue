@@ -20,9 +20,8 @@
                 <a v-on:click="goToDetails(item)" href="javascript:void(0)">Details</a>
               </td>
               <td>
-                <a v-on:click="goToApiList(item)" href="javascript:void(0)">api list</a>
+                <a v-on:click="goToApiList(item)" href="javascript:void(0)">Apis</a>
               </td>
-              <!-- <td><router-link :to="{ name: 'apilist', query: { appId: item.id }}">API list</router-link></td> -->
             </tr>
         </tbody>
     </table>
@@ -93,33 +92,32 @@ export default {
 
 <style>
 #tb_app {
-  width: 960px;
+  width: 1200px;
   text-align: left;
 }
 
 table tr {
   height: 30px;
 }
-
+/* ID */
 table tr th:first-child {
-  width: 60px
+  width: 80px
 }
-
+/* Name */
 table tr th:nth-child(2) {
-  width: 150px
+  width: 200px
 }
-
+/* Desc */
 table tr th:nth-child(3) {
   width: 500px
 }
-
+/* Details */
 table tr th:nth-child(4) {
   width: 120px
 }
-
+/* API List */
 table tr th:nth-child(5) {
   width: 120px
 }
-
 
 </style>

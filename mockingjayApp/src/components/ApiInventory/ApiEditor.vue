@@ -13,7 +13,16 @@
     </select><br/>
     
     <label for="ipt_path">Path: </label>
-    <input id="ipt_path" v-model="api.path" /><br/>
+    <input id="ipt_path" v-model="api.path" /><br/>    
+    
+    <label for="ipt_validate">Validate: </label>
+    <input type="checkbox" id="ipt_validate" v-model="api.validate"><br/>    
+    
+    <label for="ipt_forward">Forward: </label>
+    <input type="checkbox" id="ipt_forward" v-model="api.forward"><br/> 
+    
+    <label for="ipt_logReq">LogReq: </label>
+    <input id="ipt_logReq" v-model="api.logReq" /><br/>
 
     <button id="btn_submit" v-on:click="register">Apply</button>
   </div>
@@ -33,7 +42,10 @@
             name: null,
             description: null,
             method: "GET",
-            path: null
+            path: null,
+            validate: false,
+            forward: false,
+            logReq: 0
           }
       }
     },
@@ -42,7 +54,7 @@
     },
     methods: {
       register: function () {
-        let url = `./inventory/api/${ this.api.id > 0 ? 'update': 'register' }`
+        let url = `./inventory/api/${ this.api.apiId > 0 ? 'update': 'register' }`
         let postStr = JSON.stringify(this.api)
         fetch(url, {
             method: "POST",

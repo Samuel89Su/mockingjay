@@ -27,17 +27,17 @@ module.exports = {
     mounted: function () {
       let config = this.$store.state.ApiConfig
       let paths = this.id.split('_')
-      let keyData = config
+      let bodyData = config
       for (let i = 0; i < paths.length; i++) {
-        let dummy = keyData[paths[i]]
+        let dummy = bodyData[paths[i]]
         if (dummy) {
-          keyData = dummy
+          bodyData = dummy
         } else {
           break
         }
       }
 
-      this.$data.body = keyData
+      this.$data.body = bodyData
     },
     beforeUpdate: function () { console.log('beforeUpdate') },
     updated: function () { console.log('updated') },

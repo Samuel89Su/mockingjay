@@ -8,7 +8,9 @@ async function mocking(ctx, mockCfg) {
     try {
 
         // parse body
-        await parseBody(ctx, parserOpts.common);
+        if (!ctx.body) {
+            await parseBody(ctx, parserOpts.common);
+        }
 
         // inspect request
         let bypassReqInspect = false;

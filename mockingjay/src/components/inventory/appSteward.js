@@ -15,6 +15,10 @@ class steward {
     constructor(arg) {
         this.router = new Router();
         this.validate = ajv.compile(appSchema);
+        this.list = this.list.bind(this);
+        this.register = this.register.bind(this);
+        this.update = this.update.bind(this);
+        this.remove = this.remove.bind(this);
     }
 
     getRouter() {
@@ -102,6 +106,10 @@ class steward {
         }
 
         await next();
+    }
+
+    async remove(ctx, next) {
+
     }
 }
 

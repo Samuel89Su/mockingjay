@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <!-- <img src="./assets/logo.png"> -->
     <router-view/>
   </div>
 </template>
@@ -24,6 +23,6 @@ body {
   text-align: left;
   color: #2c3e50;
   margin: 60px auto 40px auto;
-  width: 1200px;
+  width: 1600px;
 }
 </style>

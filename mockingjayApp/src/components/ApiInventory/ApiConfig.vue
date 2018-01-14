@@ -1,5 +1,5 @@
 <template>
-  <div v-if="config !== undefined && config !== null" id="pn_details">
+  <div id="pn_details">
     <h1>General</h1>
     <div>
       <span id="sp_method">{{ config.method }}</span>
@@ -60,7 +60,23 @@ export default {
   data() {
     return {
       sketch: null,
-      config: null
+      config: {
+        method: 'GET',
+        path: '',
+        mock: false,
+        mockCfg: {
+          validateReq: false,
+          reqDescriptor: {
+            queries: [],
+            headers: [],
+            body: {}
+          },
+          resDescriptor: {
+            headers: [],
+            body: {}
+          }
+        }
+      }
     }
   },
   mounted: function() {    

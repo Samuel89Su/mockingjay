@@ -265,6 +265,22 @@ class Steward {
             ctx.response.body = errCode.resNotFound();
             return await next();
         }
+
+        if (!apiData.schema) {
+            ctx.response.status = 400;
+            ctx.response.body = 'schema is missing';
+            return await next();
+        }
+
+        for (const key in apiData.schema.properties) {
+            if (apiData.schema.properties.hasOwnProperty(key)) {
+                let propt = apiData.schema.properties[key];
+                if (typeof propt === 'string') {
+                    propt = propt.replace('\\n', '')
+                    propt = JSON.parse(propt)
+                }
+            }
+        }
         
         let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }`
         let cacheKey = `${ baseKey }:${ apiData.apiId }_schema`

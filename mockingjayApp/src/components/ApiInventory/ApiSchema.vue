@@ -93,7 +93,6 @@ export default {
                     }
                 }
             }
-            console.log(dummy)
             this.$data.schema = dummy
 
             this.$store.commit({
