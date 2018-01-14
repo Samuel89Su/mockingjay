@@ -2,7 +2,6 @@
 
 const Koa = require('koa');
 const serve = require('koa-static');
-const path = require('path');
 const router = require('./router');
 const logger = require('./src/components/common/logger');
 
@@ -12,7 +11,7 @@ app.env = 'dev';
 app.use(router.routes())
     .use(router.allowedMethods());
 
-app.use(serve(__dirname + '/static'));
+app.use(serve(__dirname + '/appRoot'));
 
 app.listen(3000, () => {
     logger.info('listening on 3000');
