@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "mockingjayApp"
+		},
+		{
+			"path": "managerbyreact"
 		}
 	],
 	"settings": {}
