@@ -34,14 +34,14 @@ async function log(ctx, next) {
 
     reqLoggerFactory.getLogger(appName).info({
         request: {
-            path: ctx.path,
+            path: ctx.path.toLowerCase().replace(`/mocking/${appName}`, ''),
             method: ctx.method,
             queryString: ctx.querystring,
             headers: ctx.request.headers,
             body: ctx.request.body
         },
         response: {
-            headers: ctx.headers,
+            headers: ctx.response.headers,
             body: ctx.body
         }
     });

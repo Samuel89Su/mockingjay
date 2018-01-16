@@ -1,6 +1,7 @@
 'use strict';
 
-const promisedReq = require('request-promise');
+const { URL } = require('url')
+const promisedReq = require('request-promise')
 
 async function forward(req, baseUrl, path) {
     let opts = {};
@@ -14,7 +15,7 @@ async function forward(req, baseUrl, path) {
 
     opts.qs = req.query;
 
-    // opts.body = req.incommingMessage;
+    opts.body = req.body;
 
     let res = await promisedReq(opts)
         .then((response) => {
@@ -22,6 +23,8 @@ async function forward(req, baseUrl, path) {
             let resOpts = {};
             resOpts.headers = response.headers;
             resOpts.body = response.body;
+
+            resOpts.headers.host = new URL(baseUrl).host
 
             return resOpts;
         })
