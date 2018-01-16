@@ -21,11 +21,11 @@ module.exports = {
     },
     plugins: [
         new CleanPlugin(['index.html', 'bundle.js', 'style.css'], {
-            exclude: ['images'],
+            // exclude: ['images'],
             root: Path.resolve(__dirname, '../dist/')
         }),
         new CopyPlugin([
-            { from: 'src/images', to: 'images' }
+            // { from: 'src/images', to: 'images' }
         ]),
         new Webpack.optimize.OccurrenceOrderPlugin(),
         new Webpack.optimize.UglifyJsPlugin(),

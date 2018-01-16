@@ -3,7 +3,7 @@
 const redisClient = require('../common/redisClient');
 const cacheKeys = require('../common/cacheKeys');
 const logger = require('../common/logger');
-const requestLogger = require('../common/requestLogger');
+const reqLoggerFactory = require('../common/RequestLoggerFactory');
 const mocking = require('./mocking');
 const forward = require('./forward');
 const Router = require('koa-router');
@@ -26,7 +26,13 @@ const ajv = new Ajv();
 async function log(ctx, next) {
     await next()
 
-    requestLogger.info({
+    let appName = ''
+    let subPaths = ctx.path.split('/')
+    if (subPaths.length > 2) {
+        appName = subPaths[2]
+    }
+
+    reqLoggerFactory.getLogger(appName).info({
         request: {
             path: ctx.path,
             method: ctx.method,
