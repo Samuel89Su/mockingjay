@@ -4,10 +4,11 @@ const fs = require('fs');
 const path = require('path');
 const Bunyan = require('bunyan');
 
+const LoggerMap = new Map()
+
 class RequestLoggerFactory {
     constructor (props) {        
         this.baseFolder = !(props && props.baseFolder) ? path.join(__dirname, '../../../requestLogs') : props.baseFolder
-        this.loggerMap = new Map()
 
         this.getLogger = this.getLogger.bind(this)
         this.prepareLogFolder = this.prepareLogFolder.bind(this)
@@ -15,7 +16,7 @@ class RequestLoggerFactory {
         this.prepareLogFolder()
 
         // set default logger
-        this.loggerMap.set('default',
+        LoggerMap.set('default',
             Bunyan.createLogger(
                 {
                     name: 'default_logger',
@@ -32,10 +33,10 @@ class RequestLoggerFactory {
     getLogger (appName) {
         // return default logger
         if (!appName) {
-            return this.loggerMap.get('default')
+            return LoggerMap.get('default')
         }
 
-        let logger = this.loggerMap.get(appName)
+        let logger = LoggerMap.get(appName)
         if (!logger) {
             this.prepareLogFolder(appName)
             logger = Bunyan.createLogger(
@@ -50,7 +51,7 @@ class RequestLoggerFactory {
                     }]
                 })
 
-            this.loggerMap.set(appName, logger)
+            LoggerMap.set(appName, logger)
         }
 
         return logger
