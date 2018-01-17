@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
+import '../styles/apiList.scss'
 import InventoryAPI from './InventoryAPI'
 
 class ApiList extends Component {
@@ -12,7 +13,7 @@ class ApiList extends Component {
     }
 
     componentDidMount() {
-        fetch(InventoryAPI.apiList)
+        fetch(InventoryAPI.apiList + this.props.location.search)
         .then(res => {
             var contentType = res.headers.get('content-type')
             if (!res.ok) {
@@ -45,7 +46,7 @@ class ApiList extends Component {
     render() {
         return (
             <div id='api-list'>
-                <h2>App List</h2>
+                <h2>Api List</h2>
                 <Link to='/api/register'>Register</Link>
                 <table>
                     <thead>
@@ -67,11 +68,16 @@ class ApiList extends Component {
                             this.state.list.map((app, index) => {
                                 return (
                                     <tr key={ index }>
-                                        <td>{ app.id }</td>
+                                        <td>{ app.apiId }</td>
                                         <td>{ app.name }</td>
-                                        <td>{ app.desc }</td>
-                                        <td><Link to='/app/details'>details</Link></td>
-                                        <td><Link to='/app/apilist'>api list</Link></td>
+                                        <td>{ app.method }</td>
+                                        <td>{ app.validate }</td>
+                                        <td>{ app.forward }</td>
+                                        <td>{ app.path }</td>
+                                        <td>{ app.description }</td>
+                                        <td><Link to='/api/details'>details</Link></td>
+                                        <td><Link to='/api/schema'>schema</Link></td>
+                                        <td><Link to='/api/mockcfg'>mockcfg</Link></td>
                                     </tr>)
                             })
                         }

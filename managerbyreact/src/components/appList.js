@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
+import '../styles/appList.scss'
 import { ApiList, ApiRoutes } from './apiList'
 
 
@@ -66,8 +67,8 @@ class AppList extends Component {
                                         <td>{ app.id }</td>
                                         <td>{ app.name }</td>
                                         <td>{ app.desc }</td>
-                                        <td><Link to='/app/details' component={ApiList}>details</Link></td>
-                                        <td><Link to='/app/apilist?appId=' component={ApiList}>api list</Link></td>
+                                        <td><Link to='/app/details'>details</Link></td>
+                                        <td><Link to={'/app/apilist?appId='+app.id}>api list</Link></td>
                                     </tr>)
                             })
                         }
@@ -81,7 +82,7 @@ class AppList extends Component {
 const AppRoutes = [
     { path: '/app/register' },
     { path: '/app/details' },
-    { path: '/app/apilist' }
+    { path: '/app/apilist', component: ApiList }
 ]
 
 export { AppList, AppRoutes };
