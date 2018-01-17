@@ -64,3 +64,4 @@ typings/
 /managerbyreact/build
 /managerbyreact/node_modules
 /managerbyreact/dist
+/managerbyreact/.vscode/launch.json

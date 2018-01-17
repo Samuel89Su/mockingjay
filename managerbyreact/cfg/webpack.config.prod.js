@@ -8,6 +8,9 @@ const CleanPlugin = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
+    output: {
+		filename: 'bundle_[hash].js'
+	},
     module: {
         rules: [
             {
@@ -29,7 +32,7 @@ module.exports = {
         ]),
         new Webpack.optimize.OccurrenceOrderPlugin(),
         new Webpack.optimize.UglifyJsPlugin(),
-        new ExtractTextPlugin('style.css'),
+        new ExtractTextPlugin('style_[contenthash:8].css'),
         new HtmlWebpackPlugin({
             template: 'public/index.html',
             inject: true,

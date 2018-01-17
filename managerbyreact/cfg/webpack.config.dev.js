@@ -3,6 +3,9 @@
 const Webpack = require('webpack');
 
 module.exports = {
+    output: {
+		filename: 'bundle.js'
+	},
     module: {
         rules: [
             {
@@ -35,6 +38,12 @@ module.exports = {
         inline: true,
         hot: true,
         port: 8100,
-        historyApiFallback: true
+        historyApiFallback: true,
+        proxy: {
+            '/inventory': {
+                target: 'http://localhost:3000',
+                // pathRewrite: { '^/api':'/inventory' }
+            }
+        }
     }
 };

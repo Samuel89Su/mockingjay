@@ -7,7 +7,7 @@ const base = {
 	entry: __dirname + '/src/index.js',
 	output: {
 		path: Path.resolve(__dirname, 'dist'),
-		filename: 'bundle.js'
+		// filename: 'bundle_[hash].js'
 	},
 	module: {
 		rules: [
