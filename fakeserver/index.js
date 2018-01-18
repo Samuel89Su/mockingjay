@@ -3,6 +3,7 @@
 const Koa = require('koa');
 const Router = require('koa-router');
 const BodyParser = require('koa-bodyparser');
+const serve = require('koa-static');
 
 const bodyParser = BodyParser({
   enableTypes: ['json', 'form', 'text'],
@@ -19,6 +20,9 @@ router.all('/*', (ctx, next) => {
 });
 
 const app = new Koa();
+
+
+app.use(serve(__dirname + '/static'));
 
 app.use(router.routes())
     .use(router.allowedMethods());
