@@ -9,7 +9,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     output: {
-		filename: 'bundle_[hash].js'
+		filename: 'asserts/bundle_[hash].js'
 	},
     module: {
         rules: [
@@ -23,16 +23,15 @@ module.exports = {
         ]
     },
     plugins: [
-        new CleanPlugin(['index.html', 'bundle.js', 'style.css'], {
+        new CleanPlugin(['index.html', 'asserts/*.*'], {
             // exclude: ['images'],
             root: Path.resolve(__dirname, '../dist/')
         }),
         new CopyPlugin([
-            // { from: 'src/images', to: 'images' }
         ]),
         new Webpack.optimize.OccurrenceOrderPlugin(),
         new Webpack.optimize.UglifyJsPlugin(),
-        new ExtractTextPlugin('style_[contenthash:8].css'),
+        new ExtractTextPlugin('asserts/style_[contenthash:8].css'),
         new HtmlWebpackPlugin({
             template: 'public/index.html',
             inject: true,

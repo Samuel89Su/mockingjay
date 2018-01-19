@@ -4,7 +4,9 @@ const Path = require('path');
 const Merge = require('webpack-merge');
 
 const base = {
-	entry: __dirname + '/src/index.js',
+	entry: {
+		bundle: __dirname + '/src/index.js'
+	},
 	output: {
 		path: Path.resolve(__dirname, 'dist')
 	},

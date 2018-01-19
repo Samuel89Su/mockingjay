@@ -4,8 +4,8 @@ const Webpack = require('webpack');
 
 module.exports = {
   output: {
-    filename: 'bundle.js',
-    publicPath: 'http://localhost:8100'
+    filename: 'bundle.js'
+    // publicPath: 'http://localhost:8100'
   },
   module: {
     rules: [{
@@ -13,7 +13,7 @@ module.exports = {
       use: [{
         loader: 'style-loader'
       }, {
-        loader: 'css-loader',
+        loader: 'css-loader'
       }, {
         loader: 'postcss-loader'
       }, {
