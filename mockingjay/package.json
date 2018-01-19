@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "forever-start": "forever start -w --watchDirectory src index.js",
+    "forever-stop": "forever stop index.js",
     "test": "dev",
     "rake": "node src/components/common/jsonRaker.js"
   },
@@ -33,6 +35,7 @@
     "bluebird": "^3.5.1",
     "co-body": "^5.1.1",
     "copy-to": "^2.0.1",
+    "forever": "^0.15.3",
     "http-errors": "^1.6.2",
     "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",

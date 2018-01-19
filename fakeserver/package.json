@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "start": "node index.js"
+    "start": "forever start -w index.js",
+    "stop": "forever stop index.js"
   },
   "keywords": [
     "fake",
@@ -15,6 +16,7 @@
   "author": "Samuel Su",
   "license": "MIT",
   "devDependencies": {
+    "forever": "^0.15.3",
     "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",
     "koa-router": "^7.3.0",

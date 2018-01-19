@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "managerbyreact"
+		},
+		{
+			"path": "proxy-master"
 		}
 	],
 	"settings": {}

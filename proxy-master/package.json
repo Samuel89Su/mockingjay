@@ -1,0 +1,21 @@
+{
+  "name": "proxy-master",
+  "version": "1.0.0",
+  "description": "a proxy server",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "http",
+    "proxy"
+  ],
+  "author": "Samuel Su",
+  "license": "MIT",
+  "devDependencies": {
+    "connect": "^3.6.5",
+    "http-proxy-middleware": "^0.17.4",
+    "opn": "^5.2.0"
+  }
+}
