@@ -4,6 +4,9 @@
 var http = require('http')
 var connect = require('connect')
 var proxy = require('http-proxy-middleware');
+const ProxyContext = require('./src/context')
+const ProxyTarget = require('./src/target')
+const ProxyRouter = require('./src/router')
 
 /**
  * Configure proxy middleware
