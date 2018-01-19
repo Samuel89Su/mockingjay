@@ -7,8 +7,7 @@
     "start": "node index.js",
     "forever-start": "forever start -w --watchDirectory src index.js",
     "forever-stop": "forever stop index.js",
-    "test": "dev",
-    "rake": "node src/components/common/jsonRaker.js"
+    "nodemon": "nodemon index.js"
   },
   "keywords": [
     "http",

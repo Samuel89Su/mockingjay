@@ -6,8 +6,7 @@ const Merge = require('webpack-merge');
 const base = {
 	entry: __dirname + '/src/index.js',
 	output: {
-		path: Path.resolve(__dirname, 'dist'),
-		// filename: 'bundle_[hash].js'
+		path: Path.resolve(__dirname, 'dist')
 	},
 	module: {
 		rules: [

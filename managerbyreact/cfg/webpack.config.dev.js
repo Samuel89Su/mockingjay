@@ -4,7 +4,8 @@ const Webpack = require('webpack');
 
 module.exports = {
   output: {
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    publicPath: 'http://localhost:8100'
   },
   module: {
     rules: [{
@@ -28,7 +29,7 @@ module.exports = {
       }
     })
   ],
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   devServer: {
     contentBase: './src',
     inline: true,
@@ -36,29 +37,15 @@ module.exports = {
     port: 8100,
     historyApiFallback: true,
     proxy:
-      // {
-      // '/inventory': {
-      //     target: 'http://localhost:3000',
-      //     // pathRewrite: { '^/api':'/inventory' }
-      // }
       [{
         context: [
-          '**', '!/', '!**/index.html','!**/bundle.js'
+          '**', '!/', '!**/index.html','!/bundle.js'
         ],
         target: 'http://localhost:3000',
         router: {
-          '/inventory': 'http://localhost:3000',
-          '/jquery.min.js': 'http://localhost:3100'
+          '/inventory': 'http://localhost:3000'
         }
       }
-    //   ,
-    //   {
-    //       context: ['**', '!**/', '!**/bundle.js'],
-    //       target: 'http://localhost:3000',
-    //       router: {
-
-    //       }
-    //   }
     ]
   }
 };
