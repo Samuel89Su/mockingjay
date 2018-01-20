@@ -15,7 +15,7 @@ const bodyParser = BodyParser({
 const router = new Router();
 router.use('/*', bodyParser)
 router.all('/*', (ctx, next) => {
-    console.log(ctx.request.body);
+    // console.log(ctx.request.body);
     ctx.body = "you are in fake server now...";
 });
 

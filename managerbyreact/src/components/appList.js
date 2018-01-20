@@ -80,6 +80,7 @@ class AppList extends Component {
 }
 
 const AppRoutes = [
+    ...ApiRoutes,
     { path: '/app/register' },
     { path: '/app/details' },
     { path: '/app/apilist', component: ApiList }

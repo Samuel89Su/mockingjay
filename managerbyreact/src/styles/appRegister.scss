@@ -1,0 +1,24 @@
+#fm_appCfg {
+    text-align: left;
+
+
+    #btn_submit {
+        position: fixed;
+        top: 640px;
+        left: 1440px;
+        width: 120px;
+        height: 50px;
+        background: blue;
+        color: white;
+      }
+      
+      #btn_discard {
+        position: fixed;
+        top: 720px;
+        left: 1440px;
+        width: 120px;
+        height: 50px;
+        background: rgb(122, 5, 5);
+        color: white;
+      }
+}

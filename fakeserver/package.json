@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "start": "forever start -w index.js",
-    "stop": "forever stop index.js"
+    "start": "node index.js",
+    "forever-start": "forever start -w index.js",
+    "forever-stop": "forever stop index.js"
   },
   "keywords": [
     "fake",

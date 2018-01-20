@@ -1,32 +1,38 @@
 /**
  * Module dependencies.
  */
-var http = require('http')
-var connect = require('connect')
-var proxy = require('http-proxy-middleware');
-const ProxyContext = require('./src/context')
-const ProxyTarget = require('./src/target')
-const ProxyRouter = require('./src/router')
+const http = require('http')
+const connect = require('connect')
+const proxy = require('http-proxy-middleware')
+const defaultOpts = require('./defaultOpts')
+const fs = require('fs')
+const rawUserOpts = fs.readFileSync('./opts.json')
 
-/**
- * Configure proxy middleware
- */
-var jsonPlaceholderProxy = proxy({
-  target: 'http://localhost:57761',
-  changeOrigin: true,             // for vhosted sites, changes host header to match to target's host
-  logLevel: 'debug'
-})
+try {
+  const userOpts = JSON.parse(rawUserOpts)
+  const context = userOpts.context
+  delete userOpts.context
+  const opts = Object.assign({}, userOpts, defaultOpts)
+  
+  /**
+   * Configure proxy middleware
+   */
+  const userProxy = proxy(context, opts)
 
-var app = connect()
+  const app = connect()
 
-/**
- * Add the proxy to connect
- */
-app.use('/', jsonPlaceholderProxy)
+  /**
+   * Add the proxy to connect
+   */
+  app.use('/', userProxy)
 
-http.createServer(app).listen(3200)
+  http.createServer(app).listen(3200)
 
-console.log('[DEMO] Server: listening on port 3200')
-console.log('[DEMO] Opening: http://localhost:3200/users')
+} catch (error) {
+  console.log(error)
+}
 
-require('opn')('http://localhost:3200/teacher/')
+console.log('Proxy Server: listening on port 3200')
+
+//console.log('[DEMO] Opening: http://localhost:3200/users')
+// require('opn')('http://localhost:3200/teacher/')

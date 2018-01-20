@@ -1,49 +1,25 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import '../styles/apiList.scss'
-import InventoryAPI from './InventoryAPI'
+import InventoryAPI from '../middlewares/InventoryAPI'
+import { fetchRemote } from '../middlewares/remoteFetch'
+import { updateApiList } from '../actions'
 
-class ApiList extends Component {
+class apiListV extends Component {
     constructor(props) {
         super(props)
-
-        this.state = {
-            list: []
-        }
-    }
+    }    
 
     componentDidMount() {
-        fetch(InventoryAPI.apiList + this.props.location.search)
-        .then(res => {
-            var contentType = res.headers.get('content-type')
-            if (!res.ok) {
-              return []
-            } else if (!contentType || !contentType.includes('application/json')) {
-              return []
-            } else if (contentType && contentType.includes('application/json')) {
-              return res.json()
-            }
-        })
-        .then(retData => {
-            if (retData.code !== 0) {
-              return
-            } else {
-              if (retData.data && retData.data.length > 0) {
-                let dummy = []
-                retData.data.forEach(app => {
-                    dummy.push(app)
-                })
-
-                this.setState({ list: dummy })
-              }
-            }
-          })
-        .catch(ex => {
-            console.log(ex);
-        })
+        InventoryAPI.apiList.url += this.props.location.search
+        this.props.dispatch(fetchRemote(InventoryAPI.apiList))
+        .then(
+            appList => this.props.dispatch(updateApiList(appList)),
+            error => console.log(error))
     }
 
     render() {
+        let list = this.props.apiList
         return (
             <div id='api-list'>
                 <h2>Api List</h2>
@@ -65,7 +41,7 @@ class ApiList extends Component {
                     </thead>
                     <tbody>
                         {
-                            this.state.list.map((app, index) => {
+                            list.map((app, index) => {
                                 return (
                                     <tr key={ index }>
                                         <td>{ app.apiId }</td>
@@ -88,11 +64,4 @@ class ApiList extends Component {
     }
 }
 
-const ApiRoutes = [
-    { path: '/api/register' },
-    { path: '/api/details' },
-    { path: '/api/schema' },
-    { path: '/api/mockcfg' }
-]
-
-export { ApiList, ApiRoutes }
+export default apiListV

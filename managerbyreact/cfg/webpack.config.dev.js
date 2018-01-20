@@ -39,7 +39,7 @@ module.exports = {
     proxy:
       [{
         context: [
-          '**', '!/', '!**/index.html','!/bundle.js'
+          '/inventory' // '**', '!/', '!**/index.html', '!/bundle.js', '!/favicon.ico'
         ],
         target: 'http://localhost:3000',
         router: {

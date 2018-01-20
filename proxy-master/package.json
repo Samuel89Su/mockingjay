@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "keywords": [
     "http",
@@ -14,8 +14,10 @@
   "author": "Samuel Su",
   "license": "MIT",
   "devDependencies": {
+    "bunyan": "^1.8.12",
     "connect": "^3.6.5",
     "http-proxy-middleware": "^0.17.4",
+    "nodemon": "^1.14.11",
     "opn": "^5.2.0"
   }
 }

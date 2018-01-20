@@ -1,9 +1,9 @@
 import '../styles/manager.scss'
-import React, { Component } from 'react'
 import 'normalize.css/normalize.css'
-import { AppList, AppRoutes } from './appList'
-
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import React, { Component } from 'react'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+//import { AppList, AppRoutes } from './appList'
+import { appListC, AppRoutes } from '../containers/appListC'
 
 class PageHeader extends Component {
     render() {
@@ -22,7 +22,7 @@ class Manager extends Component {
                 <div>
                     <PageHeader title='Mockingjay'></PageHeader>
             
-                    <Route exact path='/' component={AppList}></Route>
+                    <Route exact path='/' component={appListC}></Route>
                     {
                         AppRoutes.map((route, index) => {
                             return <Route key={index} path={route.path} component={route.component} ></Route>
@@ -32,10 +32,6 @@ class Manager extends Component {
                 </div>
             </Router>
         );
-    }
-
-    componentDidMount() {
-
     }
 }
 
