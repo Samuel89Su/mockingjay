@@ -1,41 +1,34 @@
-import { errHandler } from '../actions/index'
-
-const fetchJson = function(url, opts) {
-    return fetch(url, opts)
+const fetchJson = function (url, opts) {
+  return fetch(url, opts)
     .then(res => {
-        var contentType = res.headers.get('content-type')
-        if (!res.ok) {
-          return []
-        } else if (!contentType || !contentType.includes('application/json')) {
-          return []
-        } else if (contentType && contentType.includes('application/json')) {
-          return res.json()
-        }
+      var contentType = res.headers.get('content-type')
+      if (!res.ok) {
+        return null
+      } else if (!contentType || !contentType.includes('application/json')) {
+        return null
+      } else if (contentType && contentType.includes('application/json')) {
+        return res.json()
+      }
     })
     .then(retData => {
-        if (retData.code !== 0) {
-          return
-        } else {
-          if (retData.data && retData.data.length > 0) {
-            return retData.data
-          }
+      if (retData.code !== 0) {
+        return
+      } else {
+        if (retData.data) {
+          return retData.data
         }
-      })
+      }
+    })
     .catch(ex => {
-        return []
+      return null
     })
 }
 
-const fetchRemote = function(api, payload) {
-
-    return function(dispatch) {
-        if (!api) {
-            return dispatch(errHandler(new Error('api not found in config')))
-        }
-
-        api.body = payload
-        return fetchJson(api.url, api)
-    }
+const fetchRemote = function (api, payload) {
+  api.body = payload
+  return fetchJson(api.url, api)
 }
 
-export { fetchRemote }
+export {
+  fetchRemote
+}

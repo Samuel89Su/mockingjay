@@ -1,20 +1,40 @@
 import React, { Component } from 'react'
-import queryString from 'query-string'
-import '../styles/appRegister.scss'
+import { Link } from 'react-router-dom'
+import '../styles/appCfg.scss'
 
 class appCfgV extends Component {
     constructor(props) {
         super(props)
-        
+
         this.update = this.update.bind(this)
+        this.handleChange = this.handleChange.bind(this)
+
+        this.setState({})
     }
 
     componentDidMount() {
-        let query = queryString.parse(this.props.location.search)
-        this.props.onMounted(parseInt(query.appId))
+        this.props.onMounted(this.props.location.search)
     }
 
-    update() {
+    handleChange(e) {
+        let oPath = e.target.name
+        let pathSegs = oPath.split('.')
+        let partialState = {}
+        let dummy = partialState
+        for (let i = 0; i < pathSegs.length; i++) {
+            const path = pathSegs[i];
+            let index = e.target.index
+            if (path === 'Array') {
+            } else {
+                dummy[path] = e.target.value
+            }
+        }
+
+        this.setState(partialState)
+    }
+
+    update(e) {
+      e.target.disabled = true
       let appCfg = {}
       this.props.onUpdateClick(appCfg)
     }
@@ -26,36 +46,42 @@ class appCfgV extends Component {
         for (const key in appCfg.targets) {
             if (appCfg.targets.hasOwnProperty(key)) {
                 let target = appCfg.targets[key];
-                targetDivs.push(<div key={key}><h5>{key}</h5><input value={target}/></div>)
+                targetDivs.push(<li className="tgt-div" key={key}><h5>{key}</h5><input name={'targets.' + key} value={target} onChange={this.handleChange} /></li>)
             }
         }
 
         return (
-            <div id="fm_appCfg">
-                <label>Name: </label>
-                <input id="ipt_name" value={appCfg.name} />
-                <br/>
-                <h4>Description</h4>
-                <textarea id="ipt_desc" value={appCfg.desc} />
-                <br/>
-                <h4>Deployment</h4>
-                <label>Forward: </label>
-                <select id="ipt_forwardTarget" value="dev" value={appCfg.apiForwardTarget}>
-                <option value="dev">dev</option>
-                <option value="beta">beta</option>
-                <option value="prod">prod</option>
-                </select>
-                <br/>
-                {
-                    targetDivs.map((elem, index) => {
-                        return elem
-                    })
-                }
-                
-                <br/>
+            <div id="div_appCfg">
+                <h2>App config</h2>
+                <Link to='/'>back to list</Link>
+                <form id="fm_appCfg">
+                    <label>Name: </label>
+                    <input id="ipt_name" name='name' value={appCfg.name} onChange={this.handleChange} />
+                    <br/>
+                    <h4>Description</h4>
+                    <textarea id="ipt_desc" name='desc' value={appCfg.desc} onChange={this.handleChange} />
+                    <br/>
+                    <h4>Targets</h4>
+                    <label>Forward: </label>
+                    <select id="ipt_forwardTarget" name='apiForwardTarget' value="dev" value={appCfg.apiForwardTarget} onChange={this.handleChange} >
+                    <option value="dev">dev</option>
+                    <option value="beta">beta</option>
+                    <option value="prod">prod</option>
+                    </select>
+                    <br/>
+                    <ul>
+                    {
+                        targetDivs.map((elem, index) => {
+                            return elem
+                        })
+                    }
+                    </ul>
+                    
+                    <br/>
 
-                <button id="btn_submit" onClick={()=> this.update() } >Apply</button>
-                <button id="btn_discard" onClick="">Discard</button>
+                    <button id="btn_submit" onClick={this.update} >Apply</button>
+                    <button id="btn_discard" onClick="">Discard</button>
+                </form>
             </div>
         );
     }

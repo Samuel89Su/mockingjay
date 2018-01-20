@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import '../styles/apiList.scss'
-import InventoryAPI from '../middlewares/InventoryAPI'
-import { fetchRemote } from '../middlewares/remoteFetch'
-import { updateApiList } from '../actions'
 
 class apiListV extends Component {
     constructor(props) {
@@ -11,11 +8,7 @@ class apiListV extends Component {
     }    
 
     componentDidMount() {
-        InventoryAPI.apiList.url += this.props.location.search
-        this.props.dispatch(fetchRemote(InventoryAPI.apiList))
-        .then(
-            appList => this.props.dispatch(updateApiList(appList)),
-            error => console.log(error))
+        this.props.onMounted(this.props.location.search)
     }
 
     render() {

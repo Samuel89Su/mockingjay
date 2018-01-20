@@ -15,6 +15,10 @@ const InventoryAPI = {
     url: '/inventory/app/list',
     method: 'GET'
   },
+  appGet: {
+    url: '/inventory/app/get',
+    method: 'GET'
+  },
   apiList: {
     url: '/inventory/api/list',
     method: 'GET'

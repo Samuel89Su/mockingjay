@@ -3,7 +3,7 @@ import 'normalize.css/normalize.css'
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 //import { AppList, AppRoutes } from './appList'
-import { appListC, AppRoutes } from '../containers/appListC'
+import { appListC, AppRoutes } from '../components/appListC'
 
 class PageHeader extends Component {
     render() {

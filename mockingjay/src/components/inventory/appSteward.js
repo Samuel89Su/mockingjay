@@ -1,34 +1,35 @@
-'use strict';
+'use strict'
 
-const Router = require('koa-router');
-const Ajv = require('ajv');
-const redisClient = require('../common/redisClient');
-const cacheKeys = require('../common/cacheKeys');
-const logger = require('../common/logger');
-const errCode = require('./errCode');
-const bodyParser = require('../common/bodyParser');
-const appSchema = require('../Schemas/appSchema');
-        
-const ajv = new Ajv();
+const Router = require('koa-router')
+const Ajv = require('ajv')
+const redisClient = require('../common/redisClient')
+const cacheKeys = require('../common/cacheKeys')
+const logger = require('../common/logger')
+const errCode = require('./errCode')
+const bodyParser = require('../common/bodyParser')
+const appSchema = require('../Schemas/appSchema')
+
+const ajv = new Ajv()
 
 class steward {
     constructor(arg) {
-        this.router = new Router();
-        this.validate = ajv.compile(appSchema);
-        this.list = this.list.bind(this);
-        this.register = this.register.bind(this);
-        this.update = this.update.bind(this);
-        this.discard = this.discard.bind(this);
+        this.router = new Router()
+        this.validate = ajv.compile(appSchema)
+        this.list = this.list.bind(this)
+        this.register = this.register.bind(this)
+        this.update = this.update.bind(this)
+        this.discard = this.discard.bind(this)
     }
 
     getRouter() {
         this.router.get(['/', '/echo'], (ctx, next) => {
-            ctx.response.body = 'you are in app inventory now.';
+            ctx.response.body = 'you are in app inventory now.'
         });
-        this.router.get('/list', this.list);
-        this.router.post('/register', bodyParser, this.register);
-        this.router.post('/update', bodyParser, this.update);
-        this.router.post('/discard', bodyParser, this.discard);
+        this.router.get('/list', this.list)
+        this.router.get('/get', this.get)
+        this.router.post('/register', bodyParser, this.register)
+        this.router.post('/update', bodyParser, this.update)
+        this.router.post('/discard', bodyParser, this.discard)
 
         return this.router;
     }
@@ -51,12 +52,29 @@ class steward {
         await next();
     };
 
+    // fetch app cfg by id
+    async get(ctx, next) {
+        let id = ctx.request.query.appId
+        if (!id) {
+            ctx.response.status = 400
+            ctx.response.body = 'app id CAN NOT be null or empty'
+        } else {
+            let key = `${cacheKeys.appInventory}:${id}`
+            let appDesc = await redisClient.getAsync(key)
+            let appCfg = JSON.parse(appDesc)
+
+            ctx.response.body = errCode.success(appCfg);
+        }
+
+        await next();
+    }
+
     // register app
     async register(ctx, next) {
         let appDesc = ctx.request.body;
 
         // validate body json schema
-        if(!this.validate(appDesc)) {            
+        if (!this.validate(appDesc)) {
             ctx.response.status = 400;
             ctx.response.body = validate.errors;
         } else {
@@ -83,7 +101,7 @@ class steward {
         let appDesc = ctx.request.body;
 
         // validate body json schema
-        if (!this.validate(appDesc)) {            
+        if (!this.validate(appDesc)) {
             ctx.response.status = 400;
             ctx.response.body = validate.errors;
         } else if (!appDesc.id) {
@@ -113,7 +131,7 @@ class steward {
         let appDesc = ctx.request.body;
 
         // validate body json schema
-        if (!this.validate(appDesc)) {            
+        if (!this.validate(appDesc)) {
             ctx.response.status = 400;
             ctx.response.body = validate.errors;
         } else if (!appDesc.id) {

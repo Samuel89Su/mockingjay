@@ -25,7 +25,13 @@ html {
   height: 80px;
   width: 100%;
   background-color: chocolate;
-  vertical-align: auto;
+  vertical-align: middle;
   text-align: left;
   margin: 0 auto;
+
+  h1 {
+    vertical-align: middle;
+    position: inherit;
+    margin: 20px 0 0 20px;
+  }
 }
