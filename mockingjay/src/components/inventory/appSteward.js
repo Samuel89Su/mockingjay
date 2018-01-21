@@ -10,12 +10,14 @@ const bodyParser = require('../common/bodyParser')
 const appSchema = require('../Schemas/appSchema')
 
 const ajv = new Ajv()
+const validate = ajv.compile(appSchema)
 
 class steward {
     constructor(arg) {
         this.router = new Router()
-        this.validate = ajv.compile(appSchema)
+
         this.list = this.list.bind(this)
+        this.get = this.get.bind(this)
         this.register = this.register.bind(this)
         this.update = this.update.bind(this)
         this.discard = this.discard.bind(this)
@@ -71,10 +73,10 @@ class steward {
 
     // register app
     async register(ctx, next) {
-        let appDesc = ctx.request.body;
+        let appDesc = JSON.parse(ctx.request.body)
 
         // validate body json schema
-        if (!this.validate(appDesc)) {
+        if (!validate(appDesc)) {
             ctx.response.status = 400;
             ctx.response.body = validate.errors;
         } else {
@@ -98,10 +100,10 @@ class steward {
 
     //  update app desc
     async update(ctx, next) {
-        let appDesc = ctx.request.body;
+        let appDesc = JSON.parse(ctx.request.body)
 
         // validate body json schema
-        if (!this.validate(appDesc)) {
+        if (!validate(appDesc)) {
             ctx.response.status = 400;
             ctx.response.body = validate.errors;
         } else if (!appDesc.id) {
@@ -128,10 +130,10 @@ class steward {
     }
 
     async discard(ctx, next) {
-        let appDesc = ctx.request.body;
+        let appDesc = JSON.parse(ctx.request.body)
 
         // validate body json schema
-        if (!this.validate(appDesc)) {
+        if (!validate(appDesc)) {
             ctx.response.status = 400;
             ctx.response.body = validate.errors;
         } else if (!appDesc.id) {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import '../styles/appCfg.scss'
+import deepClone from '../utils/deepClone'
 
 class appCfgV extends Component {
     constructor(props) {
@@ -8,8 +9,13 @@ class appCfgV extends Component {
 
         this.update = this.update.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        // this.handleTargetChange = this.handleTargetChange.bind(this)
 
-        this.setState({})
+        this.state = {}
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState(nextProps.appCfg)
     }
 
     componentDidMount() {
@@ -19,34 +25,42 @@ class appCfgV extends Component {
     handleChange(e) {
         let oPath = e.target.name
         let pathSegs = oPath.split('.')
-        let partialState = {}
-        let dummy = partialState
+        let newState = deepClone(this.state)
+        let dummy = newState
         for (let i = 0; i < pathSegs.length; i++) {
             const path = pathSegs[i];
-            let index = e.target.index
-            if (path === 'Array') {
-            } else {
+            if (i === pathSegs.length - 1) {
                 dummy[path] = e.target.value
+            } else {
+                dummy = dummy[path]
             }
         }
 
-        this.setState(partialState)
+        this.setState(newState)
     }
 
     update(e) {
       e.target.disabled = true
-      let appCfg = {}
+      let appCfg = this.state
       this.props.onUpdateClick(appCfg)
     }
 
     render() {
-        let appCfg = this.props.appCfg
+        let appCfg = this.state
+        if (!appCfg || !appCfg.hasOwnProperty('name')) {
+            return (<div>has no state</div>)
+        }
 
         let targetDivs = []
         for (const key in appCfg.targets) {
             if (appCfg.targets.hasOwnProperty(key)) {
                 let target = appCfg.targets[key];
-                targetDivs.push(<li className="tgt-div" key={key}><h5>{key}</h5><input name={'targets.' + key} value={target} onChange={this.handleChange} /></li>)
+                targetDivs.push((<li className="tgt-div" key={key}>
+                                    <h5>{key}</h5>
+                                    <input name={'targets.' + key}
+                                        value={target}
+                                        onChange={this.handleChange} />
+                                </li>))
             }
         }
 

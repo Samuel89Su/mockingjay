@@ -14,12 +14,12 @@
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
         },
-        // {
-        //     "type": "node",
-        //     "request": "launch",
-        //     "name": "Run Server",
-        //     "program": "${workspaceFolder}\\index.js"
-        // },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Run Server",
+            "program": "${workspaceFolder}\\index.js"
+        },
         // {
         //     "type": "node",
         //     "request": "launch",
