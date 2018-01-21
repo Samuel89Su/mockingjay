@@ -3,12 +3,13 @@ import apiListV from './apiListV'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
 import apiCfgC from './apiCfgC'
+import apiSchemaC from './apiSchemaC'
 
 // routes
 const ApiRoutes = [
     { path: '/api/register' },
     { path: '/api/details', component: apiCfgC },
-    { path: '/api/schema' },
+    { path: '/api/schema', component: apiSchemaC },
     { path: '/api/mockcfg' }
 ]
 

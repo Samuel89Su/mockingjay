@@ -54,8 +54,8 @@ class apiListV extends Component {
                                         <td>{ api.path }</td>
                                         <td>{ api.description }</td>
                                         <td><Link to={`/api/details?key=apiinventory:${this.state.appName}&hashKey=${cacheKey}`}>details</Link></td>
-                                        <td><Link to={`/api/schema?key=apiinventory:${this.state.appName}&hashKey=${cacheKey}`}>schema</Link></td>
-                                        <td><Link to={`/api/mockcfg?key=apiinventory:${this.state.appName}&hashKey=${cacheKey}`}>mockcfg</Link></td>
+                                        <td><Link to={`/api/schema?appName=${this.state.appName}&apiId=${api.apiId}`}>schema</Link></td>
+                                        <td><Link to={`/api/mockcfg?appName=${this.state.appName}&apiId=${api.apiId}`}>mockcfg</Link></td>
                                     </tr>)
                             })
                         }

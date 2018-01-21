@@ -1,13 +1,18 @@
-import { connect } from 'react-redux'
-import apiCfgV  from './apiCfgV'
-import { fetchRemote, fakeDiscard } from '../middlewares/remoteFetch'
+import {
+  connect
+} from 'react-redux'
+import apiCfgV from './apiCfgV'
+import {
+  fetchRemote,
+  fakeDiscard
+} from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
 
 // actions
 const updateApiCfg = apiCfg => {
   return {
-      type: 'UPDATE_APICFG',
-      apiCfg
+    type: 'UPDATE_APICFG',
+    apiCfg
   }
 }
 
@@ -16,30 +21,32 @@ function fetchRemoteApiCfg(urlSearch, dispatch) {
   let fetchOpts = Object.assign({}, InventoryAPI.apiGet)
   fetchOpts.url += urlSearch
   return fetchRemote(fetchOpts)
-  .then(
-    apiCfg => dispatch(updateApiCfg(apiCfg)),
-    error => console.log(error))
+    .then(
+      apiCfg => dispatch(updateApiCfg(apiCfg)),
+      error => console.log(error))
 }
 
-function updateRemoteAppCfg(apiCfg, dispatch) {
+function updateRemoteApiCfg(apiCfg, dispatch) {
   let api = !apiCfg.id ? InventoryAPI.apiRegister : InventoryAPI.apiUpdate
   let fetchOpts = Object.assign({}, api)
   let payload = JSON.stringify(apiCfg)
   return fetchRemote(fetchOpts, payload)
-  .then(
-    apiCfg => dispatch(updateApiCfg(apiCfg)),
-    error => console.log(error))
+    .then(
+      apiCfg => dispatch(updateApiCfg(apiCfg)),
+      error => console.log(error))
 }
 
 function discardRemoteAppCfg(apiCfg, history) {
-    let api = InventoryAPI.apiDiscard
-    let fetchOpts = Object.assign({}, api)
-    let payload = JSON.stringify(apiCfg)
-    return fakeDiscard(fetchOpts, payload)
+  let api = InventoryAPI.apiDiscard
+  let fetchOpts = Object.assign({}, api)
+  let payload = JSON.stringify(apiCfg)
+  return fakeDiscard(fetchOpts, payload)
     .then(
-      apiCfg => { history.goBack() },
+      apiCfg => {
+        history.goBack()
+      },
       error => console.log(error))
-  }
+}
 
 // map state to props
 const mapStateToProps = state => {
@@ -47,7 +54,7 @@ const mapStateToProps = state => {
     apiCfg: state.apiCfg
   }
 }
-  
+
 // map dispatch to props
 const mapDispatchToProps = dispatch => {
   return {
@@ -55,7 +62,7 @@ const mapDispatchToProps = dispatch => {
       fetchRemoteApiCfg(apiKey, dispatch)
     },
     onUpdateClick: apiCfg => {
-      updateRemoteAppCfg(apiCfg, dispatch)
+      updateRemoteApiCfg(apiCfg, dispatch)
     },
     onDiscardClick: (apiCfg, history) => {
       discardRemoteAppCfg(apiCfg, history)
@@ -63,5 +70,5 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-const apiCfgC = connect(mapStateToProps, mapDispatchToProps)(apiCfgV )
+const apiCfgC = connect(mapStateToProps, mapDispatchToProps)(apiCfgV)
 export default apiCfgC;

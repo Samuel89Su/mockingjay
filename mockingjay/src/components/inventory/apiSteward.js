@@ -415,7 +415,6 @@ class Steward {
         let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }`
 
         // check is existed
-        let apiId = apiData.apiId;
         let apiSketch = await redisClient.hgetAsync(baseKey, apiConfig.apiId);
         if (!apiSketch) {
             ctx.response.body = errCode.resNotFound();
@@ -442,7 +441,9 @@ class Steward {
     }
 
     async getApiSchema(ctx, next) {
-        let apiData = ctx.request.body;
+        let rawArgs = ctx.request.body;
+
+        let args = JSON.parse(rawArgs)
 
         // validate
         // var valid = registerValidate(apiData);
@@ -452,9 +453,9 @@ class Steward {
         //     return await next();
         // }
 
-        let baseKey = `${ cacheKeys.apiInventory }:${ apiData.appName.toLowerCase() }`
+        let baseKey = `${ cacheKeys.apiInventory }:${ args.appName.toLowerCase() }`
 
-        let cacheKey = `${ baseKey }:${ apiData.apiId }_schema`
+        let cacheKey = `${ baseKey }:${ args.apiId }_schema`
         let apiSchemaJson = await redisClient.getAsync(cacheKey);
         if (!apiSchemaJson) {
             ctx.response.body = errCode.dbErr();

@@ -1,11 +1,9 @@
 import { combineReducers } from 'redux'
-import appCfg from './appCfg'
-import appList from './appList'
-import apiList from './apiList'
-import apiCfg from './apiCfg'
+import { appList , appCfg } from './app'
+import { apiList, apiCfg, apiSchema } from './api'
 
 const managerAPP = combineReducers({
-  appCfg, appList, apiList, apiCfg
+  appCfg, appList, apiList, apiCfg, apiSchema
 })
 
 export default managerAPP
