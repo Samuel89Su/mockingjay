@@ -1,14 +1,19 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import queryString from 'query-string'
 import '../styles/apiList.scss'
 
 class apiListV extends Component {
     constructor(props) {
         super(props)
+
+        this.state = {}
     }    
 
     componentDidMount() {
         this.props.onMounted(this.props.location.search)
+        let query = queryString.parse(this.props.location.search)
+        this.setState({ appName: query.appName })
     }
 
     render() {
@@ -34,19 +39,23 @@ class apiListV extends Component {
                     </thead>
                     <tbody>
                         {
-                            list.map((app, index) => {
+                            list.map((api, index) => {
+                                let cacheKey = api.path.replace(/\//g, '_')
+                                if (cacheKey.startsWith('_')) {
+                                    cacheKey = cacheKey.substr(1)
+                                }
                                 return (
                                     <tr key={ index }>
-                                        <td>{ app.apiId }</td>
-                                        <td>{ app.name }</td>
-                                        <td>{ app.method }</td>
-                                        <td>{ app.validate }</td>
-                                        <td>{ app.forward }</td>
-                                        <td>{ app.path }</td>
-                                        <td>{ app.description }</td>
-                                        <td><Link to='/api/details'>details</Link></td>
-                                        <td><Link to='/api/schema'>schema</Link></td>
-                                        <td><Link to='/api/mockcfg'>mockcfg</Link></td>
+                                        <td>{ api.apiId }</td>
+                                        <td>{ api.name }</td>
+                                        <td>{ api.method }</td>
+                                        <td>{ api.validate }</td>
+                                        <td>{ api.forward }</td>
+                                        <td>{ api.path }</td>
+                                        <td>{ api.description }</td>
+                                        <td><Link to={`/api/details?key=apiinventory:${this.state.appName}&hashKey=${cacheKey}`}>details</Link></td>
+                                        <td><Link to={`/api/schema?key=apiinventory:${this.state.appName}&hashKey=${cacheKey}`}>schema</Link></td>
+                                        <td><Link to={`/api/mockcfg?key=apiinventory:${this.state.appName}&hashKey=${cacheKey}`}>mockcfg</Link></td>
                                     </tr>)
                             })
                         }

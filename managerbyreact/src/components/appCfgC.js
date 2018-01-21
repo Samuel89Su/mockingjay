@@ -31,6 +31,16 @@ function updateRemoteAppCfg(appCfg, dispatch) {
     error => console.log(error))
 }
 
+function discardRemoteAppCfg(appCfg, dispatch) {
+  let api = InventoryAPI.appDiscard
+  let fetchOpts = Object.assign({}, api)
+  let payload = JSON.stringify(appCfg)
+  return fetchRemote(fetchOpts, payload)
+  .then(
+    appCfg => dispatch(updateAppCfg(appCfg)),
+    error => console.log(error))
+}
+
 // map state to props
 const mapStateToProps = state => {
   return {
@@ -46,6 +56,9 @@ const mapDispatchToProps = dispatch => {
     },
     onUpdateClick: appCfg => {
       updateRemoteAppCfg(appCfg, dispatch)
+    },
+    onDiscardClick: appCfg => {
+      discardRemoteAppCfg(appCfg, dispatch)
     }
   }
 }

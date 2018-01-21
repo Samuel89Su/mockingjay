@@ -9,10 +9,6 @@ class appListV extends Component {
 
     componentDidMount() {
         this.props.onMounted()
-        // this.props.dispatch(fetchRemote(InventoryAPI.appList))
-        // .then(
-        //     appList => this.props.dispatch(updateAppList(appList)),
-        //     error => console.log(error))
     }
 
     render() {
@@ -41,7 +37,7 @@ class appListV extends Component {
                                         <td>{ app.name }</td>
                                         <td>{ app.desc }</td>
                                         <td><Link to={'/app/details?appId='+app.id}>details</Link></td>
-                                        <td><Link to={'/app/apilist?appId='+app.id}>api list</Link></td>
+                                        <td><Link to={`/app/apilist?appId=${app.id}&appName=${app.name}`}>api list</Link></td>
                                     </tr>)
                             })
                         }

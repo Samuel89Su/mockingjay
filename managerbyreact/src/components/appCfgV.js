@@ -8,8 +8,8 @@ class appCfgV extends Component {
         super(props)
 
         this.update = this.update.bind(this)
+        this.discard = this.discard.bind(this)
         this.handleChange = this.handleChange.bind(this)
-        // this.handleTargetChange = this.handleTargetChange.bind(this)
 
         this.state = {}
     }
@@ -43,6 +43,12 @@ class appCfgV extends Component {
       e.target.disabled = true
       let appCfg = this.state
       this.props.onUpdateClick(appCfg)
+    }
+
+    discard(e) {
+      e.target.disabled = true
+      let appCfg = this.state
+      this.props.onDiscardClick(appCfg)
     }
 
     render() {
@@ -94,7 +100,7 @@ class appCfgV extends Component {
                     <br/>
 
                     <button id="btn_submit" onClick={this.update} >Apply</button>
-                    <button id="btn_discard" onClick="">Discard</button>
+                    <button id="btn_discard" onClick={this.discard}>Discard</button>
                 </form>
             </div>
         );

@@ -23,6 +23,10 @@ const InventoryAPI = {
     url: '/inventory/api/list',
     method: 'GET'
   },
+  apiGet: {
+    url: '/inventory/api/get',
+    method: 'GET'
+  },
   apiRegister: {
     url: '/inventory/api/register',
     method: 'POST'
@@ -31,20 +35,32 @@ const InventoryAPI = {
     url: '/inventory/api/update',
     method: 'POST'
   },
+  apiDiscard: {
+    url: '/inventory/api/discard',
+    method: 'POST'
+  },
+  addMockCfg: {
+    url: '/inventory/api/mockcfg',
+    method: 'POST'
+  },
   apiSchema: {
-    url: '/inventory/api/getApiSchema',
+    url: '/inventory/api/getapischema',
     method: 'POST'
   },
   apiSchemaUpdate: {
-    url: '/inventory/api/updateSchema',
+    url: '/inventory/api/updateschema',
     method: 'POST'
   },
   apiMockCfg: {
-    url: '/inventory/api/getApiConfig',
+    url: '/inventory/api/getmockcfg',
     method: 'POST'
   },
   apiMockCfgUpdate: {
-    url: '/inventory/api/updateConfig',
+    url: '/inventory/api/updatemockcfg',
+    method: 'POST'
+  },
+  removeApiMockCfg: {
+    url: '/inventory/api/removemockcfg',
     method: 'POST'
   }
 }

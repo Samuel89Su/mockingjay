@@ -8,7 +8,7 @@ const APIPaths = {
   apiUpdate: './inventory/api/update',
   apiSchema: './inventory/api/getApiSchema',
   apiSchemaUpdate: './inventory/api/updateSchema',
-  apiMockCfg: './inventory/api/getApiConfig',
+  apiMockCfg: './inventory/api/getApiMockCfg',
   apiMockCfgUpdate: './inventory/api/updateConfig'
 }
 

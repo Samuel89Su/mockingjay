@@ -20,30 +20,31 @@ class Steward {
         this.list = this.list.bind(this);
         this.register = this.register.bind(this);
         this.update = this.update.bind(this);
-        this.remove = this.remove.bind(this);
-        this.config = this.config.bind(this);
-        this.updateConfig = this.updateConfig.bind(this);
-        this.removeConfig = this.removeConfig.bind(this);
+        this.remove = this.discard.bind(this);
+        this.config = this.mockCfg.bind(this);
+        this.updateConfig = this.updateMockCfg.bind(this);
+        this.removeConfig = this.removeMockCfg.bind(this);
         this.getAppConfig = this.getAppConfig.bind(this);
         this.getApiSchema = this.getApiSchema.bind(this);
-        this.getApiConfig = this.getApiConfig.bind(this);
+        this.getApiMockCfg = this.getApiMockCfg.bind(this);
         this.updateSchema = this.updateSchema.bind(this);
     }
 
     getRouter() {
         this.router.get(['/', '/echo'], (ctx, next) => {
-            ctx.response.body = 'you are in api inventory now.';
+            ctx.response.body = 'you are in api inventory now.'
         });
-        this.router.get('/list', this.list);
+        this.router.get('/list', this.list)
+        this.router.get('/get', this.get)
         this.router.post('/register', commonBodyParser, this.register);
         this.router.post('/update', commonBodyParser, this.update);
-        this.router.post('/remove', commonBodyParser, this.remove);
+        this.router.post('/discard', commonBodyParser, this.discard);
         this.router.post('/updateschema', commonBodyParser, this.updateSchema);
-        this.router.post('/config', commonBodyParser, this.config);
-        this.router.post('/updateconfig', commonBodyParser, this.updateConfig);
-        this.router.post('/removeconfig', commonBodyParser, this.removeConfig);
+        this.router.post('/mockcfg', commonBodyParser, this.mockCfg);
+        this.router.post('/updatemockcfg', commonBodyParser, this.updateMockCfg);
+        this.router.post('/removemockcfg', commonBodyParser, this.removeMockCfg);
         this.router.post('/getapischema', commonBodyParser, this.getApiSchema);
-        this.router.post('/getapiconfig', commonBodyParser, this.getApiConfig);
+        this.router.post('/getmockcfg', commonBodyParser, this.getApiMockCfg);
 
         return this.router;
     }
@@ -83,6 +84,34 @@ class Steward {
 
                 ctx.response.body = errCode.success(apis);
             }
+        }
+
+        await next();
+    }
+
+    async get(ctx, next) {
+        let apiCacheKey = ''
+        let hashKey = ''
+        if (ctx.query) {
+            for (const key in ctx.query) {
+                if (key.toLowerCase() === 'key') {
+                    apiCacheKey = ctx.query[key].toLowerCase()
+                }
+                if (key.toLowerCase() === 'hashkey') {
+                    hashKey = ctx.query[key].toLowerCase()
+                }
+            }
+        }
+        if (!apiCacheKey || !hashKey) {
+            ctx.response.status = 400;
+            ctx.response.body = 'key CAN NOT be null or empty';
+        } else {
+            //TODO: check is app registered
+
+            let rawApiCfg = await redisClient.hgetAsync(apiCacheKey, hashKey);
+            let apiCfg = JSON.parse(rawApiCfg)
+
+            ctx.response.body = errCode.success(apiCfg)
         }
 
         await next();
@@ -207,11 +236,11 @@ class Steward {
         await next();
     }
 
-    async remove(ctx, next) {
+    async discard(ctx, next) {
         let arg = ctx.request.body;
-        if (!arg.appId || !arg.id) {
+        if (!arg.appId || !arg.apiId) {
             ctx.response.status = 400;
-            ctx.response.body = "appId or id is missing.";
+            ctx.response.body = "appId or apiId is missing.";
             return await next();
         }
 
@@ -223,7 +252,7 @@ class Steward {
 
         // remove app sketch
         let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }`
-        let ok = await redisClient.hdelAsync(baseKey, arg.id) > 0;
+        let ok = await redisClient.hdelAsync(baseKey, arg.apiId) > 0;
         if (!ok) {
             ctx.response.body = errCode.success();
             return await next();
@@ -239,7 +268,7 @@ class Steward {
         }
 
         // remove cofig
-        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }:${ arg.id }_mockCfg`
+        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }:${ arg.apiId }_mockCfg`
         let ok = await redisClient.delAsync(cacheKey) >= 0;
         if (ok) {
             ctx.response.body = errCode.success();
@@ -250,7 +279,7 @@ class Steward {
         await next();
     }
 
-    async updateSchema(ctx, next) {        
+    async updateSchema(ctx, next) {
         let apiData = ctx.request.body;
         // validate
         var valid = apiSchemaValidate(apiData);
@@ -281,7 +310,7 @@ class Steward {
                 }
             }
         }
-        
+
         let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }`
         let cacheKey = `${ baseKey }:${ apiData.apiId }_schema`
         let ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiData.schema)) === 'OK';
@@ -294,7 +323,7 @@ class Steward {
         await next();
     }
 
-    async config(ctx, next) {
+    async mockCfg(ctx, next) {
         let apiConfig = ctx.request.body;
         // validate
         var valid = cfgValidate(apiConfig);
@@ -330,7 +359,7 @@ class Steward {
         await next();
     }
 
-    async updateConfig(ctx, next) {
+    async updateMockCfg(ctx, next) {
         let apiConfig = ctx.request.body;
         // validate
         var valid = cfgValidate(apiConfig);
@@ -338,7 +367,7 @@ class Steward {
             ctx.response.status = 400;
             ctx.response.body = cfgValidate.errors;
             return await next();
-        } else if (!apiConfig.apiId) {            
+        } else if (!apiConfig.apiId) {
             ctx.response.status = 400;
             ctx.response.body = "apiId missing.";
             return await next();
@@ -349,7 +378,7 @@ class Steward {
             ctx.response.body = errCode.resNotFound();
             return await next();
         }
-        
+
         let pathKey = apiConfig.path.replace(/\//g, '_');
         if (pathKey.indexOf('_') === 0) {
             pathKey = pathKey.substr(1);
@@ -369,7 +398,7 @@ class Steward {
         await next();
     }
 
-    async removeConfig(ctx, next) {
+    async removeMockCfg(ctx, next) {
         let apiConfig = ctx.request.body;
         if (!apiConfig.apiId || !apiConfig.appId) {
             ctx.response.status = 400;
@@ -443,8 +472,8 @@ class Steward {
 
         await next();
     }
-    
-    async getApiConfig(ctx, next) {
+
+    async getApiMockCfg(ctx, next) {
         let apiData = ctx.request.body;
 
         // validate

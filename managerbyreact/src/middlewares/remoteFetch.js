@@ -12,7 +12,7 @@ const fetchJson = function (url, opts) {
     })
     .then(retData => {
       if (retData.code !== 0) {
-        return
+        return null
       } else {
         if (retData.data) {
           return retData.data
@@ -29,6 +29,10 @@ const fetchRemote = function (api, payload) {
   return fetchJson(api.url, api)
 }
 
+function fakeDiscard(api, payload) {
+  return new Promise((resolve, reject) => { resolve = ()=>{ return true }; reject = ()=>{ return false } })
+}
+
 export {
-  fetchRemote
+  fetchRemote, fakeDiscard
 }
