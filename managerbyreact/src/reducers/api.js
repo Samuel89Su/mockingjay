@@ -25,8 +25,18 @@ const apiSchema = (state = {}, action) => {
   }
 }
 
+const apiMcCfg = (state = {}, action) => {
+  switch (action.type) {
+    case 'UPDATE_APIMCCFG':
+      return action.apiMcCfg
+    default:
+      return state
+  }
+}
+
 export {
   apiList,
   apiCfg,
-  apiSchema
+  apiSchema,
+  apiMcCfg
 }

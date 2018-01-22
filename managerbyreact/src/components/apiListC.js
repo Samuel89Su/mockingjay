@@ -4,13 +4,14 @@ import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
 import apiCfgC from './apiCfgC'
 import apiSchemaC from './apiSchemaC'
+import apiMcCfgC from './apiMcCfgC'
 
 // routes
 const ApiRoutes = [
     { path: '/api/register' },
     { path: '/api/details', component: apiCfgC },
     { path: '/api/schema', component: apiSchemaC },
-    { path: '/api/mockcfg' }
+    { path: '/api/mockcfg', component: apiMcCfgC }
 ]
 
 // actions

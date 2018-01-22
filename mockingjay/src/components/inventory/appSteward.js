@@ -73,7 +73,7 @@ class steward {
 
     // register app
     async register(ctx, next) {
-        let appDesc = JSON.parse(ctx.request.body)
+        let appDesc = ctx.request.body
 
         // validate body json schema
         if (!validate(appDesc)) {
@@ -100,7 +100,7 @@ class steward {
 
     //  update app desc
     async update(ctx, next) {
-        let appDesc = JSON.parse(ctx.request.body)
+        let appDesc = ctx.request.body
 
         // validate body json schema
         if (!validate(appDesc)) {
@@ -130,7 +130,7 @@ class steward {
     }
 
     async discard(ctx, next) {
-        let appDesc = JSON.parse(ctx.request.body)
+        let appDesc = ctx.request.body
 
         // validate body json schema
         if (!validate(appDesc)) {

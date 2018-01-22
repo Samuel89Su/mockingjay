@@ -9,6 +9,7 @@ const errCode = require('./errCode');
 const commonBodyParser = require('../common/bodyParser');
 const cfgSchema = require('../Schemas/apiCfgSchema');
 const apiRegistrationSchema = require('../Schemas/apiRegistrationSchema');
+const jsonParse = require('../common/jsonParser')
 
 const ajv = new Ajv(); // options can be passed, e.g. {allErrors: true}
 const cfgValidate = ajv.compile(cfgSchema);
@@ -280,68 +281,65 @@ class Steward {
     }
 
     async updateSchema(ctx, next) {
-        let apiData = ctx.request.body;
-        // validate
-        var valid = apiSchemaValidate(apiData);
+        let apiData = ctx.request.body
+        apiData = jsonParse(apiData)
         if (!apiData.appId || apiData.appId === 0 || !apiData.apiId || apiData.apiId === 0) {
-            ctx.response.status = 400;
-            ctx.response.body = apiSchemaValidate.errors;
-            return await next();
+            ctx.response.status = 400
+            ctx.response.body = 'parameter not completed'
+            return await next()
         }
 
-        let appDesc = await this.getAppConfig(apiData.appId);
+        let appDesc = await this.getAppConfig(apiData.appId)
         if (!appDesc) {
-            ctx.response.body = errCode.resNotFound();
-            return await next();
+            ctx.response.body = errCode.resNotFound()
+            return await next()
         }
 
         if (!apiData.schema) {
-            ctx.response.status = 400;
-            ctx.response.body = 'schema is missing';
-            return await next();
-        }
-
-        for (const key in apiData.schema.properties) {
-            if (apiData.schema.properties.hasOwnProperty(key)) {
-                let propt = apiData.schema.properties[key];
-                if (typeof propt === 'string') {
-                    propt = propt.replace('\\n', '')
-                    propt = JSON.parse(propt)
-                }
-            }
+            ctx.response.status = 400
+            ctx.response.body = 'schema is missing'
+            return await next()
         }
 
         let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }`
         let cacheKey = `${ baseKey }:${ apiData.apiId }_schema`
-        let ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiData.schema)) === 'OK';
+        let ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiData.schema)) === 'OK'
         if (ok) {
-            ctx.response.body = errCode.success(apiData);
+            if (apiData.schema.properties) {
+                for (const key in apiData.schema.properties) {
+                    if (apiData.schema.properties.hasOwnProperty(key)) {
+                        const prop = apiData.schema.properties[key];
+                        apiData.schema.properties[key] = JSON.stringify(prop)
+                    }
+                }
+            }
+            ctx.response.body = errCode.success(apiData.schema)
         } else {
-            ctx.response.body = errCode.dbErr();
+            ctx.response.body = errCode.dbErr()
         }
 
-        await next();
+        await next()
     }
 
     async mockCfg(ctx, next) {
-        let apiConfig = ctx.request.body;
+        let apiConfig = ctx.request.body
         // validate
-        var valid = cfgValidate(apiConfig);
+        var valid = cfgValidate(apiConfig)
         if (!valid) {
-            ctx.response.status = 400;
-            ctx.response.body = cfgValidate.errors;
-            return await next();
+            ctx.response.status = 400
+            ctx.response.body = cfgValidate.errors
+            return await next()
         }
 
-        let appDesc = await this.getAppConfig(apiConfig.appId);
+        let appDesc = await this.getAppConfig(apiConfig.appId)
         if (!appDesc) {
-            ctx.response.body = errCode.resNotFound();
-            return await next();
+            ctx.response.body = errCode.resNotFound()
+            return await next()
         }
 
-        let pathKey = apiConfig.path.replace(/\//g, '_');
+        let pathKey = apiConfig.path.replace(/\//g, '_')
         if (pathKey.indexOf('_') === 0) {
-            pathKey = pathKey.substr(1);
+            pathKey = pathKey.substr(1)
         }
         if (pathKey.lastIndexOf('_') === pathKey.length - 1) {
             pathKey = pathKey.substring(0, pathKey.length - 1)
@@ -349,14 +347,14 @@ class Steward {
         pathKey = pathKey.toLowerCase()
 
         let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }:${ apiConfig.apiId }_mockCfg`
-        let ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiConfig)) === 'OK';
+        let ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiConfig)) === 'OK'
         if (ok) {
-            ctx.response.body = errCode.success(apiConfig);
+            ctx.response.body = errCode.success(apiConfig)
         } else {
-            ctx.response.body = errCode.dbErr();
+            ctx.response.body = errCode.dbErr()
         }
 
-        await next();
+        await next()
     }
 
     async updateMockCfg(ctx, next) {
@@ -441,9 +439,7 @@ class Steward {
     }
 
     async getApiSchema(ctx, next) {
-        let rawArgs = ctx.request.body;
-
-        let args = JSON.parse(rawArgs)
+        let args = ctx.request.body
 
         // validate
         // var valid = registerValidate(apiData);
@@ -456,13 +452,21 @@ class Steward {
         let baseKey = `${ cacheKeys.apiInventory }:${ args.appName.toLowerCase() }`
 
         let cacheKey = `${ baseKey }:${ args.apiId }_schema`
-        let apiSchemaJson = await redisClient.getAsync(cacheKey);
-        if (!apiSchemaJson) {
+        let apiSchemaRaw = await redisClient.getAsync(cacheKey);
+        if (!apiSchemaRaw) {
             ctx.response.body = errCode.dbErr();
             return await next();
         } else {
             try {
-                let apiSchema = JSON.parse(apiSchemaJson);
+                let apiSchema = JSON.parse(apiSchemaRaw);
+                if (apiSchema.properties) {
+                    for (const key in apiSchema.properties) {
+                        if (apiSchema.properties.hasOwnProperty(key)) {
+                            const prop = apiSchema.properties[key];
+                            apiSchema.properties[key] = JSON.stringify(prop)
+                        }
+                    }
+                }
                 ctx.response.body = errCode.success(apiSchema);
 
             } catch (error) {

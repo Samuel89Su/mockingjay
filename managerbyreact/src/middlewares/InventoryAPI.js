@@ -1,15 +1,20 @@
+const contentTypeHeader = { 'Content-Type': 'application/json' }
+
 const InventoryAPI = {
   appRegister: {
     url: '/inventory/app/register',
-    method: 'POST'
+    method: 'POST',
+    headers: contentTypeHeader
   },
   appUpdate: {
     url: '/inventory/app/update',
-    method: 'POST'
+    method: 'POST',
+    headers: contentTypeHeader
   },
   appDiscard: {
     url: '/inventory/app/discard',
-    method: 'POST'
+    method: 'POST',
+    headers: contentTypeHeader
   },
   appList: {
     url: '/inventory/app/list',
@@ -29,39 +34,48 @@ const InventoryAPI = {
   },
   apiRegister: {
     url: '/inventory/api/register',
-    method: 'POST'
+    method: 'POST',
+    headers: contentTypeHeader
   },
   apiUpdate: {
     url: '/inventory/api/update',
-    method: 'POST'
+    method: 'POST',
+    headers: contentTypeHeader
   },
   apiDiscard: {
     url: '/inventory/api/discard',
-    method: 'POST'
+    method: 'POST',
+    headers: contentTypeHeader
   },
   addMockCfg: {
     url: '/inventory/api/mockcfg',
-    method: 'POST'
+    method: 'POST',
+    headers: contentTypeHeader
   },
   apiSchema: {
     url: '/inventory/api/getapischema',
-    method: 'POST'
+    method: 'POST',
+    headers: contentTypeHeader
   },
   apiSchemaUpdate: {
     url: '/inventory/api/updateschema',
-    method: 'POST'
+    method: 'POST',
+    headers: contentTypeHeader
   },
   apiMockCfg: {
     url: '/inventory/api/getmockcfg',
-    method: 'POST'
+    method: 'POST',
+    headers: contentTypeHeader
   },
   apiMockCfgUpdate: {
     url: '/inventory/api/updatemockcfg',
-    method: 'POST'
+    method: 'POST',
+    headers: contentTypeHeader
   },
   removeApiMockCfg: {
     url: '/inventory/api/removemockcfg',
-    method: 'POST'
+    method: 'POST',
+    headers: contentTypeHeader
   }
 }
 

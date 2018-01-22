@@ -41,7 +41,8 @@ class apiSchemaV extends Component {
     update(e) {
       e.target.disabled = true
       let apiSchema = this.state
-      this.props.onUpdateClick(apiSchema)
+      let dummy = { appId: this.props.apiCfg.appId, apiId:this.props.apiCfg.apiId, schema: apiSchema }
+      this.props.onUpdateClick(dummy)
     }
 
     render() {
@@ -64,28 +65,28 @@ class apiSchemaV extends Component {
                     <h3>Request</h3>
                     <h4>Query</h4>
                     <div id="dv_scm_query">
-                    <textarea id="ipt_query" value={apiSchema.properties.query} onChange={this.handleChange} />
+                    <textarea id="ipt_query" name="properties.query" value={apiSchema.properties.query} onChange={this.handleChange} />
                     </div>
                     
                     <h4>Headers</h4>
                     <div id="dv_scm_req_header">
-                    <textarea id="ipt_req_header" value={apiSchema.properties.reqHeaders} onChange={this.handleChange} />
+                    <textarea id="ipt_req_header" name="properties.reqHeaders" value={apiSchema.properties.reqHeaders} onChange={this.handleChange} />
                     </div>
                     
                     <h4>Body</h4>
                     <div id="dv_scm_req_body">
-                    <textarea id="ipt_req_body" value={apiSchema.properties.reqBody} onChange={this.handleChange} />
+                    <textarea id="ipt_req_body" name="properties.reqBody" value={apiSchema.properties.reqBody} onChange={this.handleChange} />
                     </div>
 
                     <h3>Response</h3>    
                     <h4>Headers</h4>
                     <div id="dv_scm_res_header">
-                    <textarea id="ipt_res_header" value={apiSchema.properties.resHeaders} onChange={this.handleChange} />
+                    <textarea id="ipt_res_header" name="properties.resHeaders" value={apiSchema.properties.resHeaders} onChange={this.handleChange} />
                     </div>
                     
                     <h4>Body</h4>
                     <div id="dv_scm_res_body">
-                    <textarea id="ipt_res_body" value={apiSchema.properties.resBody} onChange={this.handleChange} />
+                    <textarea id="ipt_res_body" name="properties.resBody" value={apiSchema.properties.resBody} onChange={this.handleChange} />
                     </div>
 
                     <button id="btn_submit" onClick={this.update}>Apply</button>
