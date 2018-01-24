@@ -17,18 +17,19 @@ const apiSchemaValidate = ajv.compile(apiRegistrationSchema);
 
 class Steward {
     constructor(arg) {
-        this.router = new Router();
-        this.list = this.list.bind(this);
-        this.register = this.register.bind(this);
-        this.update = this.update.bind(this);
-        this.remove = this.discard.bind(this);
-        this.config = this.mockCfg.bind(this);
-        this.updateConfig = this.updateMockCfg.bind(this);
-        this.removeConfig = this.removeMockCfg.bind(this);
-        this.getAppConfig = this.getAppConfig.bind(this);
-        this.getApiSchema = this.getApiSchema.bind(this);
-        this.getApiMockCfg = this.getApiMockCfg.bind(this);
-        this.updateSchema = this.updateSchema.bind(this);
+        this.router = new Router()
+        this.list = this.list.bind(this)
+        this.register = this.register.bind(this)
+        this.update = this.update.bind(this)
+        this.remove = this.discard.bind(this)
+        this.config = this.mockCfg.bind(this)
+        this.updateConfig = this.updateMockCfg.bind(this)
+        this.removeConfig = this.removeMockCfg.bind(this)
+        this.getAppConfig = this.getAppConfig.bind(this)
+        this.getApiSchema = this.getApiSchema.bind(this)
+        this.getApiMockCfg = this.getApiMockCfg.bind(this)
+        this.updateSchema = this.updateSchema.bind(this)
+        this.updateMockCfg = this.updateMockCfg.bind(this)
     }
 
     getRouter() {

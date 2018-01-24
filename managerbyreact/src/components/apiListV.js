@@ -21,7 +21,10 @@ class apiListV extends Component {
         return (
             <div id='api-list'>
                 <h2>Api List</h2>
-                <Link to='/api/register'>Register</Link>
+                <div className="operations">
+                    <Link to='/'>Back To List</Link>
+                    <Link to='/api/register'>Register</Link>
+                </div>
                 <table>
                     <thead>
                         <tr>
