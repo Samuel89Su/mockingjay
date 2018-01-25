@@ -8,7 +8,11 @@ class appListV extends Component {
     }
 
     componentDidMount() {
-        this.props.onMounted()
+        if (!this.props.appList 
+            || !(this.props.appList instanceof Array)
+            || this.props.appList.length === 0) {
+            this.props.onMounted()
+        }
     }
 
     render() {

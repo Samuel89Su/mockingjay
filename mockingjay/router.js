@@ -8,7 +8,7 @@ const inventoryRouter = require('./src/components/inventory/router');
 
 const router = new Router();
 
-router.all(['/', '/home/*'], home);
+// router.all(['/', '/home/*'], home);
 
 // register mocking module routes
 router.use('/mocking', brokerRouter.routes(), brokerRouter.allowedMethods());

@@ -1,9 +1,8 @@
 import '../styles/manager.scss'
 import 'normalize.css/normalize.css'
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
-//import { AppList, AppRoutes } from './appList'
-import { appListC, AppRoutes } from '../components/appListC'
+import { BrowserRouter as Router, Route, browserHistory } from 'react-router-dom'
+import { appListC, AppRoutes } from './appListC'
 
 class PageHeader extends Component {
     render() {
@@ -18,7 +17,7 @@ class PageHeader extends Component {
 class Manager extends Component {
     render() {
         return (
-            <Router>
+            <Router history={browserHistory}>
                 <div>
                     <PageHeader title='Mockingjay'></PageHeader>
             
