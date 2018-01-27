@@ -16,10 +16,10 @@
 			"path": "proxy-master"
 		},
 		{
-			"path": "next-demo"
+			"path": "nextgram"
 		},
 		{
-			"path": "nextgram"
+			"path": "next-with-koa2"
 		}
 	],
 	"settings": {}
