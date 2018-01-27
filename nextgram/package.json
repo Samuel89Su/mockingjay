@@ -1,0 +1,22 @@
+{
+  "name": "nextgram",
+  "private": true,
+  "dependencies": {
+    "next": "^2.0.0-beta",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "7.0.0",
+    "standard": "8.4.0"
+  },
+  "standard": {
+    "parser": "babel-eslint"
+  },
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "NODE_ENV=production next start",
+    "lint": "standard"
+  }
+}
