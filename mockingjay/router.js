@@ -13,27 +13,21 @@ router.use('/mocking', brokerRouter.routes(), brokerRouter.allowedMethods())
 // register api inventory module routes
 router.use('/inventory', inventoryRouter.routes(), inventoryRouter.allowedMethods())
 
-
-router.get('/index', async ctx => {
+router.get('/', async (ctx, next) => {
     await nextApp.render(ctx.req, ctx.res, '/index', ctx.query)
     ctx.respond = false
-    // ctx.status = 200
+    ctx.res.statusCode = 200
 })
 
-router.get('/a', async ctx => {
-    await nextApp.render(ctx.req, ctx.res, '/b', ctx.query)
-    ctx.respond = false
-    // ctx.status = 200
-})
-
-router.get('/b', async ctx => {
-    await nextApp.render(ctx.req, ctx.res, '/a', ctx.query)
-    ctx.respond = false
-    // ctx.status = 200
-})
-
-router.use('*', async (ctx, next) => {
-    console.log(ctx.path)
+const reservePattern = new RegExp('^/(index|mocking|inventory)', 'i')
+router.all('/*', async (ctx, next) => {
+    if (!reservePattern.test(ctx.path)) {
+        await nextApp.render(ctx.req, ctx.res, ctx.path, ctx.query)
+        ctx.respond = false
+        ctx.res.statusCode = 200
+    } else {
+        await next()
+    }
 })
 
 exports = module.exports = router

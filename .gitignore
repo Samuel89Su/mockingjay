@@ -67,3 +67,5 @@ typings/
 /managerbyreact/.vscode/launch.json
 /mockingjay/.next
 /mockingjay/appRoot
+/fakeserver/static/asserts
+/fakeserver/static/index.html
