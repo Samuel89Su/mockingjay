@@ -2,12 +2,12 @@
   "name": "mockingjay",
   "version": "0.0.1",
   "description": "A mock server for http.",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js",
-    "forever-start": "forever start -w --watchDirectory src index.js",
-    "forever-stop": "forever stop index.js",
-    "nodemon": "nodemon index.js"
+    "start": "node server.js",
+    "forever-start": "forever start -w --watchDirectory src server.js",
+    "forever-stop": "forever stop server.js",
+    "nodemon": "nodemon server.js"
   },
   "keywords": [
     "http",
@@ -22,8 +22,13 @@
   "author": "SamuelSu",
   "license": "MIT",
   "dependencies": {
+    "babel-core": "^6.26.0",
     "bunyan": "^1.8.12",
+    "fbjs": "^0.8.16",
     "koa": "^2.4.1",
+    "next": "^4.2.3",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
     "redis": "^2.8.0"
   },
   "devDependencies": {
@@ -36,7 +41,6 @@
     "copy-to": "^2.0.1",
     "forever": "^0.15.3",
     "http-errors": "^1.6.2",
-    "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",
     "koa-router": "^7.3.0",
     "koa-send": "^4.1.2",

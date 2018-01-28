@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "nodemon",
             "runtimeExecutable": "nodemon",
-            "program": "${workspaceFolder}/index.js",
+            "program": "${workspaceFolder}/server.js",
             "restart": true,
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
@@ -18,7 +18,7 @@
             "type": "node",
             "request": "launch",
             "name": "Run Server",
-            "program": "${workspaceFolder}\\index.js"
+            "program": "${workspaceFolder}\\server.js"
         },
         // {
         //     "type": "node",

@@ -1,8 +1,6 @@
 'use strict';
 
 const Router = require('koa-router');
-const bodyParser = require('../common/bodyParser');
-const logger = require('../common/logger');
 const appSteward = require('./appSteward');
 const apiSteward = require('./apiSteward');
 

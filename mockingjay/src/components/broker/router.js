@@ -7,7 +7,7 @@ const router = new Router();
 
 router.use('/*', broker)
 router.all('/*', async function (ctx, next) {
-    return await next();
+    return // await next();
 });
 
 exports = module.exports = router;
