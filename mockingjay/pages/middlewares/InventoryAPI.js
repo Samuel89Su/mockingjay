@@ -21,7 +21,7 @@ const InventoryAPI = {
     method: 'GET'
   },
   appGet: {
-    url: '/inventory/app/get',
+    url: '/inventory/app/get?appId=',
     method: 'GET'
   },
   apiList: {

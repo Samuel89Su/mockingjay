@@ -4,7 +4,7 @@ class PageHeader extends Component {
     render() {
         return (
             <div className='page-header'>
-                <h1>Api Inventory</h1>
+                <h1>Mockingjay</h1>
             </div>
         );
     }

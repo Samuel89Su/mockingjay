@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import '../styles/appCfg.scss'
+import Link from 'next/link'
+// import '../styles/appCfg.scss'
 import deepClone from '../utils/deepClone'
 
 class appCfgV extends Component {
@@ -19,7 +19,7 @@ class appCfgV extends Component {
     }
 
     componentDidMount() {
-        this.props.onMounted(this.props.location.search)
+        this.props.onMounted(this.props.url.query.appId)
     }
 
     handleChange(e) {
@@ -54,7 +54,7 @@ class appCfgV extends Component {
     render() {
         let appCfg = this.state
         if (!appCfg || !appCfg.hasOwnProperty('name')) {
-            return (<div>has no state</div>)
+            return (<div>{ this.props.screw }</div>)
         }
 
         let targetDivs = []
@@ -73,7 +73,7 @@ class appCfgV extends Component {
         return (
             <div id="div_appCfg">
                 <h2>App config</h2>
-                <Link to='/'>back to list</Link>
+                <Link href='/'><a>back to list</a></Link>
                 <form id="fm_appCfg">
                     <label>Name: </label>
                     <input id="ipt_name" name='name' value={appCfg.name} onChange={this.handleChange} />

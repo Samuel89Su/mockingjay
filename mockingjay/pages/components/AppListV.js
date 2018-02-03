@@ -7,9 +7,11 @@ class AppListV extends Component {
         super(props)
     }
 
-    componentDidMount() {
-        console.log('applist mounting')
+    componentWillReceiveProps(nextProps) {
+        this.setState({})
+    }
 
+    componentDidMount() {
         if (!this.props.appList 
             || !(this.props.appList instanceof Array)
             || this.props.appList.length === 0) {
@@ -18,8 +20,6 @@ class AppListV extends Component {
     }
 
     render() {
-
-        console.log('applist rendering')
 
         let list = this.props.appList
 
@@ -45,8 +45,8 @@ class AppListV extends Component {
                                             <td>{ app.id }</td>
                                             <td>{ app.name }</td>
                                             <td>{ app.desc }</td>
-                                            <td><Link href={'/app/details?appId='+app.id}><a>details</a></Link></td>
-                                            <td><Link href={`/app/apilist?appId=${app.id}&appName=${app.name}`}><a>api list</a></Link></td>
+                                            <td><Link href={{ pathname: '/AppDetails', query: { appId: app.id } }}><a>details</a></Link></td>
+                                            <td><Link href={`/apilist?appId=${app.id}&appName=${app.name}`}><a>api list</a></Link></td>
                                         </tr>)
                                 })
                             }

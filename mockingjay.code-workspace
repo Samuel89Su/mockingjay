@@ -16,9 +16,6 @@
 			"path": "proxy-master"
 		},
 		{
-			"path": "nextgram"
-		},
-		{
 			"path": "next-with-koa2"
 		}
 	],

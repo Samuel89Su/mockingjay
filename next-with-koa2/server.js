@@ -31,10 +31,10 @@ app.prepare()
           ctx.respond = false
         })
       
-        // router.get('/*', async ctx => {
-        //   await handle(ctx.req, ctx.res)
-        //   ctx.respond = false
-        // })
+        router.get('/*', async ctx => {
+          await handle(ctx.req, ctx.res)
+          ctx.respond = false
+        })
       
         router.use('/*', async (ctx, next) => {
           ctx.res.statusCode = 200

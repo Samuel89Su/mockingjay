@@ -1,7 +1,10 @@
-import { connect } from 'react-redux'
-import appCfgV from './appCfgV'
-import { fetchRemote } from '../middlewares/remoteFetch'
-import InventoryAPI from '../middlewares/InventoryAPI'
+'use strict'
+
+import withRedux from "next-redux-wrapper"
+import BuildStore from "./BuildStore";
+import appCfgV from './components/appCfgV'
+import { fetchRemote } from './middlewares/remoteFetch'
+import InventoryAPI from './middlewares/InventoryAPI'
 
 // actions
 const updateAppCfg = appCfg => {
@@ -12,9 +15,9 @@ const updateAppCfg = appCfg => {
 }
 
 // dispatchers
-function fetchRemoteAppCfg(urlSearch, dispatch) {
+function fetchRemoteAppCfg(appId, dispatch) {
   let fetchOpts = Object.assign({}, InventoryAPI.appGet)
-  fetchOpts.url += urlSearch
+  fetchOpts.url += appId
   return fetchRemote(fetchOpts)
   .then(
     appCfg => dispatch(updateAppCfg(appCfg)),
@@ -42,9 +45,9 @@ function discardRemoteAppCfg(appCfg, dispatch) {
 }
 
 // map state to props
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    appCfg: state.appCfg
+    appCfg: !state ? null : state.appCfg
   }
 }
   
@@ -63,5 +66,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-const appCfgC = connect(mapStateToProps, mapDispatchToProps)(appCfgV)
-export default appCfgC;
+export default withRedux(BuildStore, mapStateToProps, mapDispatchToProps)(appCfgV)

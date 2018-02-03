@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
-import apiMcCfgV  from './apiMcCfgV'
-import { fetchRemote } from '../middlewares/remoteFetch'
-import InventoryAPI from '../middlewares/InventoryAPI'
+import apiMcCfgV  from './components/apiMcCfgV'
+import { fetchRemote } from './middlewares/remoteFetch'
+import InventoryAPI from './middlewares/InventoryAPI'
 import queryString from 'query-string'
 
 // actions

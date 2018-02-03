@@ -1,7 +1,5 @@
-import {
-  connect
-} from 'react-redux'
-import apiCfgV from './apiCfgV'
+import { connect } from 'react-redux'
+import apiCfgV from './components/apiCfgV'
 import {
   fetchRemote,
   fakeDiscard
