@@ -2,9 +2,9 @@
 
 import { Component } from 'react'
 import withRedux from "next-redux-wrapper"
-import BuildStore from "./BuildStore";
+import BuildStore from "../components/BuildStore";
 import AppList from './AppList'
-import Layout from './components/Layout'
+import Layout from '../components/Layout'
 
 class Index extends Component {
 

@@ -45,7 +45,7 @@ class AppListV extends Component {
                                             <td>{ app.id }</td>
                                             <td>{ app.name }</td>
                                             <td>{ app.desc }</td>
-                                            <td><Link href={{ pathname: '/AppDetails', query: { appId: app.id } }}><a>details</a></Link></td>
+                                            <td><Link href={{ pathname: '/appdetails', query: { appId: app.id } }}><a>details</a></Link></td>
                                             <td><Link href={`/apilist?appId=${app.id}&appName=${app.name}`}><a>api list</a></Link></td>
                                         </tr>)
                                 })

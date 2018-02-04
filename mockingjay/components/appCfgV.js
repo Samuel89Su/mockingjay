@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Link from 'next/link'
 // import '../styles/appCfg.scss'
-import deepClone from '../utils/deepClone'
+import deepClone from './utils/deepClone'
 
 class appCfgV extends Component {
     constructor(props) {

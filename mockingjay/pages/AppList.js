@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
-import AppListV from './components/AppListV'
-import InventoryAPI from './middlewares/InventoryAPI'
-import { fetchRemote } from './middlewares/remoteFetch'
+import AppListV from '../components/AppListV'
+import InventoryAPI from '../components/InventoryAPI'
+import { fetchRemote } from '../components/remoteFetch'
 
 // actions
 const updateAppList = appList => {

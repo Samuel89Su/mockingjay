@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
-import apiSchemaV  from './components/apiSchemaV'
-import { fetchRemote } from './middlewares/remoteFetch'
-import InventoryAPI from './middlewares/InventoryAPI'
+import apiSchemaV  from '../components/apiSchemaV'
+import { fetchRemote } from '../components/remoteFetch'
+import InventoryAPI from '../components/InventoryAPI'
 import queryString from 'query-string'
 
 // actions

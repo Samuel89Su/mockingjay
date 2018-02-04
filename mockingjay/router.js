@@ -22,10 +22,10 @@ router.use('/mocking', brokerRouter.routes(), brokerRouter.allowedMethods())
 // register api inventory module routes
 router.use('/inventory', inventoryRouter.routes(), inventoryRouter.allowedMethods())
 
-const ignorePattern = new RegExp('^/(components|middlewares|reducers|utils)', 'i')
-router.all(/^\/(components|middlewares|reducers|utils)/i, async (ctx, next) => {
-    ctx.res.statusCode = 404
-})
+// const ignorePattern = new RegExp('^/(components|middlewares|reducers|utils)', 'i')
+// router.all(/^\/(components|middlewares|reducers|utils)/i, async (ctx, next) => {
+//     ctx.res.statusCode = 404
+// })
 
 const apiPattern = new RegExp('^/(mocking|inventory)')
 router.use('/mocking', async (ctx, next) => {
@@ -35,21 +35,23 @@ router.use('/inventory', async (ctx, next) => {
     console.log('hit api: ' + ctx.path)
 })
 
-router.get('/', async (ctx, next) => {
-    await nextApp.render(ctx.req, ctx.res, '/index', ctx.query)
-    ctx.respond = false
-    ctx.res.statusCode = 200
-})
+// router.get('/', async (ctx, next) => {
+//     await nextApp.render(ctx.req, ctx.res, '/index', ctx.query)
+//     ctx.respond = false
+//     ctx.res.statusCode = 200
+// })
 
-pages.forEach(page => {
-    router.get(page, renderPage)
-})
+// pages.forEach(page => {
+//     router.get(page, renderPage)
+// })
 
 // router.get('/appdetails', async (ctx, next) => {
 //     await nextApp.render(ctx.req, ctx.res, '/appdetails', ctx.query)
 //     ctx.respond = false
 //     ctx.res.statusCode = 200
 // })
+
+router.redirect('/', '/index')
 
 const handle = nextApp.getRequestHandler()
 const reservePattern = new RegExp('^/(mocking|inventory)', 'i')
@@ -63,10 +65,10 @@ router.all('/*', async (ctx, next) => {
     }
 })
 
-async function renderPage (ctx, next) {
-    await nextApp.render(ctx.req, ctx.res, ctx.path, ctx.query)
-    ctx.respond = false
-    ctx.res.statusCode = 200
-}
+// async function renderPage (ctx, next) {
+//     await nextApp.render(ctx.req, ctx.res, ctx.path, ctx.query)
+//     ctx.respond = false
+//     ctx.res.statusCode = 200
+// }
 
 exports = module.exports = router

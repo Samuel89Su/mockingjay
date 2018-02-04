@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import '../styles/apiMcCfg.scss'
-import deepClone from '../utils/deepClone'
+// import '../styles/apiMcCfg.scss'
+import deepClone from './utils/deepClone'
 
 class apiMcCfgV extends Component {
     constructor(props) {

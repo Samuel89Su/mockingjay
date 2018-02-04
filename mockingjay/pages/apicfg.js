@@ -1,10 +1,10 @@
 import { connect } from 'react-redux'
-import apiCfgV from './components/apiCfgV'
+import apiCfgV from '../components/apiCfgV'
 import {
   fetchRemote,
   fakeDiscard
-} from '../middlewares/remoteFetch'
-import InventoryAPI from '../middlewares/InventoryAPI'
+} from '../components/remoteFetch'
+import InventoryAPI from '../components/InventoryAPI'
 
 // actions
 const updateApiCfg = apiCfg => {

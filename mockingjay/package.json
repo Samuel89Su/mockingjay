@@ -7,7 +7,8 @@
     "start": "node server.js",
     "forever-start": "forever start -w --watchDirectory src server.js",
     "forever-stop": "forever stop server.js",
-    "nodemon": "nodemon server.js"
+    "nodemon": "nodemon server.js",
+    "next-build": "next build"
   },
   "keywords": [
     "http",

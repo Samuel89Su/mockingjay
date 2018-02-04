@@ -1,10 +1,10 @@
 'use strict'
 
 import withRedux from "next-redux-wrapper"
-import BuildStore from "./BuildStore";
-import appCfgV from './components/appCfgV'
-import { fetchRemote } from './middlewares/remoteFetch'
-import InventoryAPI from './middlewares/InventoryAPI'
+import BuildStore from "../components/BuildStore";
+import appCfgV from '../components/appCfgV'
+import { fetchRemote } from '../components/remoteFetch'
+import InventoryAPI from '../components/InventoryAPI'
 
 // actions
 const updateAppCfg = appCfg => {

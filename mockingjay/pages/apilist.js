@@ -1,17 +1,10 @@
 import { connect } from 'react-redux'
-import apiListV from './components/apiListV'
-import { fetchRemote } from './middlewares/remoteFetch'
-import InventoryAPI from './middlewares/InventoryAPI'
-import apiCfgC from './apiCfgC'
-import apiSchemaC from './apiSchemaC'
-import apiMcCfgC from './apiMcCfgC'
+import apiListV from '../components/apiListV'
+import { fetchRemote } from '../components/remoteFetch'
+import InventoryAPI from '../components/InventoryAPI'
 
 // routes
 const ApiRoutes = [
-    { path: '/api/register' },
-    { path: '/api/details', component: apiCfgC },
-    { path: '/api/schema', component: apiSchemaC },
-    { path: '/api/mockcfg', component: apiMcCfgC }
 ]
 
 // actions

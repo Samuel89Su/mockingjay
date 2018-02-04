@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import queryString from 'query-string'
-import '../styles/apiList.scss'
+// import '../styles/apiList.scss'
 
 class apiListV extends Component {
     constructor(props) {

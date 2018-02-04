@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import '../styles/apiCfg.scss'
-import deepClone from '../utils/deepClone'
+// import '../styles/apiCfg.scss'
+import deepClone from './utils/deepClone'
 
 class apiCfgV extends Component {
     constructor(props) {

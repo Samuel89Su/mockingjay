@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import '../styles/apiSchema.scss'
-import deepClone from '../utils/deepClone'
+// import '../styles/apiSchema.scss'
+import deepClone from './utils/deepClone'
 
 class apiSchemaV extends Component {
     constructor(props) {
