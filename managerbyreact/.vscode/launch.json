@@ -16,6 +16,6 @@
     "request": "launch",
     "name": "Launch Manager",
     "url": "http://localhost:8100",
-    "webRoot": "${workspaceFolder}"
+    "webRoot": "${workspaceFolder}/src"
   }]
 }

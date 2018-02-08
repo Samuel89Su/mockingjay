@@ -8,7 +8,7 @@ class appListV extends Component {
     }
 
     componentDidMount() {
-        if (!this.props.appList 
+        if (!this.props.appList
             || !(this.props.appList instanceof Array)
             || this.props.appList.length === 0) {
             this.props.onMounted()
@@ -17,6 +17,9 @@ class appListV extends Component {
 
     render() {
         let list = this.props.appList
+        if (!list || !(list instanceof Array) || list.length === 0 ) {
+            return (<div>has no state</div>)
+        }
 
         return (
             <div id='app-list'>

@@ -4,7 +4,7 @@ const schema = {
     "properties": {
         "id": {
             "type": "integer",
-            "minimum": 1
+            "minimum": 0
         },
         "name": {
             "type": "string",

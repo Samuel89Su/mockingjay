@@ -4,11 +4,12 @@ import { apiListC, ApiRoutes } from './apiListC'
 import InventoryAPI from '../middlewares/InventoryAPI'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import appCfgC from './appCfgC'
+import appRegisterC from './appRegisterC'
 
 // routes
 const AppRoutes = [
   ...ApiRoutes,
-  { path: '/app/register' },
+  { path: '/app/register', component: appRegisterC },
   { path: '/app/details', component: appCfgC },
   { path: '/app/apilist', component: apiListC }
 ]

@@ -10,16 +10,20 @@ class appCfgV extends Component {
         this.update = this.update.bind(this)
         this.discard = this.discard.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        this.addTagert = this.addTagert.bind(this)
+        this.discardTarget = this.discardTarget.bind(this)
 
-        this.state = {}
+        this.state = props.appCfg
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.setState(nextProps.appCfg)
-    }
+    // componentWillReceiveProps(nextProps) {
+    //     this.setState(nextProps.appCfg)
+    // }
 
-    componentDidMount() {
-        this.props.onMounted(this.props.location.search)
+    componentWillMount() {
+        if (!this.props.register) {
+            this.props.onMounted(this.props.location.search)
+        }
     }
 
     handleChange(e) {
@@ -39,10 +43,23 @@ class appCfgV extends Component {
         this.setState(newState)
     }
 
+    addTagert() {
+        let newState = deepClone(this.state)
+        // newState.targets.new = ''
+        this.setState(newState)
+    }
+
+    discardTarget(e) {
+        let newState = deepClone(this.state)
+        delete newState.targets[e.target.name]
+        this.setState(newState)
+    }
+
     update(e) {
       e.target.disabled = true
       let appCfg = this.state
       this.props.onUpdateClick(appCfg)
+      e.target.disabled = false
     }
 
     discard(e) {
@@ -57,17 +74,17 @@ class appCfgV extends Component {
             return (<div>has no state</div>)
         }
 
-        let targetDivs = []
+        let targets = []
         for (const key in appCfg.targets) {
             if (appCfg.targets.hasOwnProperty(key)) {
                 let target = appCfg.targets[key];
-                targetDivs.push((<li className="tgt-div" key={key}>
-                                    <h5>{key}</h5>
-                                    <input name={'targets.' + key}
-                                        value={target}
-                                        onChange={this.handleChange} />
-                                </li>))
+                targets.push({name: key, value: target})
+                
             }
+        }
+        let discard = <div />
+        if (!this.props.register) {
+            discard = <button id="btn_discard" onClick={this.discard}>Discard</button>
         }
 
         return (
@@ -81,26 +98,42 @@ class appCfgV extends Component {
                     <h4>Description</h4>
                     <textarea id="ipt_desc" name='desc' value={appCfg.desc} onChange={this.handleChange} />
                     <br/>
-                    <h4>Targets</h4>
+                    <div>
+                        <text>Targets</text>
+                        <button onClick={this.addTagert}>Add</button>
+                    </div>
                     <label>Forward: </label>
                     <select id="ipt_forwardTarget" name='apiForwardTarget' value="dev" value={appCfg.apiForwardTarget} onChange={this.handleChange} >
-                    <option value="dev">dev</option>
-                    <option value="beta">beta</option>
-                    <option value="prod">prod</option>
+                        {
+                            targets.map((target) => {
+                                return (<option key={target.name} value={target.name}>{target.name}</option>)
+                            })
+                        }
                     </select>
                     <br/>
                     <ul>
-                    {
-                        targetDivs.map((elem, index) => {
-                            return elem
-                        })
-                    }
+                        {
+                            targets.map((target) => {
+                                return (<li className="tgt-div" key={target.name}>
+                                        <div>
+                                            <text>{target.name}</text>
+                                            <button name={target.name} onClick={this.discardTarget}>Discard</button>
+                                        </div>
+                                        <input name={'targets.' + target.name}
+                                            value={target.value}
+                                            onChange={this.handleChange} />
+                                        </li>)
+                            })
+                        }
                     </ul>
                     
                     <br/>
 
                     <button id="btn_submit" onClick={this.update} >Apply</button>
-                    <button id="btn_discard" onClick={this.discard}>Discard</button>
+                    {
+                        discard
+                    }
+                    
                 </form>
             </div>
         );
