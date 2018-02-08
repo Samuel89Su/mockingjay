@@ -28,11 +28,8 @@ const mapStateToProps = state => {
               id: 0,
               name: '',
               desc: '',
-              apiForwardTarget: 'dev',
-              targets: {
-                dev: '',
-                prod: ''
-              }
+              apiForwardTarget: '',
+              targets: []
             }
             : state.appCfg,
     register: true

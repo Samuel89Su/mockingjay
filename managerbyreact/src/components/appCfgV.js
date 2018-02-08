@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import '../styles/appCfg.scss'
-import deepClone from '../utils/deepClone'
+import { deepClone, updateByPath } from '../utils'
 
 class appCfgV extends Component {
     constructor(props) {
@@ -16,42 +16,37 @@ class appCfgV extends Component {
         this.state = props.appCfg
     }
 
-    // componentWillReceiveProps(nextProps) {
-    //     this.setState(nextProps.appCfg)
-    // }
+    componentWillReceiveProps(nextProps) {
+        this.setState(nextProps.appCfg)
+    }
 
     componentWillMount() {
+        console.log(this.props.register)
         if (!this.props.register) {
+            console.log(this.props.location.search)
             this.props.onMounted(this.props.location.search)
         }
     }
 
     handleChange(e) {
         let oPath = e.target.name
-        let pathSegs = oPath.split('.')
-        let newState = deepClone(this.state)
-        let dummy = newState
-        for (let i = 0; i < pathSegs.length; i++) {
-            const path = pathSegs[i];
-            if (i === pathSegs.length - 1) {
-                dummy[path] = e.target.value
-            } else {
-                dummy = dummy[path]
-            }
-        }
-
+        let newState = updateByPath(deepClone(this.state), oPath, e.target.value)
         this.setState(newState)
     }
 
     addTagert() {
         let newState = deepClone(this.state)
-        // newState.targets.new = ''
+        newState.targets.push({
+            name: new Date().valueOf().toString(),
+            value: ''
+        })
         this.setState(newState)
     }
 
     discardTarget(e) {
         let newState = deepClone(this.state)
-        delete newState.targets[e.target.name]
+        var index = parseInt(e.target.name)
+        newState.targets.splice(index,1)
         this.setState(newState)
     }
 
@@ -73,15 +68,7 @@ class appCfgV extends Component {
         if (!appCfg || !appCfg.hasOwnProperty('name')) {
             return (<div>has no state</div>)
         }
-
-        let targets = []
-        for (const key in appCfg.targets) {
-            if (appCfg.targets.hasOwnProperty(key)) {
-                let target = appCfg.targets[key];
-                targets.push({name: key, value: target})
-                
-            }
-        }
+        
         let discard = <div />
         if (!this.props.register) {
             discard = <button id="btn_discard" onClick={this.discard}>Discard</button>
@@ -91,21 +78,21 @@ class appCfgV extends Component {
             <div id="div_appCfg">
                 <h2>App config</h2>
                 <Link to='/'>back to list</Link>
-                <form id="fm_appCfg">
+                <div>
                     <label>Name: </label>
-                    <input id="ipt_name" name='name' value={appCfg.name} onChange={this.handleChange} />
+                    <input name='name' value={appCfg.name} onChange={this.handleChange} />
                     <br/>
                     <h4>Description</h4>
-                    <textarea id="ipt_desc" name='desc' value={appCfg.desc} onChange={this.handleChange} />
+                    <textarea name='desc' value={appCfg.desc} onChange={this.handleChange} />
                     <br/>
                     <div>
                         <text>Targets</text>
                         <button onClick={this.addTagert}>Add</button>
                     </div>
                     <label>Forward: </label>
-                    <select id="ipt_forwardTarget" name='apiForwardTarget' value="dev" value={appCfg.apiForwardTarget} onChange={this.handleChange} >
+                    <select name='apiForwardTarget' value="dev" value={appCfg.apiForwardTarget} onChange={this.handleChange} >
                         {
-                            targets.map((target) => {
+                            appCfg.targets.map((target) => {
                                 return (<option key={target.name} value={target.name}>{target.name}</option>)
                             })
                         }
@@ -113,15 +100,17 @@ class appCfgV extends Component {
                     <br/>
                     <ul>
                         {
-                            targets.map((target) => {
+                            appCfg.targets.map((target, index) => {
                                 return (<li className="tgt-div" key={target.name}>
-                                        <div>
-                                            <text>{target.name}</text>
-                                            <button name={target.name} onClick={this.discardTarget}>Discard</button>
-                                        </div>
-                                        <input name={'targets.' + target.name}
-                                            value={target.value}
-                                            onChange={this.handleChange} />
+                                            <div>
+                                                <input name={'targets.' + index + '.name'}
+                                                    value={target.name}
+                                                    onChange={this.handleChange} />
+                                                <button name={index} onClick={this.discardTarget}>Discard</button>
+                                            </div>
+                                            <input name={'targets.' + index + '.value'}
+                                                value={target.value}
+                                                onChange={this.handleChange} />
                                         </li>)
                             })
                         }
@@ -129,12 +118,12 @@ class appCfgV extends Component {
                     
                     <br/>
 
-                    <button id="btn_submit" onClick={this.update} >Apply</button>
+                    <button onClick={this.update} >Apply</button>
                     {
                         discard
                     }
                     
-                </form>
+                </div>
             </div>
         );
     }

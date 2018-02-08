@@ -167,13 +167,24 @@ async function forwardReq(ctx, next) {
             if (appDesc) {
                 if (appDesc.apiForwardTarget) {
                     if (appDesc.targets && appDesc.targets[appDesc.apiForwardTarget]) {
-                        let targetBaseUrl = appDesc.targets[appDesc.apiForwardTarget]
-                        let resOpts = await forward(ctx.req, targetBaseUrl, apiSketch.path)
-                        ctx.body = resOpts.body
-                        try {
-                            ctx.response.set(resOpts.headers)
-                        } catch (error) {
-                            console.log(error)
+                        let targetBaseUrl = ''
+                        for (let i = 0; i < appDesc.targets.length; i++) {
+                            const target = appDesc.targets[i];
+                            if (target.name === appDesc.apiForwardTarget) {
+                                targetBaseUrl = appDesc.targets[appDesc.apiForwardTarget]
+                            }
+                        }
+                        if (targetBaseUrl) {
+                            let resOpts = await forward(ctx.req, targetBaseUrl, apiSketch.path)
+                            ctx.body = resOpts.body
+                            try {
+                                ctx.response.set(resOpts.headers)
+                            } catch (error) {
+                                console.log(error)
+                            }
+                        } else {
+                            ctx.status = 400
+                            ctx.body = 'target not found.'
                         }
                     } else {
                         ctx.status = 400

@@ -4,9 +4,18 @@
     "desc": "",
     "staticForwardTarget": "dev",
     "apiForwardTarget": "dev",
-    "targets": {
-        "dev": "http://localhost:3100",
-        "beta": "",
-        "prod": ""
-    } 
+    "targets": [
+        {
+            "name": "dev",
+            "value": "http://localhost:3100"
+        },
+        {
+            "name": "beta",
+            "value": "http://localhost:3100"
+        },
+        {
+            "name": "prod",
+            "value": "http://localhost:3100"
+        }
+    ]
 }

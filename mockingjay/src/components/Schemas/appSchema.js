@@ -22,7 +22,22 @@ const schema = {
             "type":"string"
         },
         "targets": {
-            "type":"object"
+            "type":"array",
+            "item": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "minLength": 2,
+                        "maxLength": 12
+                    },
+                    "value": {
+                        "type": "string",
+                        "minLength": 7,
+                        "maxLength": 30
+                    }
+                }
+            }
         }
     },
     "required": [

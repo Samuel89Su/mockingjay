@@ -9,7 +9,7 @@
       "request": "attach",
       "name": "Attach Manager",
       "port": 9222,
-      "webRoot": "${workspaceFolder}"
+      "webRoot": "${workspaceFolder}/src"
     },
     {
     "type": "chrome",

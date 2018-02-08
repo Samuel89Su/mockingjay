@@ -1,3 +1,9 @@
+/**
+ * Rake object by schema
+ * @param [Object] json
+ * @param [Object] schema
+ * @returns [Object] new object
+ */
 function rake(json, schema) {
     if (!json || !schema) {
         return
