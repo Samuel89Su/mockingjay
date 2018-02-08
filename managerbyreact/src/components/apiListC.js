@@ -5,10 +5,11 @@ import InventoryAPI from '../middlewares/InventoryAPI'
 import apiCfgC from './apiCfgC'
 import apiSchemaC from './apiSchemaC'
 import apiMcCfgC from './apiMcCfgC'
+import apiRegisterC from './apiRegisterC'
 
 // routes
 const ApiRoutes = [
-    { path: '/api/register' },
+    { path: '/api/register', component: apiRegisterC },
     { path: '/api/details', component: apiCfgC },
     { path: '/api/schema', component: apiSchemaC },
     { path: '/api/mockcfg', component: apiMcCfgC }

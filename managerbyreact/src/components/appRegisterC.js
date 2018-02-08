@@ -11,6 +11,7 @@ const updateAppCfg = appCfg => {
   }
 }
 
+// dispatchers
 function updateRemoteAppCfg(appCfg, dispatch) {
   let api = !appCfg.id ? InventoryAPI.appRegister : InventoryAPI.appUpdate
   let fetchOpts = Object.assign({}, api)
@@ -24,7 +25,7 @@ function updateRemoteAppCfg(appCfg, dispatch) {
 // map state to props
 const mapStateToProps = state => {
   return {
-    appCfg: !state.appCfg ? {
+    appCfg: (!state.appCfg || !state.appCfg.name) ? {
               id: 0,
               name: '',
               desc: '',

@@ -51,7 +51,8 @@ function discardRemoteAppCfg(apiCfg, history) {
 // map state to props
 const mapStateToProps = state => {
   return {
-    apiCfg: state.apiCfg
+    apiCfg: state.apiCfg,
+    register: false
   }
 }
 

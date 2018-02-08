@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import '../styles/apiCfg.scss'
-import { deepClone } from '../utils'
+import { deepClone, updateByPath } from '../utils'
 
 class apiCfgV extends Component {
     constructor(props) {
@@ -11,7 +11,7 @@ class apiCfgV extends Component {
         this.discard = this.discard.bind(this)
         this.handleChange = this.handleChange.bind(this)
 
-        this.state = {}
+        this.state = props.apiCfg
     }
 
     componentWillReceiveProps(nextProps) {
@@ -21,24 +21,15 @@ class apiCfgV extends Component {
         this.setState(nextProps.apiCfg)
     }
 
-    componentDidMount() {
-        this.props.onMounted(this.props.location.search)
+    componentWillMount() {
+        if (!this.props.register) {
+            this.props.onMounted(this.props.location.search)
+        }
     }
 
     handleChange(e) {
         let oPath = e.target.name
-        let pathSegs = oPath.split('.')
-        let newState = deepClone(this.state)
-        let dummy = newState
-        for (let i = 0; i < pathSegs.length; i++) {
-            const path = pathSegs[i];
-            if (i === pathSegs.length - 1) {
-                dummy[path] = e.target.value
-            } else {
-                dummy = dummy[path]
-            }
-        }
-
+        let newState = updateByPath(deepClone(this.state), oPath, e.target.value)
         this.setState(newState)
     }
 
@@ -89,8 +80,16 @@ class apiCfgV extends Component {
                     <label htmlFor="ipt_logReq">LogReq: </label>
                     <input id="ipt_logReq" name="logReq" value={apiCfg.logReq} onChange={this.handleChange} /><br/>
                 
+                    <input type="hidden" />
+
                     <button id="btn_submit" onClick={this.update}>Apply</button>
-                    <button id="btn_discard" onClick={this.discard}>Discard</button>
+                    <div>{
+                        !this.props.register
+                        ? (<button id="btn_discard" onClick={this.discard}>Discard</button>)
+                        : <span />
+                    }
+                    </div>
+                    
               </form>
             </div>
         );

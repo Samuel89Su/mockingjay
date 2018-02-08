@@ -21,9 +21,7 @@ class appCfgV extends Component {
     }
 
     componentWillMount() {
-        console.log(this.props.register)
         if (!this.props.register) {
-            console.log(this.props.location.search)
             this.props.onMounted(this.props.location.search)
         }
     }
@@ -68,22 +66,17 @@ class appCfgV extends Component {
         if (!appCfg || !appCfg.hasOwnProperty('name')) {
             return (<div>has no state</div>)
         }
-        
-        let discard = <div />
-        if (!this.props.register) {
-            discard = <button id="btn_discard" onClick={this.discard}>Discard</button>
-        }
 
         return (
             <div id="div_appCfg">
                 <h2>App config</h2>
                 <Link to='/'>back to list</Link>
-                <div>
+                <form id="fm_appCfg">
                     <label>Name: </label>
                     <input name='name' value={appCfg.name} onChange={this.handleChange} />
                     <br/>
                     <h4>Description</h4>
-                    <textarea name='desc' value={appCfg.desc} onChange={this.handleChange} />
+                    <textarea id="ipt_desc" name='desc' value={appCfg.desc} onChange={this.handleChange} />
                     <br/>
                     <div>
                         <text>Targets</text>
@@ -117,13 +110,17 @@ class appCfgV extends Component {
                     </ul>
                     
                     <br/>
+                    <input type="hidden"/>
 
-                    <button onClick={this.update} >Apply</button>
-                    {
-                        discard
+                    <button id="btn_submit" onClick={this.update} >Apply</button>
+                    <div>{
+                        !this.props.register
+                        ? (<button id="btn_discard" onClick={this.discard}>Discard</button>)
+                        : <span />
                     }
+                    </div>
                     
-                </div>
+                </form>
             </div>
         );
     }

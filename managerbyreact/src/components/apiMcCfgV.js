@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import '../styles/apiMcCfg.scss'
-import deepClone from '../utils'
+import { deepClone, updateByPath } from '../utils'
 
 class apiMcCfgV extends Component {
     constructor(props) {
@@ -28,24 +28,7 @@ class apiMcCfgV extends Component {
 
     handleChange(e) {
         let oPath = e.target.name
-        let pathSegs = oPath.split('.')
-        let newState = deepClone(this.state)
-        let dummy = newState
-        for (let i = 0; i < pathSegs.length; i++) {
-            const path = pathSegs[i];
-            if (i === pathSegs.length - 1) {
-                let value = e.target.value
-                if (value === 'true') {
-                    value = true
-                } else if (value === 'false') {
-                    value = false
-                }
-                dummy[path] = value
-            } else {
-                dummy = dummy[path]
-            }
-        }
-
+        let newState = updateByPath(deepClone(this.state), oPath, e.target.value)
         this.setState(newState)
     }
 
