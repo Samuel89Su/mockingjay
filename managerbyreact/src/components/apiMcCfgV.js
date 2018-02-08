@@ -15,14 +15,14 @@ class apiMcCfgV extends Component {
         this.addKey = this.addKey.bind(this)
         this.discardKey = this.discardKey.bind(this)
 
-        this.state = {}
+        this.state = props.apiMcCfg
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState(nextProps.apiMcCfg)
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.props.onMounted(this.props.location.search)
     }
 
@@ -65,7 +65,7 @@ class apiMcCfgV extends Component {
     createValidator(namePrefix, validator) {
         if (validator) {
             return (<div>
-                        <input name={namePrefix + '.validator.type'} value={validator.type} onChange={this.handleChange} /><br/>
+                        <input readOnly="true" name={namePrefix + '.validator.type'} value={validator.type} onChange={this.handleChange} /><br/>
                         <textarea name={namePrefix + '.validator.value'} value={validator.value} onChange={this.handleChange} />
                     </div>)
         } else {
@@ -76,7 +76,10 @@ class apiMcCfgV extends Component {
     createReactor(namePrefix, reactor) {
         if (reactor) {
             return (<div>
-                        <input name={namePrefix + '.reactor.type'} value={reactor.type} onChange={this.handleChange} /><br/>
+                        <select name={namePrefix + '.reactor.type'} value={reactor.type} onChange={this.handleChange} >
+                            <option value="fixed">fixed</option>
+                            <option value="custom">custom</option>
+                        </select><br/>
                         <textarea name={namePrefix + '.reactor.value'} value={reactor.value} onChange={this.handleChange} />
                     </div>)
         } else {

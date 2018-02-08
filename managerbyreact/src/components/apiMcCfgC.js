@@ -35,7 +35,37 @@ function updateRemoteApiMcCfg(apiMcCfg, dispatch) {
 // map state to props
 const mapStateToProps = state => {
   return {
-    apiMcCfg: state.apiMcCfg,
+    apiMcCfg: (!state.apiMcCfg || state.apiMcCfg.path)
+              ? {
+                path: state.apiCfg.path,
+                method: state.apiCfg.method,
+                mockCfg: {
+                  mock: false,
+                  validateReq: false,
+                  reqDescriptor: {
+                    queries: [],
+                    headers: [],
+                    body: {
+                      required: false,
+                      validator: {
+                        type: 'custom',
+                        value: ''
+                      }
+                    }
+                  },
+                  resDescriptor: {
+                    headers: [],
+                    body: {
+                      optional: true,
+                      reactor: {
+                        type: '',
+                        value: ''
+                      }
+                    }
+                  }
+                }
+              }
+              : state.apiMcCfg,
     apiCfg: state.apiCfg
   }
 }
