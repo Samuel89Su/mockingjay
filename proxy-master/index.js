@@ -26,13 +26,10 @@ try {
    */
   app.use('/', userProxy)
 
-  http.createServer(app).listen(3200)
+  http.createServer(app).listen(3200, '172.16.211.123')
 
 } catch (error) {
   console.log(error)
 }
 
 console.log('Proxy Server: listening on port 3200')
-
-//console.log('[DEMO] Opening: http://localhost:3200/users')
-// require('opn')('http://localhost:3200/teacher/')

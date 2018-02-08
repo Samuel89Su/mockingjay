@@ -1,28 +1,23 @@
 'use strict'
 
 const Koa = require('koa')
-// const serve = require('koa-static')
+const serve = require('koa-static')
 const router = require('./router')
-const nextApp = require('./nextApp')
 const logger = require('./src/components/common/logger')
 const Router = require('koa-router')
 
-// server.use(serve(__dirname + '/appRoot'))
+const server = new Koa()
+server.env = process.env.NODE_ENV !== 'production' ? 'dev' : 'production'
 
-nextApp.prepare()
-    .then(() => {
-                
-        const server = new Koa()
-        server.env = process.env.NODE_ENV !== 'production' ? 'dev' : 'production'
-        
-        server.use(router.routes())
-            .use(router.allowedMethods())
+server.use(serve(__dirname + '/static'))
 
-        server.listen(3000, (err) => {
-            if (err) {
-                throw err
-            }
-            logger.info('listening on 3000')
-            console.log('listening on 3000')
-        });
-    })
+server.use(router.routes())
+    .use(router.allowedMethods())
+
+server.listen(3000, (err) => {
+    if (err) {
+        throw err
+    }
+    logger.info('listening on 3000')
+    console.log('listening on 3000')
+})

@@ -1,6 +1,6 @@
 {
     "context": ["/"],
-    "target": "http://localhost:3100",
+    "target": "http://172.16.211.123:3100",
     "router": { 
     }
 }
