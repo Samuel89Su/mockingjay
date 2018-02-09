@@ -14,9 +14,10 @@ router.use('/mocking', brokerRouter.routes(), brokerRouter.allowedMethods())
 router.use('/inventory', inventoryRouter.routes(), inventoryRouter.allowedMethods())
 
 const regexp = /.(js|css)$/i
+const htmlRegexp = /.(html|htm)$/i
 router.get(/^\/(app|api)/i, async (ctx, next) => {
     // filter resource file
-    if (regexp.test(ctx.path)) {
+    if (regexp.test(ctx.path) && !htmlRegexp.test(ctx.path)) {
         await next()
     } else {
         await send(ctx, 'index.html', { root: __dirname + '/static' })
