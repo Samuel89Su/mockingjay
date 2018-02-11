@@ -1,6 +1,6 @@
 {
-    "context": ["/"],
-    "target": "http://172.16.211.123:3100",
+    "context": ["/inventory"],
+    "target": "http://localhost:3000",
     "router": { 
     }
 }

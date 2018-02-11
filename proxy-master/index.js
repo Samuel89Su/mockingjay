@@ -4,8 +4,9 @@
 const http = require('http')
 const connect = require('connect')
 const proxy = require('http-proxy-middleware')
-const defaultOpts = require('./defaultOpts')
 const fs = require('fs')
+const serveStatic = require('serve-static')
+const defaultOpts = require('./defaultOpts')
 const rawUserOpts = fs.readFileSync('./opts.json')
 
 try {
@@ -19,14 +20,18 @@ try {
    */
   const userProxy = proxy(context, opts)
 
+  const serve = serveStatic('static', {'index': ['index.html']})
+
   const app = connect()
+
+  app.use(serve);
 
   /**
    * Add the proxy to connect
    */
   app.use('/', userProxy)
 
-  http.createServer(app).listen(3200, '172.16.211.123')
+  http.createServer(app).listen(3200, '0.0.0.0')
 
 } catch (error) {
   console.log(error)

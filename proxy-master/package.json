@@ -17,7 +17,8 @@
     "connect": "^3.6.5",
     "http-proxy-middleware": "^0.17.4",
     "nodemon": "^1.14.12",
-    "opn": "^5.2.0"
+    "opn": "^5.2.0",
+    "serve-static": "^1.13.2"
   },
   "devDependencies": {}
 }
