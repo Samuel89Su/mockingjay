@@ -4,7 +4,16 @@ const Koa = require('koa')
 const serve = require('koa-static')
 const router = require('./router')
 const logger = require('./src/components/common/logger')
-const Router = require('koa-router')
+const redisClient = require('./src/components/common/redisClient')
+
+// w & r test
+async function test () {
+    let ok = await redisClient.setAsync('test', 123) === 'OK'
+    ok = ok && await redisClient.getAsync('test') === '123'
+    logger.error(`redis w & r test ${ok ? 'success' : 'failed'}`)
+}
+
+test()
 
 const server = new Koa()
 server.env = process.env.NODE_ENV !== 'production' ? 'dev' : 'production'
