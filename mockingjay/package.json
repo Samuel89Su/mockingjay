@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "forever-start": "forever start -w --watchDirectory src server.js",
+    "forever-restart": "forever restart -w --watchDirectory src server.js",
     "forever-stop": "forever stop server.js",
     "nodemon": "nodemon server.js"
   },
