@@ -57,8 +57,6 @@ typings/
 # dotenv environment variables file
 .env
 
-/mockingjay/static/static
-/mockingjay/static/index.html
 /mockingjay/requestLogs
 /mockingjayApp/dist
 /managerbyreact/build
