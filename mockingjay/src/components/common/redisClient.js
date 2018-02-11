@@ -8,7 +8,7 @@ Promise.promisifyAll(Redis.RedisClient.prototype);
 Promise.promisifyAll(Redis.Multi.prototype);
 
 const redisConOption = {
-    host: 'localhost',
+    host: '127.0.0.1',
     port: '6379',
 };
 
