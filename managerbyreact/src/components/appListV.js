@@ -17,7 +17,7 @@ class appListV extends Component {
 
     render() {
         let list = this.props.appList
-        if (!list || !(list instanceof Array) || list.length === 0 ) {
+        if (!list || !(list instanceof Array) ) {
             return (<div>has no state</div>)
         }
 
