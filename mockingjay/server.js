@@ -14,7 +14,7 @@ server.use(serve(__dirname + '/static'))
 server.use(router.routes())
     .use(router.allowedMethods())
 
-server.listen(3000, (err) => {
+server.listen(3000, '139.196.103.143', (err) => {
     if (err) {
         throw err
     }
