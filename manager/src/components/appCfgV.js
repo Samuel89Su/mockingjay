@@ -80,7 +80,7 @@ class appCfgV extends Component {
                     <br/>
                     <div>
                         <text>Targets</text>
-                        <button onClick={this.addTagert}>Add</button>
+                        <input type="button" value="Add" onClick={this.addTagert} />
                     </div>
                     <label>Forward: </label>
                     <select name='apiForwardTarget' value="dev" value={appCfg.apiForwardTarget} onChange={this.handleChange} >
@@ -99,7 +99,7 @@ class appCfgV extends Component {
                                                 <input name={'targets.' + index + '.name'}
                                                     value={target.name}
                                                     onChange={this.handleChange} />
-                                                <button name={index} onClick={this.discardTarget}>Discard</button>
+                                                <input type="button" value="Discard" name={index} onClick={this.discardTarget} />
                                             </div>
                                             <input name={'targets.' + index + '.value'}
                                                 value={target.value}
