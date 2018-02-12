@@ -41,10 +41,7 @@ module.exports = {
         context: [
           '/inventory' // '**', '!/', '!**/index.html', '!/bundle.js', '!/favicon.ico'
         ],
-        target: 'http://139.196.103.143:3000/',
-        router: {
-          '/inventory': 'http://139.196.103.143:3000'
-        }
+        target: 'http://127.0.0.1:3000/'
       }
     ]
   }

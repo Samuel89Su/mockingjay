@@ -6,13 +6,13 @@
  */
 function rake(json, schema) {
     if (!json || !schema) {
-        return
-    } else if (typeof json !== 'object' && typeof json !== 'array') {
-        return
+        return null
+    } else if (typeof json !== 'object' && !(json instanceof Array)) {
+        return json
     } else if (json instanceof Array) {
         for (let index = 0; index < json.length; index++) {
             const item = json[index];
-            rake(item, schema.items)
+            json[index] = rake(item, schema.items)
         }
     } else if (typeof json === 'object') {
         for (const key in json) {
@@ -21,11 +21,13 @@ function rake(json, schema) {
                 if (!schema.properties[key]) {
                     delete json[key]
                 } else {
-                    rake(prop, schema.properties[key])
+                    schema.properties[key] = rake(prop, schema.properties[key])
                 }
             }
         }
     }
+
+    return json
 }
 
 exports = module.exports = rake

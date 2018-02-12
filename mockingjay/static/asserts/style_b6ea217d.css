@@ -192,8 +192,10 @@
   #div_appCfg #fm_appCfg {
     margin: 20px 0 0 0; }
     #div_appCfg #fm_appCfg input {
-      height: 32px;
+      height: 28px;
       width: 500px; }
+    #div_appCfg #fm_appCfg input[type="button"] {
+      width: 70px; }
     #div_appCfg #fm_appCfg #ipt_desc {
       height: 120px;
       width: 500px; }
@@ -214,4 +216,4 @@
       background: #7a0505;
       color: white; }
 
-/*# sourceMappingURL=style_589d3de4.css.map*/
+/*# sourceMappingURL=style_b6ea217d.css.map*/

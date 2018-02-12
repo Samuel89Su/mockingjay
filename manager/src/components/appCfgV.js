@@ -71,7 +71,7 @@ class appCfgV extends Component {
             <div id="div_appCfg">
                 <h2>App config</h2>
                 <Link to='/'>back to list</Link>
-                <form id="fm_appCfg">
+                <div id="fm_appCfg">
                     <label>Name: </label>
                     <input name='name' value={appCfg.name} onChange={this.handleChange} />
                     <br/>
@@ -84,6 +84,7 @@ class appCfgV extends Component {
                     </div>
                     <label>Forward: </label>
                     <select name='apiForwardTarget' value="dev" value={appCfg.apiForwardTarget} onChange={this.handleChange} >
+                        <option key="0" value=""></option>
                         {
                             appCfg.targets.map((target) => {
                                 return (<option key={target.name} value={target.name}>{target.name}</option>)
@@ -120,7 +121,7 @@ class appCfgV extends Component {
                     }
                     </div>
                     
-                </form>
+                </div>
             </div>
         );
     }

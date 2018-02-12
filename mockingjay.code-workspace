@@ -10,13 +10,13 @@
 			"path": "mockingjayApp"
 		},
 		{
-			"path": "managerbyreact"
-		},
-		{
 			"path": "proxy-master"
 		},
 		{
 			"path": "next-with-koa2"
+		},
+		{
+			"path": "manager"
 		}
 	],
 	"settings": {}

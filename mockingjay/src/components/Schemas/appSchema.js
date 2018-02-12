@@ -23,7 +23,7 @@ const schema = {
         },
         "targets": {
             "type":"array",
-            "item": {
+            "items": {
                 "type": "object",
                 "properties": {
                     "name": {
