@@ -16,20 +16,23 @@ const keyPrefixes = {
     apiInventory: 'apiinventory:',
 }
 
+const keyPostfixes = {
+    schema: '_schema',
+    mockCfg: '_mockCfg'
+}
+
 function CombineCacheKey(cacheType, params) {
-    if (!keyPrefixes.hasOwnProperty(cacheType)) {
+    if (!params || (!keyPrefixes.hasOwnProperty(cacheType) && !keyPostfixes.hasOwnProperty(cacheType))) {
         return null
     } else {
-        let keyPrefix = keyPrefixes[cacheType]
-        if (!params) {
-
-        } else if (typeof params !== 'object' && !(params instanceof Array)) {
-            keyPrefix += params
+        let cacheKey = null
+        if (typeof params !== 'object' && !(params instanceof Array)) {
+            cacheKey += params
         } else if (params instanceof Array) {
             for (let i = 0; i < params.length; i++) {
                 let partial = params[i];
                 if (partial) {
-                    keyPrefix += partial + '_'
+                    cacheKey += partial + '_'
                 }
             }
         } else if (typeof params === 'object') {
@@ -37,7 +40,7 @@ function CombineCacheKey(cacheType, params) {
                 if (params.hasOwnProperty(key)) {
                     const val = params[key];
                     if (val) {
-                        keyPrefix += val + '_'
+                        cacheKey += val + '_'
                     }
                 }
             }
@@ -45,10 +48,25 @@ function CombineCacheKey(cacheType, params) {
             throw new TypeError('type of params is invalid')
         }
 
-        if (keyPrefix.endsWith('_')) {
-            keyPrefix = keyPrefix.subStr(0, keyPrefix.length - 1)
+        if (keyPrefixes.hasOwnProperty(cacheType)) {
+            let keyPrefix = keyPrefixes[cacheType]
+            cacheKey = keyPrefix + cacheKey
+
+            if (cacheKey.endsWith('_')) {
+                cacheKey = keyPrefix.subStr(0, cacheKey.length - 1)
+            }
         }
-        return keyPrefix
+
+        if (keyPostfixes.hasOwnProperty(cacheType)) {            
+            let keyPostfix = keyPrefixes[cacheType]
+            cacheKey += keyPostfix
+
+            if (cacheKey.startsWith('_')) {
+                cacheKey = cacheKey.subStr(1, cacheKey.length - 1)
+            }
+        }
+
+        return cacheKey
     }
 }
 
