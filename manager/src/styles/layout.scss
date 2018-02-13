@@ -21,7 +21,7 @@ html {
 
 }
 
-.page-header {
+.layout-header {
   height: 80px;
   width: 100%;
   background-color: chocolate;
@@ -31,7 +31,7 @@ html {
 
   h1 {
     vertical-align: middle;
-    position: inherit;
+    position: relative;
     margin: 20px 0 0 20px;
   }
 }
