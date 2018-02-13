@@ -1,6 +1,4 @@
-import {
-  connect
-} from 'react-redux'
+import { connect } from 'react-redux'
 import apiCfgV from './apiCfgV'
 import {
   fetchRemote,
@@ -23,7 +21,7 @@ function fetchRemoteApiCfg(urlSearch, dispatch) {
   return fetchRemote(fetchOpts)
     .then(
       apiCfg => dispatch(updateApiCfg(apiCfg)),
-      error => console.log(error))
+      error => (error) => {})
 }
 
 function updateRemoteApiCfg(apiCfg, dispatch) {
@@ -33,7 +31,7 @@ function updateRemoteApiCfg(apiCfg, dispatch) {
   return fetchRemote(fetchOpts, payload)
     .then(
       apiCfg => dispatch(updateApiCfg(apiCfg)),
-      error => console.log(error))
+      error => (error) => {})
 }
 
 function discardRemoteAppCfg(apiCfg, history) {
@@ -42,10 +40,10 @@ function discardRemoteAppCfg(apiCfg, history) {
   let payload = JSON.stringify(apiCfg)
   return fakeDiscard(fetchOpts, payload)
     .then(
-      apiCfg => {
+      () => {
         history.goBack()
       },
-      error => console.log(error))
+      error => (error) => {})
 }
 
 // map state to props

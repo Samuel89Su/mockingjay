@@ -18,7 +18,7 @@ function fetchRemoteAppCfg(urlSearch, dispatch) {
   return fetchRemote(fetchOpts)
   .then(
     appCfg => dispatch(updateAppCfg(appCfg)),
-    error => console.log(error))
+    error => (error) => {})
 }
 
 function updateRemoteAppCfg(appCfg, dispatch) {
@@ -28,7 +28,7 @@ function updateRemoteAppCfg(appCfg, dispatch) {
   return fetchRemote(fetchOpts, payload)
   .then(
     appCfg => dispatch(updateAppCfg(appCfg)),
-    error => console.log(error))
+    error => (error) => {})
 }
 
 function discardRemoteAppCfg(appCfg, dispatch) {
@@ -38,7 +38,7 @@ function discardRemoteAppCfg(appCfg, dispatch) {
   return fetchRemote(fetchOpts, payload)
   .then(
     appCfg => dispatch(updateAppCfg(appCfg)),
-    error => console.log(error))
+    error => (error) => {})
 }
 
 // map state to props

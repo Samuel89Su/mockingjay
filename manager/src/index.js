@@ -3,12 +3,12 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
-import managerApp from './reducers'
+import reducers from './reducers'
 import { BrowserRouter as Router, Route, browserHistory } from 'react-router-dom'
 import { appListC, AppRoutes } from '../src/components/appListC'
 import Layout from './components/layout'
 
-const store = createStore(managerApp, applyMiddleware(thunk))
+const store = createStore(reducers, applyMiddleware(thunk))
 
 ReactDOM.render(
 	(<Provider store={store}>
