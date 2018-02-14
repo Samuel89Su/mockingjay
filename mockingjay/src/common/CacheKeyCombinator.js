@@ -6,10 +6,9 @@ class CacheKeyCombinator {
             appId: 'appid',
             apiId: 'apiId',
             appDesc: 'appinventory:',
-            apiDesc: 'apiinventory:',
-            schema: '_schema',
-            mockCfg: '_mockCfg'
+            apiDesc: 'apiinventory:'
         }
+        this.keyPrefixes.schema = this.keyPrefixes.mockCfg = this.keyPrefixes.apiDesc
 
         this.keyPostfixes = {
             schema: '_schema',

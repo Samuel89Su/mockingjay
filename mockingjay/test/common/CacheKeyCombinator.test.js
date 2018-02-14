@@ -1,5 +1,5 @@
 const assert = require('assert')
-const CachekeyCombinator = require('../../../src/common/CacheKeyCombinator')
+const CachekeyCombinator = require('../../src/common/CacheKeyCombinator')
 
 describe('CachekeyCombinator', () => {
     describe('#combineCacheKey', () => {
@@ -21,41 +21,84 @@ describe('CachekeyCombinator', () => {
 
         it('return fix when pass a supported cacheType, but without params', () => {
             let prefix = CachekeyCombinator.combineCacheKey('apiId')
-            let postfix = '_' + CachekeyCombinator.combineCacheKey('schema')
+            let postfix = CachekeyCombinator.combineCacheKey('schema')
             assert.equal(true, 
                 (CachekeyCombinator.keyPrefixes.apiId === prefix
-                && CachekeyCombinator.keyPostfixes.schema === postfix)
+                && 'apiinventory:_schema' === postfix)
             )
         })
 
         it('combine prefix and params(String)', ()=>{
-            assert.equal('appinventory_app', 
-                CachekeyCombinator.combineCacheKey('appDesc', 'app'))
-        })
-
-        it('combine prefix and params(Number)', ()=>{
-            assert.equal('appinventory_1', 
+            assert.equal('appinventory:1', 
                 CachekeyCombinator.combineCacheKey('appDesc', '1'))
         })
 
+        it('combine prefix and params(Number)', ()=>{
+            assert.equal('appinventory:1', 
+                CachekeyCombinator.combineCacheKey('appDesc', 1))
+        })
+
         it('combine prefix and params(Array)', ()=>{
-            assert.equal('appinventory_1_2_3', 
-                CachekeyCombinator.combineCacheKey('appDesc', [1,2,3]))
+            assert.equal('appinventory:1', 
+                CachekeyCombinator.combineCacheKey('appDesc', [1]))
         })
 
         it('combine prefix and params(Object)', ()=>{
-            assert.equal('appinventory_1_2_3', 
+            assert.equal('appinventory:1', 
                 CachekeyCombinator.combineCacheKey('appDesc', 
                     {
-                        one: 1,
-                        two: 2,
-                        three: 3
+                        one: 1
                     }
                 )
             )
         })
 
+        it('combine prefix and params(Array)', ()=>{
+            assert.equal('apiinventory:1', 
+                CachekeyCombinator.combineCacheKey('apiDesc', [1]))
+        })
+
+        it('combine prefix and params(Object)', ()=>{
+            assert.equal('apiinventory:1', 
+                CachekeyCombinator.combineCacheKey('apiDesc', 
+                    {
+                        one: 1
+                    }
+                )
+            )
+        })
         
+        it('combine prefix-postfix and params(Array)', ()=>{
+            assert.equal('apiinventory:test_1_schema', 
+                CachekeyCombinator.combineCacheKey('schema', ['test', '1']))
+        })
+
+        it('combine prefix-postfix and params(Object)', ()=>{
+            assert.equal('apiinventory:test_1_schema', 
+                CachekeyCombinator.combineCacheKey('schema', 
+                    {
+                        app: 'test',
+                        one: 1
+                    }
+                )
+            )
+        })
+        
+        it('combine prefix-postfix and params(Array)', ()=>{
+            assert.equal('apiinventory:test_1_mockCfg', 
+                CachekeyCombinator.combineCacheKey('mockCfg', ['test', '1']))
+        })
+
+        it('combine prefix-postfix and params(Object)', ()=>{
+            assert.equal('apiinventory:test_1_mockCfg', 
+                CachekeyCombinator.combineCacheKey('mockCfg', 
+                    {
+                        app: 'test',
+                        one: 1
+                    }
+                )
+            )
+        })
 
     })
 })
