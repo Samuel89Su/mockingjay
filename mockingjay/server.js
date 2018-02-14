@@ -3,8 +3,8 @@
 const Koa = require('koa')
 const serve = require('koa-static')
 const router = require('./router')
-const logger = require('./src/components/common/logger')
-const redisClient = require('./src/components/common/redisClient')
+const logger = require('./src/common/logger')
+const redisClient = require('./src/common/redisClient')
 
 // w & r test
 async function test () {

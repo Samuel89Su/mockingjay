@@ -8,7 +8,7 @@ const logger = require('../common/logger')
 const errCode = require('./errCode')
 const bodyParser = require('../common/bodyParser')
 const appSchema = require('../Schemas/appSchema')
-const schemaRaker = require('../common/jsonRaker')
+const schemaRaker = require('../utils/jsonRaker')
 
 const ajv = new Ajv()
 const validate = ajv.compile(appSchema)

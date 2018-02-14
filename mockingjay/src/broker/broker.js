@@ -81,7 +81,7 @@ async function generalValidate(ctx, next) {
 async function validateSchema(ctx, next) {
     let apiSketch = ctx.apiSketch
     if (apiSketch.validate) {
-        let schemaKey = `${ apiSketch.baseKey }:${ apiSketch.apiId }_schema`
+        let schemaKey = `${ apiSketch.baseKey }_${ apiSketch.apiId }_schema`
         let apiSchema = await redisClient.getAsync(schemaKey)
         if (apiSchema) {
             apiSchema = JSON.parse(apiSchema)
@@ -208,7 +208,7 @@ async function forwardReq(ctx, next) {
 
 async function mock(ctx, next) {
     let apiSketch = ctx.apiSketch
-    let cacheKey = `${ apiSketch.baseKey }:${ apiSketch.apiId }_mockCfg`
+    let cacheKey = `${ apiSketch.baseKey }_${ apiSketch.apiId }_mockCfg`
     let mockConfig = await redisClient.getAsync(cacheKey)
     if (!mockConfig) {
         ctx.status = 400

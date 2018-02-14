@@ -24,7 +24,7 @@
         //     "type": "node",
         //     "request": "launch",
         //     "name": "Run Test",
-        //     "program": "${workspaceFolder}\\src\\components\\common\\jsonRaker.js"
+        //     "program": "${workspaceFolder}\\src\\utils\\jsonRaker.js"
         // }
     ]
 }

@@ -8,7 +8,7 @@ const LoggerMap = new Map()
 
 class RequestLoggerFactory {
     constructor (props) {        
-        this.baseFolder = !(props && props.baseFolder) ? path.join(__dirname, '../../../requestLogs') : props.baseFolder
+        this.baseFolder = !(props && props.baseFolder) ? path.join(__dirname, '../../requestLogs') : props.baseFolder
 
         this.getLogger = this.getLogger.bind(this)
         this.prepareLogFolder = this.prepareLogFolder.bind(this)

@@ -2,8 +2,8 @@
 
 const Router = require('koa-router')
 const send = require('koa-send')
-const brokerRouter = require('./src/components/broker/router')
-const inventoryRouter = require('./src/components/inventory/router')
+const brokerRouter = require('./src/broker/router')
+const inventoryRouter = require('./src/inventory/router')
 
 const router = new Router()
 

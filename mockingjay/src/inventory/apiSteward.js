@@ -9,7 +9,7 @@ const errCode = require('./errCode')
 const commonBodyParser = require('../common/bodyParser')
 const cfgSchema = require('../Schemas/apiCfgSchema')
 const apiRegistrationSchema = require('../Schemas/apiRegistrationSchema')
-const jsonParse = require('../common/jsonParser')
+const jsonParse = require('../utils/jsonParser')
 
 const ajv = new Ajv(); // options can be passed, e.g. {allErrors: true}
 const cfgValidate = ajv.compile(cfgSchema)
@@ -159,7 +159,7 @@ class Steward {
         if (!ok) {
             ctx.response.body = errCode.dbErr()
         } else if (apiData.schema) {
-            let cacheKey = `${ baseKey }:${ id }_schema`
+            let cacheKey = `${ baseKey }_${ id }_schema`
             ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiData.schema)) === 'OK'
             if (ok) {
                 apiData.apiId = id
@@ -226,7 +226,7 @@ class Steward {
         if (!ok) {
             ctx.response.body = errCode.dbErr()
         } else if (apiData.schema) {
-            let cacheKey = `${ baseKey }:${ apiId }_schema`
+            let cacheKey = `${ baseKey }_${ apiId }_schema`
             ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiData.schema)) === 'OK'
             if (ok) {
                 ctx.response.body = errCode.success(apiData)
@@ -261,7 +261,7 @@ class Steward {
         }
 
         // remove schema
-        let cacheKey = `${ baseKey }:${ apiId }_schema`
+        let cacheKey = `${ baseKey }_${ apiId }_schema`
         ok = await redisClient.delAsync(cacheKey) >= 0
         if (ok) {
             ctx.response.body = errCode.success(arg)
@@ -270,7 +270,7 @@ class Steward {
         }
 
         // remove cofig
-        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }:${ arg.apiId }_mockCfg`
+        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }_${ arg.apiId }_mockCfg`
         let ok = await redisClient.delAsync(cacheKey) >= 0
         if (ok) {
             ctx.response.body = errCode.success()
@@ -303,7 +303,7 @@ class Steward {
         }
 
         let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }`
-        let cacheKey = `${ baseKey }:${ apiData.apiId }_schema`
+        let cacheKey = `${ baseKey }_${ apiData.apiId }_schema`
         let ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiData.schema)) === 'OK'
         if (ok) {
             if (apiData.schema.properties) {
@@ -347,7 +347,7 @@ class Steward {
         }
         pathKey = pathKey.toLowerCase()
 
-        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }:${ apiConfig.apiId }_mockCfg`
+        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }_${ apiConfig.apiId }_mockCfg`
         let ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiConfig)) === 'OK'
         if (ok) {
             ctx.response.body = errCode.success(apiConfig)
@@ -386,7 +386,7 @@ class Steward {
             pathKey = pathKey.substring(0, pathKey.length - 1)
         }
 
-        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }:${ apiConfig.apiId }_mockCfg`
+        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }_${ apiConfig.apiId }_mockCfg`
         let ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiConfig)) === 'OK'
         if (ok) {
             ctx.response.body = errCode.success(apiConfig)
@@ -428,7 +428,7 @@ class Steward {
             pathKey = pathKey.substring(0, pathKey.length - 1)
         }
 
-        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }:${ apiConfig.apiId }_mockCfg`
+        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }_${ apiConfig.apiId }_mockCfg`
         let ok = await redisClient.delAsync(cacheKey) >= 0
         if (ok) {
             ctx.response.body = errCode.success()
@@ -452,7 +452,7 @@ class Steward {
 
         let baseKey = `${ cacheKeys.apiInventory }:${ args.appName.toLowerCase() }`
 
-        let cacheKey = `${ baseKey }:${ args.apiId }_schema`
+        let cacheKey = `${ baseKey }_${ args.apiId }_schema`
         let apiSchemaRaw = await redisClient.getAsync(cacheKey)
         if (!apiSchemaRaw) {
             ctx.response.body = errCode.dbErr()
@@ -492,7 +492,7 @@ class Steward {
 
         let baseKey = `${ cacheKeys.apiInventory }:${ apiData.appName.toLowerCase() }`
 
-        let cacheKey = `${ baseKey }:${ apiData.apiId }_mockCfg`
+        let cacheKey = `${ baseKey }_${ apiData.apiId }_mockCfg`
         let apiConfigJson = await redisClient.getAsync(cacheKey)
         if (!apiConfigJson) {
             ctx.response.body = errCode.dbErr()

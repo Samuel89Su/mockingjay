@@ -1,5 +1,5 @@
 const assert = require('assert')
-const CachekeyCombinator = require('../../../src/components/common/CacheKeyCombinator')
+const CachekeyCombinator = require('../../../src/common/CacheKeyCombinator')
 
 describe('CachekeyCombinator', () => {
     describe('#combineCacheKey', () => {
