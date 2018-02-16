@@ -2,8 +2,6 @@
 
 const Redis = require('redis')
 const Promise = require('bluebird')
-const cacheKeys = require('./cacheKeys')
-const logger = require('./logger')
 
 Promise.promisifyAll(Redis.RedisClient.prototype)
 Promise.promisifyAll(Redis.Multi.prototype)

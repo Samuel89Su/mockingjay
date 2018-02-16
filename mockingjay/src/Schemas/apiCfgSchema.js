@@ -6,7 +6,7 @@ const schema = {
             "type": "integer",
             "minimum": 1
         },
-        "apiId": {
+        "id": {
             "type": "integer",
             "minimum": 1
         },
@@ -174,7 +174,7 @@ const schema = {
         }
     },
     "required": [
-        "appId", "apiId", "mock"
+        "appId", "id", "mock"
     ]
 }
 

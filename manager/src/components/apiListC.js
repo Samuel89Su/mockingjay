@@ -36,7 +36,8 @@ function fetchRemoteApiList(urlSearch, dispatch) {
 // map state to props
 const mapStateToProps = state => {
   return {
-    apiList: state.apiList
+    apiList: state.apiList,
+    appName: state.appCfg.name
   }
 }
 

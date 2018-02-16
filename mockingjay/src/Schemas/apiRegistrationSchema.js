@@ -2,7 +2,7 @@ const schema = {
     "$schema": "http://json-schema.org/draft-06/schema#",
     "type": "object",
     "properties": {
-        "apiId": {
+        "id": {
             "type": "integer",
             "minimum": 1
         },

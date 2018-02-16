@@ -1,50 +1,49 @@
-'use strict';
+'use strict'
 
-const redisClient = require('../common/redisClient');
-const cacheKeys = require('../common/cacheKeys');
-const logger = require('../common/logger');
-const reqLoggerFactory = require('../common/RequestLoggerFactory');
-const mocking = require('./mocking');
-const forward = require('./forward');
-const Router = require('koa-router');
-const Ajv = require('ajv');
-const parseBody = require('../common/parseBody');
-const parserOpts = require('../common/bodyParserOpts');
-const QueryString = require('querystring');
+const logger = require('../common/logger')
+const reqLoggerFactory = require('../common/RequestLoggerFactory')
+const mocking = require('./mocking')
+const forward = require('./forward')
+const Router = require('koa-router')
+const Ajv = require('ajv')
+const parseBody = require('../common/parseBody')
+const parserOpts = require('../common/bodyParserOpts')
+const CacheFacade = require('../common/CacheFacade')
 
-const router = new Router();
-router
-    .use('/*',
-        log,
-        generalValidate,
-        validateSchema,
-        forwardReq,
-        mock);
+const router = new Router()
+router.use('/*', log, generalValidate, validateSchema, forwardReq, mock)
 
-const ajv = new Ajv();
+const ajv = new Ajv()
 
 async function log(ctx, next) {
     await next()
 
     let appName = ''
-    let subPaths = ctx.path.split('/')
+    let subPaths = ctx
+        .path
+        .split('/')
     if (subPaths.length > 2) {
         appName = subPaths[2]
     }
 
-    reqLoggerFactory.getLogger(appName).info({
-        request: {
-            path: ctx.path.toLowerCase().replace(`/mocking/${appName}`, ''),
-            method: ctx.method,
-            queryString: ctx.querystring,
-            headers: ctx.request.headers,
-            body: ctx.request.body
-        },
-        response: {
-            headers: ctx.response.headers,
-            body: ctx.body
-        }
-    });
+    reqLoggerFactory
+        .getLogger(appName)
+        .info({
+            request: {
+                path: ctx
+                    .path
+                    .toLowerCase()
+                    .replace(`/mocking/${appName}`, ''),
+                method: ctx.method,
+                queryString: ctx.querystring,
+                headers: ctx.request.headers,
+                body: ctx.request.body
+            },
+            response: {
+                headers: ctx.response.headers,
+                body: ctx.body
+            }
+        })
 }
 
 async function generalValidate(ctx, next) {
@@ -54,16 +53,14 @@ async function generalValidate(ctx, next) {
         return
     } else {
         let appName = subPaths[2]
-        let apiKey = subPaths.slice(3).join('_')
+        let apiPath = subPaths.slice(3)
 
-        let baseKey = `${ cacheKeys.apiInventory }:${ appName.toLowerCase() }`
-        let apiSketch = await redisClient.hgetAsync(baseKey, apiKey)
+        let apiSketch = await CacheFacade.getApi(appName, null, apiPath)
         if (!apiSketch) {
             set404(ctx)
             return
         } else {
-            apiSketch = JSON.parse(apiSketch)
-            apiSketch.baseKey = baseKey
+            apiSketch.appName = appName
 
             // method not allow
             if (apiSketch.method !== ctx.method) {
@@ -72,7 +69,7 @@ async function generalValidate(ctx, next) {
                 return
             } else {
                 ctx.apiSketch = apiSketch
-                await next();
+                await next()
             }
         }
     }
@@ -81,11 +78,8 @@ async function generalValidate(ctx, next) {
 async function validateSchema(ctx, next) {
     let apiSketch = ctx.apiSketch
     if (apiSketch.validate) {
-        let schemaKey = `${ apiSketch.baseKey }_${ apiSketch.apiId }_schema`
-        let apiSchema = await redisClient.getAsync(schemaKey)
+        let apiSchema = await CacheFacade.getApiSchema(apiSketch.appName, apiSketch.id)
         if (apiSchema) {
-            apiSchema = JSON.parse(apiSchema)
-
             let valid = false
             let errors = null
 
@@ -95,7 +89,7 @@ async function validateSchema(ctx, next) {
 
                 let validate = ajv.compile(apiSchema.properties.query)
                 if (validate(target)) {
-                    valid = true;
+                    valid = true
                 } else {
                     errors = validate.errors
                 }
@@ -104,7 +98,7 @@ async function validateSchema(ctx, next) {
 
                 let validate = ajv.compile(target)
                 if (validate(ctx.request.headers)) {
-                    valid = true;
+                    valid = true
                 } else {
                     errors = validate.errors
                 }
@@ -112,7 +106,7 @@ async function validateSchema(ctx, next) {
                 await parseBody(ctx, parserOpts.common)
                 let validate = ajv.compile(apiSchema.properties.reqBody)
                 if (validate(ctx.request.body)) {
-                    valid = true;
+                    valid = true
                 } else {
                     errors = validate.errors
                 }
@@ -134,14 +128,14 @@ async function validateSchema(ctx, next) {
 
                 let validate = ajv.compile(apiSchema.properties.resHeaders)
                 if (validate(target)) {
-                    valid = true;
+                    valid = true
                 } else {
                     errors = validate.errors
                 }
             } else if (apiSchema.properties.resBody) {
                 let validate = ajv.compile(apiSchema.properties.resBody)
                 if (validate(ctx.body)) {
-                    valid = true;
+                    valid = true
                 } else {
                     errors = validate.errors
                 }
@@ -161,15 +155,14 @@ async function validateSchema(ctx, next) {
 async function forwardReq(ctx, next) {
     let apiSketch = ctx.apiSketch
     if (apiSketch.forward) {
-        let appDesc = await redisClient.getAsync(`${ cacheKeys.appInventory }:${ apiSketch.appId }`)
+        let appDesc = CacheFacade.getApp(apiSketch.appName, 0)
         if (appDesc) {
-            appDesc = JSON.parse(appDesc)
             if (appDesc) {
                 if (appDesc.apiForwardTarget) {
                     if (appDesc.targets && appDesc.targets[appDesc.apiForwardTarget]) {
                         let targetBaseUrl = ''
                         for (let i = 0; i < appDesc.targets.length; i++) {
-                            const target = appDesc.targets[i];
+                            const target = appDesc.targets[i]
                             if (target.name === appDesc.apiForwardTarget) {
                                 targetBaseUrl = appDesc.targets[appDesc.apiForwardTarget]
                             }
@@ -178,7 +171,9 @@ async function forwardReq(ctx, next) {
                             let resOpts = await forward(ctx.req, targetBaseUrl, apiSketch.path)
                             ctx.body = resOpts.body
                             try {
-                                ctx.response.set(resOpts.headers)
+                                ctx
+                                    .response
+                                    .set(resOpts.headers)
                             } catch (error) {
                                 console.log(error)
                             }
@@ -202,24 +197,21 @@ async function forwardReq(ctx, next) {
 
         return
     } else {
-        await next();
+        await next()
     }
 }
 
 async function mock(ctx, next) {
     let apiSketch = ctx.apiSketch
-    let cacheKey = `${ apiSketch.baseKey }_${ apiSketch.apiId }_mockCfg`
-    let mockConfig = await redisClient.getAsync(cacheKey)
+    let mockConfig = await CacheFacade.getApiMockCfg(apiSketch.appName, apiSketch.path)
     if (!mockConfig) {
         ctx.status = 400
         ctx.body = 'mock config not found'
     } else {
-        mockConfig = JSON.parse(mockConfig)
         if (!mockConfig) {
-            await this.set404(ctx)
-        }
-        // mocking 
-        else if (mockConfig.mock) {
+            await this.set404(ctx // mocking
+            )
+        } else if (mockConfig.mock) {
             await mocking(ctx, mockConfig.mockCfg)
         }
     }
@@ -228,12 +220,12 @@ async function mock(ctx, next) {
 }
 
 function set404(ctx) {
-    ctx.status = 404;
-    ctx.body = 'api not found';
+    ctx.status = 404
+    ctx.body = 'api not found'
 }
 
 function parseKeyVals(src, schema) {
-    let keys = [];
+    let keys = []
     for (const key in schema.properties) {
         if (schema.properties.hasOwnProperty(key)) {
             keys.push(key)
@@ -244,9 +236,9 @@ function parseKeyVals(src, schema) {
         if (src[key]) {
             src[key] = JSON.parse(src[key])
         }
-    });
+    })
 
-    return src;
+    return src
 }
 
 exports = module.exports = router.routes()

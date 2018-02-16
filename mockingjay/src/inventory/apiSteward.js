@@ -2,14 +2,13 @@
 
 const Router = require('koa-router')
 var Ajv = require('ajv')
-const redisClient = require('../common/redisClient')
-const cacheKeys = require('../common/cacheKeys')
 const logger = require('../common/logger')
 const errCode = require('./errCode')
 const commonBodyParser = require('../common/bodyParser')
 const cfgSchema = require('../Schemas/apiCfgSchema')
 const apiRegistrationSchema = require('../Schemas/apiRegistrationSchema')
 const jsonParse = require('../utils/jsonParser')
+const CacheFacade = require('../common/CacheFacade')
 
 const ajv = new Ajv(); // options can be passed, e.g. {allErrors: true}
 const cfgValidate = ajv.compile(cfgSchema)
@@ -72,16 +71,7 @@ class Steward {
             if (!appDesc) {
                 ctx.response.body = errCode.resNotFound()
             } else {
-                let key = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }`
-                let jsonList = await redisClient.hgetallAsync(key)
-                let apis = []
-                for (const id in jsonList) {
-                    if (jsonList.hasOwnProperty(id)) {
-                        const apiJson = jsonList[id]
-                        apis.push(JSON.parse(apiJson))
-                    }
-                }
-
+                let apis = await CacheFacade.getApiList(appDesc.name)
                 apis = apis.sort(apiSorter)
 
                 ctx.response.body = errCode.success(apis)
@@ -92,26 +82,25 @@ class Steward {
     }
 
     async get(ctx, next) {
-        let apiCacheKey = ''
-        let hashKey = ''
+        let appName = ''
+        let apiId = ''
         if (ctx.query) {
             for (const key in ctx.query) {
-                if (key.toLowerCase() === 'key') {
-                    apiCacheKey = ctx.query[key].toLowerCase()
+                if (key.toLowerCase() === 'appname') {
+                    appName = ctx.query[key].toLowerCase()
                 }
-                if (key.toLowerCase() === 'hashkey') {
-                    hashKey = ctx.query[key].toLowerCase()
+                if (key.toLowerCase() === 'id') {
+                    apiId = ctx.query[key].toLowerCase()
                 }
             }
         }
-        if (!apiCacheKey || !hashKey) {
+        if (!appName || !apiId) {
             ctx.response.status = 400
             ctx.response.body = 'key CAN NOT be null or empty'
         } else {
             //TODO: check is app registered
 
-            let rawApiCfg = await redisClient.hgetAsync(apiCacheKey, hashKey)
-            let apiCfg = JSON.parse(rawApiCfg)
+            let apiCfg = await CacheFacade.getApi(appName, parseInt(apiId), null)
 
             ctx.response.body = errCode.success(apiCfg)
         }
@@ -135,34 +124,23 @@ class Steward {
             return await next()
         }
 
-        let id = await redisClient.incrAsync(cacheKeys.apiId)
+        let id = await CacheFacade.allocateApiId()
         let apiSketch = {
-            apiId: id,
+            id: id,
             name: apiData.name,
             description: apiData.description,
             path: apiData.path,
             method: apiData.method,
             appId: apiData.appId
         }
-        let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }`
 
-        let hashKey = apiSketch.path.replace(/\//g, '_')
-        if (hashKey.indexOf('_') === 0) {
-            hashKey = hashKey.substr(1)
-        }
-        if (hashKey.lastIndexOf('_') === hashKey.length - 1) {
-            hashKey = hashKey.substring(0, hashKey.length - 1)
-        }
-        hashKey = hashKey.toLowerCase()
-
-        let ok = await redisClient.hsetAsync(baseKey, hashKey, JSON.stringify(apiSketch)) >= 0
+        let ok = await CacheFacade.setApi(appDesc.name, id, apiSketch.path, apiSketch)
         if (!ok) {
             ctx.response.body = errCode.dbErr()
         } else if (apiData.schema) {
-            let cacheKey = `${ baseKey }_${ id }_schema`
-            ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiData.schema)) === 'OK'
+            ok = await CacheFacade.setApiSchema(appDesc.name, id, apiData.schema)
             if (ok) {
-                apiData.apiId = id
+                apiData.id = id
                 ctx.response.body = errCode.success(apiData)
             } else {
                 ctx.response.body = errCode.dbErr()
@@ -181,9 +159,9 @@ class Steward {
             ctx.response.status = 400
             ctx.response.body = apiSchemaValidate.errors
             return await next()
-        } else if (!apiData.apiId) {
+        } else if (!apiData.id) {
             ctx.response.status = 400
-            ctx.response.body = "apiId is missing.."
+            ctx.response.body = "id is missing.."
             return await next()
         }
 
@@ -193,21 +171,10 @@ class Steward {
             return await next()
         }
 
-        let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }`
-
-        let pathKey = apiData.path.replace(/\//g, '_')
-        if (pathKey.indexOf('_') === 0) {
-            pathKey = pathKey.substr(1)
-        }
-        if (pathKey.lastIndexOf('_') === pathKey.length - 1) {
-            pathKey = pathKey.substring(0, pathKey.length - 1)
-        }
-        pathKey = pathKey.toLowerCase()
-
         // check is existed
-        let apiId = apiData.apiId
-        let ok = await redisClient.hexistsAsync(baseKey, pathKey) === 1
-        if (!ok) {
+        let apiId = apiData.id
+        let apiDesc = await CacheFacade.getApi(appDesc.name, apiId, apiData.path)
+        if (!apiDesc) {
             ctx.response.body = errCode.resNotFound()
             return await next()
         }
@@ -222,12 +189,11 @@ class Steward {
             validate: apiData.validate,
             forward: apiData.forward
         }
-        ok = await redisClient.hsetAsync(baseKey, pathKey, JSON.stringify(apiSketch)) >= 0
+        let ok = await CacheFacade.setApi(appDesc.name, apiId, apiData.path, apiSketch)
         if (!ok) {
             ctx.response.body = errCode.dbErr()
         } else if (apiData.schema) {
-            let cacheKey = `${ baseKey }_${ apiId }_schema`
-            ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiData.schema)) === 'OK'
+            ok = await CacheFacade.setApiSchema(appDesc.name, apiId, apiData.schema)
             if (ok) {
                 ctx.response.body = errCode.success(apiData)
             } else {
@@ -240,9 +206,9 @@ class Steward {
 
     async discard(ctx, next) {
         let arg = ctx.request.body
-        if (!arg.appId || !arg.apiId) {
+        if (!arg.appId || !arg.id) {
             ctx.response.status = 400
-            ctx.response.body = "appId or apiId is missing."
+            ctx.response.body = "appId or id is missing."
             return await next()
         }
 
@@ -252,26 +218,10 @@ class Steward {
             return await next()
         }
 
-        // remove app sketch
-        let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }`
-        let ok = await redisClient.hdelAsync(baseKey, arg.apiId) > 0
-        if (!ok) {
-            ctx.response.body = errCode.success()
-            return await next()
-        }
+        let apiDescRaw = CacheFacade.getApi(appDesc.name, arg.id, null)
+        let apiDesc = JSON.parse(apiDescRaw)
 
-        // remove schema
-        let cacheKey = `${ baseKey }_${ apiId }_schema`
-        ok = await redisClient.delAsync(cacheKey) >= 0
-        if (ok) {
-            ctx.response.body = errCode.success(arg)
-        } else {
-            ctx.response.body = errCode.dbErr()
-        }
-
-        // remove cofig
-        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }_${ arg.apiId }_mockCfg`
-        let ok = await redisClient.delAsync(cacheKey) >= 0
+        let ok = CacheFacade.delApi(appDesc.name, arg.id, apiDesc.path)
         if (ok) {
             ctx.response.body = errCode.success()
         } else {
@@ -284,7 +234,7 @@ class Steward {
     async updateSchema(ctx, next) {
         let apiData = ctx.request.body
         apiData = jsonParse(apiData)
-        if (!apiData.appId || apiData.appId === 0 || !apiData.apiId || apiData.apiId === 0) {
+        if (!apiData.appId || apiData.appId === 0 || !apiData.id || apiData.id === 0) {
             ctx.response.status = 400
             ctx.response.body = 'parameter not completed'
             return await next()
@@ -302,9 +252,7 @@ class Steward {
             return await next()
         }
 
-        let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }`
-        let cacheKey = `${ baseKey }_${ apiData.apiId }_schema`
-        let ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiData.schema)) === 'OK'
+        let ok = await CacheFacade.setApiSchema(appDesc.name, apiData.id, JSON.stringify(apiData.schema))
         if (ok) {
             if (apiData.schema.properties) {
                 for (const key in apiData.schema.properties) {
@@ -338,17 +286,7 @@ class Steward {
             return await next()
         }
 
-        let pathKey = apiConfig.path.replace(/\//g, '_')
-        if (pathKey.indexOf('_') === 0) {
-            pathKey = pathKey.substr(1)
-        }
-        if (pathKey.lastIndexOf('_') === pathKey.length - 1) {
-            pathKey = pathKey.substring(0, pathKey.length - 1)
-        }
-        pathKey = pathKey.toLowerCase()
-
-        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }_${ apiConfig.apiId }_mockCfg`
-        let ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiConfig)) === 'OK'
+        let ok = await CacheFacade.setApiMockCfg(appDesc.name, apiConfig.path, JSON.stringify(apiConfig))
         if (ok) {
             ctx.response.body = errCode.success(apiConfig)
         } else {
@@ -366,9 +304,9 @@ class Steward {
             ctx.response.status = 400
             ctx.response.body = cfgValidate.errors
             return await next()
-        } else if (!apiConfig.apiId) {
+        } else if (!apiConfig.id) {
             ctx.response.status = 400
-            ctx.response.body = "apiId missing."
+            ctx.response.body = "id missing."
             return await next()
         }
 
@@ -378,16 +316,7 @@ class Steward {
             return await next()
         }
 
-        let pathKey = apiConfig.path.replace(/\//g, '_')
-        if (pathKey.indexOf('_') === 0) {
-            pathKey = pathKey.substr(1)
-        }
-        if (pathKey.lastIndexOf('_') === pathKey.length - 1) {
-            pathKey = pathKey.substring(0, pathKey.length - 1)
-        }
-
-        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }_${ apiConfig.apiId }_mockCfg`
-        let ok = await redisClient.setAsync(cacheKey, JSON.stringify(apiConfig)) === 'OK'
+        let ok = await CacheFacade.setApiMockCfg(appDesc.name, apiConfig.path, JSON.stringify(apiConfig))
         if (ok) {
             ctx.response.body = errCode.success(apiConfig)
         } else {
@@ -399,9 +328,9 @@ class Steward {
 
     async removeMockCfg(ctx, next) {
         let apiConfig = ctx.request.body
-        if (!apiConfig.apiId || !apiConfig.appId) {
+        if (!apiConfig.id || !apiConfig.appId) {
             ctx.response.status = 400
-            ctx.response.body = "apiId is missing."
+            ctx.response.body = "id is missing."
             return await next()
         }
 
@@ -411,25 +340,7 @@ class Steward {
             return await next()
         }
 
-        let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }`
-
-        // check is existed
-        let apiSketch = await redisClient.hgetAsync(baseKey, apiConfig.apiId)
-        if (!apiSketch) {
-            ctx.response.body = errCode.resNotFound()
-            return await next()
-        }
-
-        let pathKey = apiSketch.path.replace(/\//g, '_')
-        if (pathKey.indexOf('_') === 0) {
-            pathKey = pathKey.substr(1)
-        }
-        if (pathKey.lastIndexOf('_') === pathKey.length - 1) {
-            pathKey = pathKey.substring(0, pathKey.length - 1)
-        }
-
-        let cacheKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }_${ apiConfig.apiId }_mockCfg`
-        let ok = await redisClient.delAsync(cacheKey) >= 0
+        let ok = await CacheFacade.delApiMockCfg(appDesc.name, apiConfig.path)
         if (ok) {
             ctx.response.body = errCode.success()
         } else {
@@ -442,98 +353,52 @@ class Steward {
     async getApiSchema(ctx, next) {
         let args = ctx.request.body
 
-        // validate
-        // var valid = registerValidate(apiData)
-        // if (!valid) {
-        //     ctx.response.status = 400
-        //     ctx.response.body = registerValidate.errors
-        //     return await next()
-        // }
-
-        let baseKey = `${ cacheKeys.apiInventory }:${ args.appName.toLowerCase() }`
-
-        let cacheKey = `${ baseKey }_${ args.apiId }_schema`
-        let apiSchemaRaw = await redisClient.getAsync(cacheKey)
-        if (!apiSchemaRaw) {
-            ctx.response.body = errCode.dbErr()
-            return await next()
-        } else {
-            try {
-                let apiSchema = JSON.parse(apiSchemaRaw)
-                if (apiSchema.properties) {
-                    for (const key in apiSchema.properties) {
-                        if (apiSchema.properties.hasOwnProperty(key)) {
-                            const prop = apiSchema.properties[key]
-                            apiSchema.properties[key] = JSON.stringify(prop)
-                        }
-                    }
+        let apiSchema = await CacheFacade.getApiSchema(args.appName, parseInt(args.id))
+        if (apiSchema.properties) {
+            for (const key in apiSchema.properties) {
+                if (apiSchema.properties.hasOwnProperty(key)) {
+                    const prop = apiSchema.properties[key]
+                    apiSchema.properties[key] = JSON.stringify(prop)
                 }
-                ctx.response.body = errCode.success(apiSchema)
-
-            } catch (error) {
-                logger.error(error)
-                ctx.response.body = errCode.dbErr()
             }
         }
+        ctx.response.body = errCode.success(apiSchema)
 
         await next()
     }
 
     async getApiMockCfg(ctx, next) {
         let apiData = ctx.request.body
-
-        // validate
-        // var valid = registerValidate(apiData)
-        // if (!valid) {
-        //     ctx.response.status = 400
-        //     ctx.response.body = registerValidate.errors
-        //     return await next()
-        // }
-
-        let baseKey = `${ cacheKeys.apiInventory }:${ apiData.appName.toLowerCase() }`
-
-        let cacheKey = `${ baseKey }_${ apiData.apiId }_mockCfg`
-        let apiConfigJson = await redisClient.getAsync(cacheKey)
-        if (!apiConfigJson) {
-            ctx.response.body = errCode.dbErr()
+        if (!apiData.id || !apiData.appName) {
+            ctx.response.status = 400
+            ctx.response.body = "id or appName is missing."
             return await next()
-        } else {
-            try {
-                let apiConfig = JSON.parse(apiConfigJson)
-                ctx.response.body = errCode.success(apiConfig)
-
-            } catch (error) {
-                logger.error(error)
-                ctx.response.body = errCode.dbErr()
-            }
         }
+        apiData.id = parseInt(apiData.id)
+
+        let appDesc = await this.getAppConfig(0, apiData.appName)
+
+        let apiDesc = await CacheFacade.getApi(appDesc.name, apiData.id, null)
+
+        let mockCfg = await CacheFacade.getApiMockCfg(appDesc.name, apiDesc.path)
+
+        ctx.response.body = errCode.success(mockCfg)
 
         await next()
     }
 
-    async getAppConfig(appId) {
-        let appCacheKey = `${ cacheKeys.appInventory }:${ appId }`
-        let appDescStr = await redisClient.getAsync(appCacheKey)
-        if (!appDescStr) {
+    async getAppConfig(appId, appName) {
+        let appDesc = await CacheFacade.getApp(appName ? appName : '', appId)
+        if (!appDesc) {
             return null
         } else {
-            try {
-                let appDesc = JSON.parse(appDescStr)
-                if (!appDesc) {
-                    return null
-                } else {
-                    return appDesc
-                }
-            } catch (error) {
-                logger.error(error)
-                return null
-            }
+            return appDesc
         }
     }
 }
 
 function apiSorter(a, b) {
-    return a.apiId - b.apiId
+    return a.id - b.id
 }
 
 exports = module.exports = new Steward()

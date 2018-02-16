@@ -30,7 +30,7 @@ class apiSchemaV extends Component {
     update(e) {
       e.target.disabled = true
       let apiSchema = this.state
-      let dummy = { appId: this.props.apiCfg.appId, apiId:this.props.apiCfg.apiId, schema: apiSchema }
+      let dummy = { appId: this.props.apiCfg.appId, id:this.props.apiCfg.id, schema: apiSchema }
       this.props.onUpdateClick(dummy)
     }
 

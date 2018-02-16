@@ -2,13 +2,12 @@
 
 const Router = require('koa-router')
 const Ajv = require('ajv')
-const redisClient = require('../common/redisClient')
-const cacheKeys = require('../common/cacheKeys')
 const logger = require('../common/logger')
 const errCode = require('./errCode')
 const bodyParser = require('../common/bodyParser')
 const appSchema = require('../Schemas/appSchema')
 const schemaRaker = require('../utils/jsonRaker')
+const CacheFacade = require('../common/CacheFacade')
 
 const ajv = new Ajv()
 const validate = ajv.compile(appSchema)
@@ -39,15 +38,7 @@ class steward {
 
     // fetch app list
     async list(ctx, next) {
-
-        let keyPattern = `${cacheKeys.appInventory}:*`
-        let keys = await redisClient.keysAsync(keyPattern)
-        let apps = []
-        for (let i = 0; i < keys.length; i++) {
-            const key = keys[i]
-            let appDesc = await redisClient.getAsync(key)
-            apps.push(JSON.parse(appDesc))
-        }
+        let apps = await CacheFacade.getAppList()
 
         apps = apps.sort(idASCSorter)
 
@@ -62,9 +53,7 @@ class steward {
             ctx.response.status = 400
             ctx.response.body = 'app id CAN NOT be null or empty'
         } else {
-            let key = `${cacheKeys.appInventory}:${id}`
-            let appDesc = await redisClient.getAsync(key)
-            let appCfg = JSON.parse(appDesc)
+            let appCfg = await CacheFacade.getApp('', parseInt(id))
 
             ctx.response.body = errCode.success(appCfg)
         }
@@ -85,12 +74,12 @@ class steward {
             appDesc = schemaRaker(appDesc, appSchema)
 
             // generate id
-            let id = await redisClient.incrAsync(cacheKeys.appId)
+            let id = await CacheFacade.allocateAppId()
             appDesc.id = id
             let key = `${cacheKeys.appInventory}:${appDesc.id}`
 
             // set/update cache
-            let ok = await redisClient.setAsync(key, JSON.stringify(appDesc)) === 'OK'
+            let ok = await CacheFacade.setApp(appDesc.name, id, appDesc)
             if (ok) {
                 appDesc.id = id
                 ctx.response.body = errCode.success(appDesc)
@@ -117,19 +106,14 @@ class steward {
             // rake json
             appDesc = schemaRaker(appDesc, appSchema)
 
-            let idMax = await redisClient.getAsync(cacheKeys.appId)
-            if (appDesc.id > parseInt(idMax)) {
-                ctx.response.body = errCode.resNotFound()
-            } else {
-                let key = `${ cacheKeys.appInventory }:${ appDesc.id }`
+            let key = `${ cacheKeys.appInventory }:${ appDesc.id }`
 
-                // set/update cache
-                let ok = await redisClient.setAsync(key, JSON.stringify(appDesc)) === 'OK'
-                if (ok) {
-                    ctx.response.body = errCode.success(appDesc)
-                } else {
-                    ctx.response.body = errCode.dbErr()
-                }
+            // set/update cache
+            let ok = await CacheFacade.setApp(appDesc.name, appDesc.id, appDesc)
+            if (ok) {
+                ctx.response.body = errCode.success(appDesc)
+            } else {
+                ctx.response.body = errCode.dbErr()
             }
         }
 
@@ -147,22 +131,9 @@ class steward {
             ctx.response.status = 400
             ctx.response.body = 'app id CAN NOT be null or empty'
         } else {
-            let key = `${ cacheKeys.appInventory }:${ appDesc.id }`
-            await redisClient.delAsync(key)
-            let baseKey = `${ cacheKeys.apiInventory }:${ appDesc.name.toLowerCase() }`
-            let apiIds = await redisClient.hkeysAsync(baseKey)
-            if (apiIds && apiIds.length > 0) {
-                for (let i = 0; i < apiIds.length; i++) {
-                    const id = apiIds[i]
-                    let schemaKey = `${ baseKey }:${ id }_${ cacheKeys.schemaPostfix }`
-                    let mockCfgKey = `${ baseKey }:${ id }_${ cacheKeys.mockCfgPostfix }`
-                    await redisClient.delAsync(schemaKey)
-                    await redisClient.delAsync(mockCfgKey)
-                }
-            }
-            await redisClient.delAsync(baseKey)
+            let ok = await CacheFacade.delApp(appDesc.name, appDesc.id)
 
-            ctx.response.body = errCode.success(appDesc)
+            ctx.response.body = errCode.success(ok)
         }
 
         await next()

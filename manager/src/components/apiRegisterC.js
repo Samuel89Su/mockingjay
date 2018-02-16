@@ -27,7 +27,7 @@ const mapStateToProps = state => {
   return {
     apiCfg: (!state.apiCfg || !state.apiCfg.name)
         ? {
-            apiId: 0,
+            id: 0,
             name: '',
             description: '',
             path: '/',

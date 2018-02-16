@@ -70,7 +70,7 @@ describe('CachekeyCombinator', () => {
         
         it('combine prefix-postfix and params(Array)', ()=>{
             assert.equal('apiinventory:test_1_schema', 
-                CachekeyCombinator.combineCacheKey('schema', ['test', '1']))
+                CachekeyCombinator.combineCacheKey('schema', ['test', 1]))
         })
 
         it('combine prefix-postfix and params(Object)', ()=>{
@@ -86,7 +86,7 @@ describe('CachekeyCombinator', () => {
         
         it('combine prefix-postfix and params(Array)', ()=>{
             assert.equal('apiinventory:test_1_mockCfg', 
-                CachekeyCombinator.combineCacheKey('mockCfg', ['test', '1']))
+                CachekeyCombinator.combineCacheKey('mockCfg', ['test', 1]))
         })
 
         it('combine prefix-postfix and params(Object)', ()=>{

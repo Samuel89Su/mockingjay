@@ -35,7 +35,7 @@ function updateRemoteApiMcCfg(apiMcCfg, dispatch) {
 // map state to props
 const mapStateToProps = state => {
   return {
-    apiMcCfg: (!state.apiMcCfg || state.apiMcCfg.path)
+    apiMcCfg: (!state.apiMcCfg || !state.apiMcCfg.path)
               ? {
                 path: state.apiCfg.path,
                 method: state.apiCfg.method,
