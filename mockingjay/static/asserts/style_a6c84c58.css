@@ -96,6 +96,30 @@
       height: 50px;
       background: #7a0505;
       color: white; }
+.container-btn {
+  background: orange;
+  position: fixed;
+  height: 100%;
+  width: 100%; }
+  .container-btn .pane-btn {
+    background: orchid;
+    position: fixed;
+    right: 100px;
+    bottom: 40px;
+    width: 150px;
+    height: 120px; }
+    .container-btn .pane-btn .btn-submit {
+      width: 120px;
+      height: 50px;
+      background: blue;
+      color: white;
+      margin: 5px 0 0 10px; }
+    .container-btn .pane-btn .btn-discard {
+      width: 120px;
+      height: 50px;
+      background: #7a0505;
+      color: white;
+      margin: 5px 0 0 10px; }
 #div_apiSchema {
   text-align: left;
   margin: 30px 0 0 40px; }
@@ -188,8 +212,10 @@
       color: white; }
 #div_appCfg {
   text-align: left;
-  margin: 30px 0 0 40px; }
+  margin: 30px 0 0 40px;
+  background: yellow; }
   #div_appCfg #fm_appCfg {
+    background: green;
     margin: 20px 0 0 0; }
     #div_appCfg #fm_appCfg input {
       height: 28px;
@@ -199,22 +225,6 @@
     #div_appCfg #fm_appCfg #ipt_desc {
       height: 120px;
       width: 500px; }
-    #div_appCfg #fm_appCfg #btn_submit {
-      position: fixed;
-      top: 500px;
-      left: 960px;
-      width: 120px;
-      height: 50px;
-      background: blue;
-      color: white; }
-    #div_appCfg #fm_appCfg #btn_discard {
-      position: fixed;
-      top: 600px;
-      left: 960px;
-      width: 120px;
-      height: 50px;
-      background: #7a0505;
-      color: white; }
 /* Base Application Styles */
 @font-face {
   font-family: "iconfont";
@@ -243,4 +253,4 @@ html {
     position: relative;
     margin: 20px 0 0 20px; }
 
-/*# sourceMappingURL=style_814d77e2.css.map*/
+/*# sourceMappingURL=style_a6c84c58.css.map*/
