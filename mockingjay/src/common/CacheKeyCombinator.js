@@ -20,18 +20,43 @@ class CacheKeyCombinator {
         this.buildApiKeyPrefix = this.buildApiKeyPrefix.bind(this)
     }
 
+    /**
+     * 
+     * @param {String} appName app name
+     * @param {Number} id app id
+     * @returns {String} cache key
+     */
     buildAppCfgKey (appName, id) {
         return `${this.appInventoryPrefix}:${appName.toLowerCase()}_${id}`
     }
 
+    /**
+     * 
+     * @param {String} appName 
+     * @param {Number} apiId 
+     * @param {String} apiPath 
+     * @returns {String} cache key
+     */
     buildApiDescKey (appName, apiId, apiPath) {
         return `${this.buildApiKeyPrefix(appName, false)}${apiId}_${apiPath}`
     }
 
+    /**
+     * 
+     * @param {String} appName app name
+     * @param {Number} apiId api id
+     * @returns {String} cache key
+     */
     buildApiSchemaKey (appName, apiId) {
         return `${this.buildApiKeyPrefix(appName, false)}${apiId}_${this.schemaPostfix}`
     }
 
+    /**
+     * 
+     * @param {String} appName app name
+     * @param {String} apiPath api path
+     * @returns {String} cache key
+     */
     buildMockCfgKey(appName, apiPath) {
         if (!appName || appName === '') {
             throw new Error('appName is undefined or null')
@@ -47,70 +72,13 @@ class CacheKeyCombinator {
 
     /**
      * 
-     * @param {String} appName 
-     * @param {Boolean} isPattern 
-     * @returns {Promise<String>}
+     * @param {String} appName app name
+     * @param {Boolean} isPattern use as pattern
+     * @returns {String} cache key
      */
     buildApiKeyPrefix(appName, isPattern) {
         return `${this.apiInventoryPrefix}:${appName.toLowerCase()}:${isPattern?'*':''}`
     }
-
-    // combineCacheKey(cacheType, params) {
-    //     if (!cacheType) {
-    //         throw new Error('cacheType is undefined or null')
-    //     } else if (!this.keyPrefixes.hasOwnProperty(cacheType) && !this.keyPostfixes.hasOwnProperty(cacheType)) {
-    //         throw new Error('cacheType is not supported')
-    //     } else {
-    //         let cacheKey = ''
-    //         if (params) {
-    //             if (typeof params !== 'object' && !(params instanceof Array)) {
-    //                 cacheKey += params
-    //             } else if (params instanceof Array) {
-    //                 for (let i = 0; i < params.length; i++) {
-    //                     let partial = params[i]
-    //                     if (partial) {
-    //                         if (typeof partial === 'string') {
-    //                             partial = partial.toLowerCase()
-    //                         }
-    //                         cacheKey += partial + '_'
-    //                     }
-    //                 }
-    //             } else if (typeof params === 'object' && !(params instanceof Array)) {
-    //                 for (const key in params) {
-    //                     if (params.hasOwnProperty(key)) {
-    //                         let val = params[key]
-    //                         if (val) {
-    //                             if (typeof val === 'string') {
-    //                                 val = val.toLowerCase()
-    //                             }
-    //                             cacheKey += val + '_'
-    //                         }
-    //                     }
-    //                 }
-    //             } else {
-    //                 throw new TypeError('type of params is invalid')
-    //             }
-    //         }    
-
-    //         if (this.keyPrefixes.hasOwnProperty(cacheType)) {
-    //             let keyPrefix = this.keyPrefixes[cacheType]
-    //             cacheKey = keyPrefix + cacheKey
-    //             if (cacheKey.endsWith('_')) {
-    //                 cacheKey = cacheKey.substr(0, cacheKey.length - 1)
-    //             }
-    //         }
-    
-    //         if (this.keyPostfixes.hasOwnProperty(cacheType)) {            
-    //             let keyPostfix = this.keyPostfixes[cacheType]
-    //             cacheKey += keyPostfix
-    //             if (cacheKey.startsWith('_')) {
-    //                 cacheKey = cacheKey.substr(1, cacheKey.length - 1)
-    //             }
-    //         }
-    
-    //         return cacheKey
-    //     }
-    // }
 }
 
 exports = module.exports = new CacheKeyCombinator()

@@ -2,10 +2,10 @@ const assert = require('assert')
 const CachekeyCombinator = require('../../src/common/CacheKeyCombinator')
 
 describe('CachekeyCombinator', () => {
-    describe('#combineCacheKey', () => {
+    describe('#buildAppCfgKey', () => {
         it('throw error when invoked without arguments', () => {
             try {
-                CachekeyCombinator.combineCacheKey()
+                CachekeyCombinator.buildAppCfgKey()
             } catch (error) {
                 assert.equal(error, 'Error: cacheType is undefined or null')
             }

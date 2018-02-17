@@ -15,25 +15,43 @@ router.use('/*', log, generalValidate, validateSchema, forwardReq, mock)
 
 const ajv = new Ajv()
 
+/**
+ * error handling & logging
+ */
 async function log(ctx, next) {
-    await next()
+    try {
+        let appName = ''
+        let subPaths = ctx.path.split('/')
+        if (subPaths.length > 2) {
+            appName = subPaths[2]
+        }
+        if (!appName) {
+            ctx.status = 400
+            ctx.body = 'App name has not been specificed'
+            return
+        }
 
-    let appName = ''
-    let subPaths = ctx
-        .path
-        .split('/')
-    if (subPaths.length > 2) {
-        appName = subPaths[2]
-    }
+        let replacePattern = new RegExp('/' + subPaths[1] + '/' + appName, 'i')
+        let apiPath = ctx.path.replace(replacePattern, '')
 
-    reqLoggerFactory
-        .getLogger(appName)
-        .info({
+        let apiSketch = await CacheFacade.getApi(appName, null, apiPath)
+        if (!apiSketch) {
+            set404(ctx)
+            return
+        } else {
+            apiSketch.appName = appName
+        }
+
+        ctx.apiSketch = apiSketch
+
+        const logger = reqLoggerFactory.getLogger(appName)
+        ctx.logger = logger
+
+        await next()
+
+        logger.info({
             request: {
-                path: ctx
-                    .path
-                    .toLowerCase()
-                    .replace(`/mocking/${appName}`, ''),
+                path: apiPath,
                 method: ctx.method,
                 queryString: ctx.querystring,
                 headers: ctx.request.headers,
@@ -44,35 +62,44 @@ async function log(ctx, next) {
                 body: ctx.body
             }
         })
+    } catch (error) {
+        if (ctx.logger) {
+            ctx.logger.error({
+                request: {
+                    path: ctx.apiSketch.path,
+                    method: ctx.method,
+                    queryString: ctx.querystring,
+                    headers: ctx.request.headers,
+                    body: ctx.request.body
+                },
+                error: {
+                    msg: error.message,
+                    stack: error.stack
+                }
+            })
+        }
+
+        ctx.status = 500
+        ctx.body = {
+            msg: error.message,
+            stack: error.stack
+        }
+
+        return
+    }
 }
 
 async function generalValidate(ctx, next) {
-    let subPaths = ctx.path.split('/')
-    if (subPaths.length < 3) {
-        set404(ctx)
+    let apiSketch = ctx.apiSketch
+
+    // method not allow
+    if (apiSketch.method !== ctx.method) {
+        ctx.status = 405
+        ctx.body = 'Method Not Allowed'
         return
-    } else {
-        let appName = subPaths[2]
-        let apiPath = subPaths.slice(3)
-
-        let apiSketch = await CacheFacade.getApi(appName, null, apiPath)
-        if (!apiSketch) {
-            set404(ctx)
-            return
-        } else {
-            apiSketch.appName = appName
-
-            // method not allow
-            if (apiSketch.method !== ctx.method) {
-                ctx.status = 405
-                ctx.body = 'Method Not Allowed'
-                return
-            } else {
-                ctx.apiSketch = apiSketch
-                await next()
-            }
-        }
     }
+
+    await next()
 }
 
 async function validateSchema(ctx, next) {
