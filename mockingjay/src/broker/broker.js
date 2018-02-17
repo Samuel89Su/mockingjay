@@ -174,9 +174,8 @@ async function validateSchema(ctx, next) {
                 return
             }
         }
-    } else {
-        await next()
     }
+    await next()
 }
 
 async function forwardReq(ctx, next) {

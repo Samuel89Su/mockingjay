@@ -37,10 +37,10 @@ const mapStateToProps = state => {
   return {
     apiMcCfg: (!state.apiMcCfg || !state.apiMcCfg.path)
               ? {
-                path: state.apiCfg.path,
-                method: state.apiCfg.method,
+                appId: state.apiCfg.appId,
+                id: state.apiCfg.id,
+                mock: false,
                 mockCfg: {
-                  mock: false,
                   validateReq: false,
                   reqDescriptor: {
                     queries: [],
@@ -58,7 +58,7 @@ const mapStateToProps = state => {
                     body: {
                       optional: true,
                       reactor: {
-                        type: '',
+                        type: 'fixed',
                         value: ''
                       }
                     }

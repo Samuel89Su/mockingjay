@@ -80,6 +80,11 @@ class ResponseBaker {
                 }
             }
         }
+
+        if (ctx.status !== 200) {
+            ctx.status = 200
+            ctx.body = ''
+        }
     }
 
     // return error message

@@ -52,8 +52,8 @@ class apiListV extends Component {
                                         <td>{ api.id }</td>
                                         <td>{ api.name }</td>
                                         <td>{ api.method }</td>
-                                        <td>{ api.validate }</td>
-                                        <td>{ api.forward }</td>
+                                        <td>{ api.validate.toString() }</td>
+                                        <td>{ api.forward.toString() }</td>
                                         <td>{ api.path }</td>
                                         <td>{ api.description }</td>
                                         <td><Link to={`/api/details?appName=${this.state.appName}&id=${api.id}`}>details</Link></td>

@@ -131,7 +131,9 @@ class Steward {
             description: apiData.description,
             path: apiData.path,
             method: apiData.method,
-            appId: apiData.appId
+            appId: apiData.appId,
+            validate: apiData.validate,
+            forward: apiData.forward
         }
 
         let ok = await CacheFacade.setApi(appDesc.name, id, apiSketch.path, apiSketch)
@@ -145,6 +147,8 @@ class Steward {
             } else {
                 ctx.response.body = errCode.dbErr()
             }
+        } else {
+            ctx.response.body = errCode.success(apiData)
         }
 
         await next()
@@ -180,7 +184,7 @@ class Steward {
         }
 
         let apiSketch = {
-            apiId: apiId,
+            id: apiId,
             name: apiData.name,
             description: apiData.description,
             path: apiData.path,
@@ -199,6 +203,8 @@ class Steward {
             } else {
                 ctx.response.body = errCode.dbErr()
             }
+        } else {
+            ctx.response.body = errCode.success(apiData)
         }
 
         await next()
@@ -252,7 +258,7 @@ class Steward {
             return await next()
         }
 
-        let ok = await CacheFacade.setApiSchema(appDesc.name, apiData.id, JSON.stringify(apiData.schema))
+        let ok = await CacheFacade.setApiSchema(appDesc.name, apiData.id, apiData.schema)
         if (ok) {
             if (apiData.schema.properties) {
                 for (const key in apiData.schema.properties) {
@@ -286,7 +292,7 @@ class Steward {
             return await next()
         }
 
-        let ok = await CacheFacade.setApiMockCfg(appDesc.name, apiConfig.path, JSON.stringify(apiConfig))
+        let ok = await CacheFacade.setApiMockCfg(appDesc.name, apiConfig.path, apiConfig)
         if (ok) {
             ctx.response.body = errCode.success(apiConfig)
         } else {
@@ -297,28 +303,29 @@ class Steward {
     }
 
     async updateMockCfg(ctx, next) {
-        let apiConfig = ctx.request.body
+        let mockCfg = ctx.request.body
+        mockCfg = jsonParse(mockCfg)
         // validate
-        var valid = cfgValidate(apiConfig)
+        var valid = cfgValidate(mockCfg)
         if (!valid) {
             ctx.response.status = 400
             ctx.response.body = cfgValidate.errors
             return await next()
-        } else if (!apiConfig.id) {
+        } else if (!mockCfg.id) {
             ctx.response.status = 400
             ctx.response.body = "id missing."
             return await next()
         }
 
-        let appDesc = await this.getAppConfig(apiConfig.appId)
+        let appDesc = await this.getAppConfig(mockCfg.appId)
         if (!appDesc) {
             ctx.response.body = errCode.resNotFound()
             return await next()
         }
 
-        let ok = await CacheFacade.setApiMockCfg(appDesc.name, apiConfig.path, JSON.stringify(apiConfig))
+        let ok = await CacheFacade.setApiMockCfg(appDesc.name, mockCfg.path, mockCfg)
         if (ok) {
-            ctx.response.body = errCode.success(apiConfig)
+            ctx.response.body = errCode.success(mockCfg)
         } else {
             ctx.response.body = errCode.dbErr()
         }
@@ -381,6 +388,14 @@ class Steward {
         let apiDesc = await CacheFacade.getApi(appDesc.name, apiData.id, null)
 
         let mockCfg = await CacheFacade.getApiMockCfg(appDesc.name, apiDesc.path)
+        if (!mockCfg) {
+            mockCfg = {
+                appId: appDesc.id,
+                id: apiDesc.id,
+                method: apiDesc.method,
+                path: apiDesc.path
+            }
+        }
 
         ctx.response.body = errCode.success(mockCfg)
 
