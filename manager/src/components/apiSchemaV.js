@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import '../styles/apiSchema.scss'
 import { deepClone, updateByPath } from '../utils'
+import Btns from './btn-apply-discard'
 
 class apiSchemaV extends Component {
     constructor(props) {
@@ -78,9 +79,9 @@ class apiSchemaV extends Component {
                     <textarea id="ipt_res_body" name="properties.resBody" value={apiSchema.properties.resBody} onChange={this.handleChange} />
                     </div>
 
-                    <button id="btn_submit" onClick={this.update}>Apply</button>
-
                 </div>
+
+                <Btns applyAction={this.update} hideDiscard={true} />
             </div>
         );
     }

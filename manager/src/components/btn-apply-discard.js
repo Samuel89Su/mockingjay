@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import '../styles/btn.scss'
 
 class Btns extends Component {
     constructor(props) {

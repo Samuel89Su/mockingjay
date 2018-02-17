@@ -2,12 +2,14 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import '../styles/apiMcCfg.scss'
 import { deepClone, updateByPath } from '../utils'
+import Btns from './btn-apply-discard'
 
 class apiMcCfgV extends Component {
     constructor(props) {
         super(props)
 
         this.update = this.update.bind(this)
+        this.discard = this.discard.bind(this)
         this.handleChange = this.handleChange.bind(this)
         
         this.createValidator = this.createValidator.bind(this)
@@ -28,7 +30,8 @@ class apiMcCfgV extends Component {
 
     handleChange(e) {
         let oPath = e.target.name
-        let newState = updateByPath(deepClone(this.state), oPath, e.target.value)
+        let value = e.target.type === 'checkbox' ? e.target.checked : e.target.value
+        let newState = updateByPath(deepClone(this.state), oPath, value)
         this.setState(newState)
     }
 
@@ -60,6 +63,10 @@ class apiMcCfgV extends Component {
       }
 
       this.props.onUpdateClick(apiMcCfg)
+    }
+
+    discard(e) {
+        history.back()
     }
 
     createValidator(namePrefix, validator) {
@@ -195,12 +202,12 @@ class apiMcCfgV extends Component {
                         <span id="sp_method">{ apiMcCfg.method }</span>
                         <span id="sp_path">{ apiMcCfg.path }</span><br/>
                         <label htmlFor="ck_mock">Mock</label>
-                        <input type="checkbox" id="ck_mock" value={apiMcCfg.mock} onChange={this.handleChange} />
+                        <input type="checkbox" id="ck_mock" name="mock" checked={apiMcCfg.mock} value={apiMcCfg.mock} onChange={this.handleChange} />
                     </div>
 
                     <div id="dv_mockCfg">
-                        <label htmlFor="checkbox">Validate Request: </label>
-                        <input type="checkbox" value={apiMcCfg.mockCfg.validateReq} onChange={this.handleChange} /><br/>
+                        <label>Validate Request: </label>
+                        <input type="checkbox" name="mockCfg.validateReq" checked={apiMcCfg.mockCfg.validateReq} value={apiMcCfg.mockCfg.validateReq} onChange={this.handleChange} /><br/>
                         <h3>Request description</h3>
                         <h4>Queries</h4>
                         <button onClick={()=>this.addKey('query')}>Add</button>
@@ -211,7 +218,7 @@ class apiMcCfgV extends Component {
                                 <li key={index} className="div-key">
                                     <label>Key: </label>
                                     <input name={'mockCfg.reqDescriptor.queries.' + index + '.key'} value={query.key} onChange={this.handleChange} />
-                                    <input name={'mockCfg.reqDescriptor.queries.' + index + '.required'} type="checkbox" value={query.required} onChange={this.handleChange} />
+                                    <input name={'mockCfg.reqDescriptor.queries.' + index + '.required'} type="checkbox" checked={query.required} value={query.required} onChange={this.handleChange} />
                                     <label >Required</label><br/>
                                     <button onClick={() => this.discardKey('query', query.key)}>Discard</button>
                                     <h5>Validator</h5>
@@ -229,7 +236,7 @@ class apiMcCfgV extends Component {
                                 <li key={index} className="div-key">
                                     <label>Key: </label>
                                     <input name={'mockCfg.reqDescriptor.headers.' + index + '.key'} value={header.key} onChange={this.handleChange} />
-                                    <input name={'mockCfg.reqDescriptor.headers.' + index + '.required'} type="checkbox" value={header.required} onChange={this.handleChange} />
+                                    <input name={'mockCfg.reqDescriptor.headers.' + index + '.required'} type="checkbox" checked={header.required} value={header.required} onChange={this.handleChange} />
                                     <label >Required</label><br/>
                                     <button onClick={() => this.discardKey('reqHeader', header.key)}>Discard</button>
                                     <h5>Validator</h5>
@@ -241,7 +248,7 @@ class apiMcCfgV extends Component {
                         <h4>Body</h4>
                         <div>
                             <label>Required</label>
-                            <input name="mockCfg.reqDescriptor.body" type="checkbox" value={apiMcCfg.mockCfg.reqDescriptor.body.required} onChange={this.handleChange} />
+                            <input name="mockCfg.reqDescriptor.body" type="checkbox" checked={apiMcCfg.mockCfg.reqDescriptor.body.required} value={apiMcCfg.mockCfg.reqDescriptor.body.required} onChange={this.handleChange} />
                             { this.createValidator('mockCfg.reqDescriptor.body', apiMcCfg.mockCfg.reqDescriptor.body.validator) }
                         </div>
                         <h3>Response description</h3>
@@ -254,7 +261,7 @@ class apiMcCfgV extends Component {
                                 <li key={index} className="div-key">
                                     <label>Key: </label>
                                     <input name={'mockCfg.resDescriptor.headers.' + index + '.key'} value={header.key} onChange={this.handleChange} />
-                                    <input name={'mockCfg.resDescriptor.headers.' + index + '.required'} type="checkbox" value={header.optional} onChange={this.handleChange} />
+                                    <input name={'mockCfg.resDescriptor.headers.' + index + '.required'} type="checkbox" checked={header.optional} value={header.optional} onChange={this.handleChange} />
                                     <label >Optional</label><br/>
                                     <button onClick={() => this.discardKey('resHeader', header.key)}>Discard</button>
                                     <h5>Reactor</h5>
@@ -266,16 +273,15 @@ class apiMcCfgV extends Component {
                         <h4>Body</h4>
                         <div>
                             <label>Optional</label>
-                            <input name="mockCfg.resDescriptor.body" type="checkbox" value={apiMcCfg.mockCfg.resDescriptor.body.optional} onChange={this.handleChange} />
+                            <input name="mockCfg.resDescriptor.body" type="checkbox" checked={apiMcCfg.mockCfg.resDescriptor.body.optional} value={apiMcCfg.mockCfg.resDescriptor.body.optional} onChange={this.handleChange} />
                             { this.createReactor('mockCfg.resDescriptor.body', apiMcCfg.mockCfg.resDescriptor.body.reactor) }
                         </div>
                     </div>
 
-                    <button id="btn_submit" onClick={this.update}>Update</button>
-
                 </div>
+                <Btns applyAction={this.update} hideDiscard={false} discardAction={this.discard} />
             </div>
-        );
+        )
     }
 }
 

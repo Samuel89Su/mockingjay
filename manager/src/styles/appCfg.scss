@@ -21,36 +21,4 @@
       width: 500px;
     }
   }
-
-  .container-btn {
-    background: orange;
-    position: fixed;
-    height: 100%;
-    width: 100%;
-
-    .pane-btn {
-      background: orchid;
-      position: fixed;
-      right: 100px;
-      bottom: 40px;
-      width: 150px;
-      height: 120px;
-
-      .btn-submit {
-        width: 120px;
-        height: 50px;
-        background: blue;
-        color: white;
-        margin: 5px 0 0 10px;
-      }
-    
-      .btn-discard {
-        width: 120px;
-        height: 50px;
-        background: rgb(122, 5, 5);
-        color: white;
-        margin: 5px 0 0 10px;
-      }
-    }
-  }
 }

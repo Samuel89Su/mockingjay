@@ -30,7 +30,8 @@ class apiCfgV extends Component {
 
     handleChange(e) {
         let oPath = e.target.name
-        let newState = updateByPath(deepClone(this.state), oPath, e.target.value)
+        let value = e.target.type === 'checkbox' ? e.target.checked : e.target.value
+        let newState = updateByPath(deepClone(this.state), oPath, value)
         this.setState(newState)
     }
 
@@ -73,19 +74,18 @@ class apiCfgV extends Component {
                     <input id="ipt_path" name="path" value={apiCfg.path} onChange={this.handleChange} /><br/>
                     
                     <label htmlFor="ipt_validate">Validate: </label>
-                    <input type="checkbox" id="ipt_validate" value={apiCfg.validate} onChange={this.handleChange} /><br/>
+                    <input type="checkbox" id="ipt_validate" name="validate" checked={apiCfg.validate} value={apiCfg.validate} onChange={this.handleChange} /><br/>
                     
                     <label htmlFor="ipt_forward">Forward: </label>
-                    <input type="checkbox" id="ipt_forward" name="forward" value={apiCfg.forward} onChange={this.handleChange} /><br/>
+                    <input type="checkbox" id="ipt_forward" name="forward" checked={apiCfg.forward} value={apiCfg.forward} onChange={this.handleChange} /><br/>
                     
                     <label htmlFor="ipt_logReq">LogReq: </label>
                     <input id="ipt_logReq" name="logReq" value={apiCfg.logReq} onChange={this.handleChange} /><br/>
                 
                     <input type="hidden" />
-
-                    <Btns applyAction={this.update} hideDiscard={this.props.register} discardAction={this.discard} />
-                    
               </form>
+
+              <Btns applyAction={this.update} hideDiscard={this.props.register} discardAction={this.discard} />
             </div>
         );
     }
