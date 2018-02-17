@@ -41,7 +41,7 @@ function discardRemoteAppCfg(apiCfg, history) {
   return fakeDiscard(fetchOpts, payload)
     .then(
       () => {
-        history.goBack()
+        history.back()
       },
       error => (error) => {})
 }
