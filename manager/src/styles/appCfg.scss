@@ -1,8 +1,10 @@
 #div_appCfg {
   text-align: left;
   margin: 30px 0 0 40px;
+  background: yellow;
 
-  #fm_appCfg {  
+  #fm_appCfg {
+    background: green;
     margin: 20px 0 0 0;
 
     input {
@@ -18,26 +20,37 @@
       height: 120px;
       width: 500px;
     }
-
-    #btn_submit {
-      position: fixed;
-      top: 500px;
-      left: 960px;
-      width: 120px;
-      height: 50px;
-      background: blue;
-      color: white;
-    }
-  
-    #btn_discard {
-      position: fixed;
-      top: 600px;
-      left: 960px;
-      width: 120px;
-      height: 50px;
-      background: rgb(122, 5, 5);
-      color: white;
-    }
   }
 
+  .container-btn {
+    background: orange;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+
+    .pane-btn {
+      background: orchid;
+      position: fixed;
+      right: 100px;
+      bottom: 40px;
+      width: 150px;
+      height: 120px;
+
+      .btn-submit {
+        width: 120px;
+        height: 50px;
+        background: blue;
+        color: white;
+        margin: 5px 0 0 10px;
+      }
+    
+      .btn-discard {
+        width: 120px;
+        height: 50px;
+        background: rgb(122, 5, 5);
+        color: white;
+        margin: 5px 0 0 10px;
+      }
+    }
+  }
 }

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import '../styles/apiCfg.scss'
 import { deepClone, updateByPath } from '../utils'
+import Btns from './btn-apply-discard'
 
 class apiCfgV extends Component {
     constructor(props) {
@@ -82,13 +83,7 @@ class apiCfgV extends Component {
                 
                     <input type="hidden" />
 
-                    <button id="btn_submit" onClick={this.update}>Apply</button>
-                    <div>{
-                        !this.props.register
-                        ? (<button id="btn_discard" onClick={this.discard}>Discard</button>)
-                        : <span />
-                    }
-                    </div>
+                    <Btns applyAction={this.update} hideDiscard={this.props.register} discardAction={this.discard} />
                     
               </form>
             </div>
