@@ -83,7 +83,7 @@ class apiSchemaV extends Component {
 
                 <Btns applyAction={this.update} hideDiscard={true} />
             </div>
-        );
+        )
     }
 }
 

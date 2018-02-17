@@ -118,7 +118,7 @@ class appCfgV extends Component {
                 <Btns applyAction={this.update} hideDiscard={this.props.register} discardAction={this.discard} />
                 
             </div>
-        );
+        )
     }
 }
 

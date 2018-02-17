@@ -110,7 +110,7 @@ class apiMcCfgV extends Component {
                         errMsg: ''
                     }
                 }
-                break;
+                break
             case 'reqHeader':
                 dummy = cfg.mockCfg.reqDescriptor.headers
                 key = {
@@ -122,7 +122,7 @@ class apiMcCfgV extends Component {
                         errMsg: ''
                     }
                 }
-                break;
+                break
             case 'resHeader':
                 dummy = cfg.mockCfg.resDescriptor.headers
                 key = {
@@ -134,7 +134,7 @@ class apiMcCfgV extends Component {
                         errMsg: ''
                     }
                 }
-                break;
+                break
             default:
                 return
         }
@@ -158,20 +158,20 @@ class apiMcCfgV extends Component {
         switch (type) {
             case 'query':
                 dummy = cfg.mockCfg.reqDescriptor.queries
-                break;
+                break
             case 'reqHeader':
                 dummy = cfg.mockCfg.reqDescriptor.headers
-                break;
+                break
             case 'resHeader':
                 dummy = cfg.mockCfg.resDescriptor.headers
-                break;
+                break
             default:
                 return
         }
 
         let idx = -1
         for (let i = 0; i < dummy.length; i++) {
-            const query = dummy[i];
+            const query = dummy[i]
             if (query.key === key) {
                 idx = i
             }
