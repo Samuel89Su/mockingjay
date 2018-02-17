@@ -82,7 +82,6 @@ class steward {
             // generate id
             let id = await CacheFacade.allocateAppId()
             appDesc.id = id
-            let key = `${cacheKeys.appInventory}:${appDesc.id}`
 
             // set/update cache
             let ok = await CacheFacade.setApp(appDesc.name, id, appDesc)
@@ -113,8 +112,6 @@ class steward {
         } else {
             // rake json
             appDesc = schemaRaker(appDesc, appSchema)
-
-            let key = `${ cacheKeys.appInventory }:${ appDesc.id }`
 
             // set/update cache
             let ok = await CacheFacade.setApp(appDesc.name, appDesc.id, appDesc)
