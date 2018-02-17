@@ -37,7 +37,7 @@ function discardRemoteAppCfg(appCfg, dispatch) {
   let payload = JSON.stringify(appCfg)
   return fetchRemote(fetchOpts, payload)
   .then(
-    appCfg => dispatch(updateAppCfg(appCfg)),
+    appCfg => {history.pushState()},
     error => (error) => {})
 }
 

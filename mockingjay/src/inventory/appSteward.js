@@ -36,7 +36,9 @@ class steward {
         return this.router
     }
 
-    // fetch app list
+    /**
+     * fetch app list
+     */
     async list(ctx, next) {
         let apps = await CacheFacade.getAppList()
 
@@ -46,7 +48,9 @@ class steward {
         await next()
     }
 
-    // fetch app cfg by id
+    /**
+     * fetch app cfg by id
+     */
     async get(ctx, next) {
         let id = ctx.request.query.appId
         if (!id) {
@@ -61,7 +65,9 @@ class steward {
         await next()
     }
 
-    // register app
+    /**
+     * register app 
+     */
     async register(ctx, next) {
         let appDesc = ctx.request.body
 
@@ -91,7 +97,9 @@ class steward {
         await next()
     }
 
-    //  update app desc
+    /**
+     * update app desc
+     */
     async update(ctx, next) {
         let appDesc = ctx.request.body
 
