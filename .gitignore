@@ -67,3 +67,4 @@ typings/
 /mockingjay/appRoot
 /fakeserver/static/asserts
 /fakeserver/static/index.html
+/manager/dist
