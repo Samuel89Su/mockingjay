@@ -1,0 +1,15 @@
+config:
+  target: 'http://127.0.0.1:3000'
+  phases:
+    - duration: 1
+      arrivalRate: 1
+  processor: "./requesthook.js"
+  defaults:
+scenarios:
+  - flow:
+      - loop:
+          - post:
+              url: "/inventory/app/register"
+              beforeRequest: "updateJSONBody"
+              afterResponse: "logHeaders"
+        count: 10

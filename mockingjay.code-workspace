@@ -7,13 +7,7 @@
 			"path": "mockingjay"
 		},
 		{
-			"path": "mockingjayApp"
-		},
-		{
 			"path": "proxy-master"
-		},
-		{
-			"path": "next-with-koa2"
 		},
 		{
 			"path": "manager"
