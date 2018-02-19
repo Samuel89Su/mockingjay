@@ -1,5 +1,6 @@
 'use strict'
 
+const errCode = require('../inventory/errCode')
 const logger = require('../common/logger')
 
 async function handleError (ctx, next) {
@@ -10,6 +11,12 @@ async function handleError (ctx, next) {
             message: error.message,
             stack: error.stack
         })
+
+        ctx.response.body = errCode.internalErr({
+            message: error.message,
+            stack: error.stack
+        })
+
     } finally {
     }
 }

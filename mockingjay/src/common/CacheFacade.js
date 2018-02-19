@@ -3,6 +3,11 @@
 const CacheKeyCombinator = require('./CacheKeyCombinator')
 const redisClient = require('./redisClient')
 const logger = require('./logger')
+const getComparer = require('../utils/comparerFactory')
+
+const appAndApiComparer = getComparer(null, false, CacheKeyCombinator.extractId)
+
+const pageSize = 10
 
 class CacheFacade {
     constructor() {
@@ -45,12 +50,20 @@ class CacheFacade {
     }
 
     /**
-     * get all app
+     * get paginated app, 10 as a page.
+     * @param {Number} pageNum page number
      * @returns {Promise<Array>}
      */
-    async getAppList() {
+    async getAppList(pageNum) {
+        if (!pageNum) {
+            pageNum = 0
+        }
+        
         let keyPattern = CacheKeyCombinator.appInventoryPrefix + ':*'
         let keys = await redisClient.keysAsync(keyPattern)
+        let sortedKeys = keys.sort(appAndApiComparer)
+        let startIdx = pageNum * pageSize
+        keys = sortedKeys.slice(startIdx, startIdx + pageSize)
         let apps = []
         for (let i = 0; i < keys.length; i++) {
             const key = keys[i]
@@ -198,17 +211,25 @@ class CacheFacade {
     /**
      * get api list by app name.
      * @param {String} appName
+     * @param {Number} pageNum
      * @returns {Promise<Array<Object>>}
      */
-    async getApiList(appName) {
+    async getApiList(appName, pageNum) {
         if (typeof appName !== 'string' || !appName) {
             throw new Error('invalid appName')
         }
 
+        if (!pageNum) {
+            pageNum = 0
+        }
+
         let keyPattern = CacheKeyCombinator.buildApiDescKey(appName, '*', '/*')
+        let keys = await redisClient.keysAsync(keyPattern)
+        let sortedKeys = keys.sort(appAndApiComparer)
+        let startIdx = pageNum * pageSize
+        keys = sortedKeys.slice(startIdx, startIdx + pageSize)
 
         let apis = []
-        let keys = await redisClient.keysAsync(keyPattern)
         if (keys && keys.length > 0) {
             for (let i = 0; i < keys.length; i++) {
                 const key = keys[i];

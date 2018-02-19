@@ -10,13 +10,15 @@ class appListV extends Component {
 
         this.register = this.register.bind(this)
         this.handlePaginationChange = this.handlePaginationChange.bind(this)
+
+        this.state = { activePage: 1 }
     }
 
     componentDidMount() {
         if (!this.props.appList
             || !(this.props.appList instanceof Array)
             || this.props.appList.length === 0) {
-            this.props.onMounted()
+            this.props.fetchData({ pageNum: this.state.activePage -1 })
         }
     }
 
@@ -24,10 +26,11 @@ class appListV extends Component {
         this.props.history.push('/app/register')
     }
 
-    handlePaginationChange(e, data) { 
+    handlePaginationChange(e, data) {
         this.setState({ 
-                activePage: data.activePage 
+            activePage: data.activePage
             })
+        this.props.fetchData({ pageNum: data.activePage -1 })
     }
 
     render() {
@@ -60,7 +63,7 @@ class appListV extends Component {
                         {  
                             list.map((app, index) => {
                                 return (
-                                <Table.Row>
+                                <Table.Row key={index}>
                                     <Table.Cell>{ app.id }</Table.Cell>
                                     <Table.Cell>{ app.name }</Table.Cell>
                                     <Table.Cell>{ app.desc }</Table.Cell>
@@ -75,7 +78,7 @@ class appListV extends Component {
                     </Table>
                     
                     <div>
-                        <Pagination floated='right' activePage={1} onPageChange={this.handlePaginationChange} totalPages={5} />
+                        <Pagination floated='right' activePage={ this.state.activePage } onPageChange={ this.handlePaginationChange } totalPages={ 5 } />
                     </div>
                 </div>
             </div>

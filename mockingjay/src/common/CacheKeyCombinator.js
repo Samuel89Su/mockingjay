@@ -18,6 +18,8 @@ class CacheKeyCombinator {
         this.buildApiSchemaKey = this.buildApiSchemaKey.bind(this)
         this.buildMockCfgKey = this.buildMockCfgKey.bind(this)
         this.buildApiKeyPrefix = this.buildApiKeyPrefix.bind(this)
+
+        this.extractAppId = this.extractId.bind(this) 
     }
 
     /**
@@ -27,7 +29,7 @@ class CacheKeyCombinator {
      * @returns {String} cache key
      */
     buildAppCfgKey (appName, id) {
-        return `${this.appInventoryPrefix}:${appName.toLowerCase()}_${id}`
+        return `${this.appInventoryPrefix}:${id}_${appName.toLowerCase()}`
     }
 
     /**
@@ -38,7 +40,7 @@ class CacheKeyCombinator {
      * @returns {String} cache key
      */
     buildApiDescKey (appName, apiId, apiPath) {
-        return `${this.buildApiKeyPrefix(appName, false)}${apiId}_${apiPath}`
+        return `${this.buildApiKeyPrefix(appName, false)}${apiId}_${apiPath.toLowerCase()}`
     }
 
     /**
@@ -57,7 +59,7 @@ class CacheKeyCombinator {
      * @param {String} apiPath api path
      * @returns {String} cache key
      */
-    buildMockCfgKey(appName, apiPath) {
+    buildMockCfgKey (appName, apiPath) {
         if (!appName || appName === '') {
             throw new Error('appName is undefined or null')
         } else if (!apiPath || apiPath === '') {
@@ -75,8 +77,19 @@ class CacheKeyCombinator {
      * @param {Boolean} isPattern use as pattern
      * @returns {String} cache key
      */
-    buildApiKeyPrefix(appName, isPattern) {
+    buildApiKeyPrefix (appName, isPattern) {
         return `${this.apiInventoryPrefix}:${appName.toLowerCase()}:${isPattern?'*':''}`
+    }
+
+    /**
+     * ':[0-9]{1,5}_'
+     * @param {String} key cache key
+     * @returns {Number} id
+     */
+    extractId (key) {
+        let idPart = key.match(':[0-9]{1,5}_')[0]
+        let idRaw = idPart.match('[0-9]{1,5}')[0]
+        return parseInt(idRaw)
     }
 }
 

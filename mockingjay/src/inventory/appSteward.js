@@ -8,6 +8,9 @@ const bodyParser = require('../common/bodyParser')
 const appSchema = require('../Schemas/appSchema')
 const schemaRaker = require('../utils/jsonRaker')
 const CacheFacade = require('../common/CacheFacade')
+const getComparer = require('../utils/comparerFactory')
+
+const appComparer = getComparer('id')
 
 const ajv = new Ajv()
 const validate = ajv.compile(appSchema)
@@ -38,11 +41,20 @@ class steward {
 
     /**
      * fetch app list
+     * @param {Object} ctx
+     *   - {Object} request
+     *      - {Object} query - {Number} pageNum default 0
      */
     async list(ctx, next) {
-        let apps = await CacheFacade.getAppList()
-
-        apps = apps.sort(idASCSorter)
+        let pageNum = 0
+        if (ctx.query) {
+            for (const key in ctx.query) {
+                if (key.toLowerCase() === 'pagenum') {
+                    pageNum = parseInt(ctx.query[key])
+                }
+            }
+        }
+        let apps = await CacheFacade.getAppList(pageNum)
 
         ctx.response.body = errCode.success(apps)
         await next()
@@ -143,10 +155,6 @@ class steward {
 
         await next()
     }
-}
-
-function idASCSorter(a, b) {
-    return a.id - b.id
 }
 
 exports = module.exports = new steward()
