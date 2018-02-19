@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+const queryString = require('query-string')
 import apiListV from './apiListV'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
@@ -16,36 +17,35 @@ const ApiRoutes = [
 ]
 
 // actions
-function updateApiList(apiList) {
+function updateApiList(pagedApis) {
   return {
     type: 'UPDATE_APILIST',
-    apiList
+    pagedApis
   }
 }
 
 // dispatchers
-function fetchRemoteApiList(urlSearch, dispatch) {
+function fetchRemoteApiList(dispatch, query) {
   let fetchOpts = Object.assign({}, InventoryAPI.apiList)
-  fetchOpts.url += urlSearch
+  fetchOpts.url += '?' + queryString.stringify(query)
   return fetchRemote(fetchOpts)
   .then(
-    apiList => dispatch(updateApiList(apiList)),
+    pagedApis => dispatch(updateApiList(pagedApis)),
     error => console.log(error))
 }
 
 // map state to props
 const mapStateToProps = state => {
   return {
-    apiList: state.apiList,
-    appName: state.appCfg.name
+    pagedApis: state.pagedApis
   }
 }
 
 // map dispatch to props
 const mapDispatchToProps = dispatch => {
   return {
-    onMounted: (urlSearch) => {
-      fetchRemoteApiList(urlSearch, dispatch)
+    fetchData: (query) => {
+      fetchRemoteApiList(dispatch, query)
     }
   }
 }

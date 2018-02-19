@@ -2,68 +2,98 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import queryString from 'query-string'
 import '../styles/apiList.scss'
+import { Table, Header, Button, Pagination } from 'semantic-ui-react'
 
 class apiListV extends Component {
     constructor(props) {
         super(props)
 
-        this.state = {}
+        this.register = this.register.bind(this)
+        this.handlePaginationChange = this.handlePaginationChange.bind(this)
+
+        this.state = { activePage: 1 }
     }    
 
-    componentDidMount() {
-        this.props.onMounted(this.props.location.search)
+    componentWillMount() {
         let query = queryString.parse(this.props.location.search)
-        this.setState({ appName: query.appName })
+        query.pageNum = this.state.activePage - 1
+        this.props.fetchData(query)
+    }
+
+    register(event, data) {
+        this.props.history.push('/api/register')
+    }
+
+    handlePaginationChange(e, data) {
+        let query = queryString.parse(this.props.location.search)
+        query.pageNum = data.activePage - 1
+        this.setState({ 
+            activePage: data.activePage
+            })
+        this.props.fetchData(query)
     }
 
     render() {
-        let list = this.props.apiList
+        let pagedApis = this.props.pagedApis
+        let list = this.props.pagedApis.records
+        if (!list || !(list instanceof Array) ) {
+            return (<div>has no state</div>)
+        }
+
         return (
             <div id='api-list'>
-                <h2>Api List</h2>
-                <div className="operations">
-                    <Link to='/'>Back To List</Link>
-                    <Link to='/api/register'>Register</Link>
+                <Header as='h2'>Apis</Header>
+                <div>
+                    <Button onClick={()=>{this.props.history.push('/')}} >Register</Button>
+                    <Button onClick={this.register} >Register</Button>
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Method</th>
-                        <th>Validate</th>
-                        <th>Forward</th>
-                        <th>Path</th>
-                        <th>Desc</th>
-                        <th>Details</th>
-                        <th>Schema</th>
-                        <th>MockCfg</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            list.map((api, index) => {
-                                let cacheKey = api.path.replace(/\//g, '_')
-                                if (cacheKey.startsWith('_')) {
-                                    cacheKey = cacheKey.substr(1)
-                                }
-                                return (
-                                    <tr key={ index }>
-                                        <td>{ api.id }</td>
-                                        <td>{ api.name }</td>
-                                        <td>{ api.method }</td>
-                                        <td>{ api.validate.toString() }</td>
-                                        <td>{ api.forward.toString() }</td>
-                                        <td>{ api.path }</td>
-                                        <td>{ api.description }</td>
-                                        <td><Link to={`/api/details?appName=${this.state.appName}&id=${api.id}`}>details</Link></td>
-                                        <td><Link to={`/api/schema?appName=${this.state.appName}&id=${api.id}`}>schema</Link></td>
-                                        <td><Link to={`/api/mockcfg?appName=${this.state.appName}&id=${api.id}`}>mockcfg</Link></td>
-                                    </tr>)
-                            })
-                        }
-                    </tbody>
-                </table>
+
+                <div>
+                    <Table>
+                        <Table.Header fullWidth>
+                            <Table.Row>
+                                <Table.HeaderCell>ID</Table.HeaderCell>
+                                <Table.HeaderCell>Name</Table.HeaderCell>
+                                <Table.HeaderCell>Method</Table.HeaderCell>
+                                <Table.HeaderCell>Validate</Table.HeaderCell>
+                                <Table.HeaderCell>Forward</Table.HeaderCell>
+                                <Table.HeaderCell>Path</Table.HeaderCell>
+                                <Table.HeaderCell>Desc</Table.HeaderCell>
+                                <Table.HeaderCell>Details</Table.HeaderCell>
+                                <Table.HeaderCell>Schema</Table.HeaderCell>
+                                <Table.HeaderCell>MockCfg</Table.HeaderCell>
+                            </Table.Row>
+                        </Table.Header>
+                        <Table.Body>
+                            {
+                                list.map((api, index) => {
+                                    let cacheKey = api.path.replace(/\//g, '_')
+                                    if (cacheKey.startsWith('_')) {
+                                        cacheKey = cacheKey.substr(1)
+                                    }
+                                    return (
+                                        <Table.Row key={ index }>
+                                            <Table.Cell>{ api.id }</Table.Cell>
+                                            <Table.Cell>{ api.name }</Table.Cell>
+                                            <Table.Cell>{ api.method }</Table.Cell>
+                                            <Table.Cell>{ api.validate.toString() }</Table.Cell>
+                                            <Table.Cell>{ api.forward.toString() }</Table.Cell>
+                                            <Table.Cell>{ api.path }</Table.Cell>
+                                            <Table.Cell>{ api.description }</Table.Cell>
+                                            <Table.Cell><Link to={`/api/details?appName=${this.state.appName}&id=${api.id}`}>details</Link></Table.Cell>
+                                            <Table.Cell><Link to={`/api/schema?appName=${this.state.appName}&id=${api.id}`}>schema</Link></Table.Cell>
+                                            <Table.Cell><Link to={`/api/mockcfg?appName=${this.state.appName}&id=${api.id}`}>mockcfg</Link></Table.Cell>
+                                        </Table.Row>)
+                                })
+                            }
+                        </Table.Body>
+                    </Table>
+
+                    <div>
+                        <Pagination floated='right' activePage={ this.state.activePage } onPageChange={ this.handlePaginationChange } totalPages={ pagedApis.pageCnt } />
+                    </div>
+                </div>
+                
             </div>
         );
     }

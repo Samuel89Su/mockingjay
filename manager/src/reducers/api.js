@@ -1,7 +1,7 @@
-const apiList = (state = [], action) => {
+const pagedApis = (state = {}, action) => {
   switch (action.type) {
     case 'UPDATE_APILIST':
-      return action.apiList
+      return action.pagedApis
     default:
       return state
   }
@@ -35,7 +35,7 @@ const apiMcCfg = (state = {}, action) => {
 }
 
 export {
-  apiList,
+  pagedApis,
   apiCfg,
   apiSchema,
   apiMcCfg

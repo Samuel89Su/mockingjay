@@ -16,10 +16,10 @@ const AppRoutes = [
 ]
 
 // actions
-const updateAppList = appList => {
+const updateAppList = pagedApps => {
   return {
     type: 'UPDATE_APPLIST',
-    appList
+    pagedApps
   }
 }
 

@@ -9,9 +9,6 @@ const cfgSchema = require('../Schemas/apiCfgSchema')
 const apiRegistrationSchema = require('../Schemas/apiRegistrationSchema')
 const jsonParse = require('../utils/jsonParser')
 const CacheFacade = require('../common/CacheFacade')
-const getComparer = require('../utils/comparerFactory')
-
-const apiComparer = getComparer('id')
 
 const ajv = new Ajv(); // options can be passed, e.g. {allErrors: true}
 const cfgValidate = ajv.compile(cfgSchema)
@@ -61,7 +58,6 @@ class Steward {
             for (const key in ctx.query) {
                 if (key.toLowerCase() === 'appid') {
                     appId = parseInt(ctx.query[key])
-                    break
                 } else if (key.toLowerCase() === 'pagenum') {
                     pageNum = parseInt(ctx.query[key])
                 }
@@ -77,10 +73,9 @@ class Steward {
             if (!appDesc) {
                 ctx.response.body = errCode.resNotFound()
             } else {
-                let apis = await CacheFacade.getApiList(appDesc.name, pageNum)
-                apis = apis.sort(apiComparer)
+                let page = await CacheFacade.getApiList(appDesc.name, pageNum)
 
-                ctx.response.body = errCode.success(apis)
+                ctx.response.body = errCode.success(page)
             }
         }
 

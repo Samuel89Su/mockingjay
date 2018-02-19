@@ -1,7 +1,7 @@
-const pagedApps = (state = [], action) => {
+const pagedApps = (state = {}, action) => {
   switch (action.type) {
     case 'UPDATE_APPLIST':
-      return action.appList
+      return action.pagedApps
     default:
       return state
   }

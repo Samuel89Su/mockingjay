@@ -232,6 +232,8 @@ class CacheFacade {
 
         let keyPattern = CacheKeyCombinator.buildApiDescKey(appName, '*', '/*')
         let keys = await redisClient.keysAsync(keyPattern)
+        let total = keys.length
+
         let sortedKeys = keys.sort(appAndApiComparer)
         let startIdx = pageNum * pageSize
         keys = sortedKeys.slice(startIdx, startIdx + pageSize)
@@ -245,7 +247,9 @@ class CacheFacade {
             }
         }
 
-        return apis
+        let page = assemblePagination(pageNum, pageSize, total, apis)
+
+        return page
     }
 
     /**

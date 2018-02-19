@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import '../styles/appList.scss'
-import { Icon, Label, Menu, Table, Header, Button, Pagination } from 'semantic-ui-react'
-import { width } from 'window-size';
+import { Table, Header, Button, Pagination } from 'semantic-ui-react'
 
 class appListV extends Component {
     constructor(props) {
@@ -14,7 +13,7 @@ class appListV extends Component {
         this.state = { activePage: 1 }
     }
 
-    componentDidMount() {
+    componentWillMount() {
         if (!this.props.pagedApps || this.props.pagedApps.records
             || !(this.props.pagedApps.records instanceof Array)
             || this.props.pagedApps.records.length === 0) {
@@ -42,7 +41,7 @@ class appListV extends Component {
 
         return (
             <div id='app-list'>
-                <Header as='h2'>App</Header>
+                <Header as='h2'>Apps</Header>
                 <div>
                     <Button onClick={this.register} >Register</Button>
                 </div>
@@ -70,7 +69,7 @@ class appListV extends Component {
                                     <Table.Cell>{ app.desc }</Table.Cell>
                                     <Table.Cell>{ app.apiForwardTarget }</Table.Cell>
                                     <Table.Cell><Link to={'/app/details?appId='+app.id}>details</Link></Table.Cell>
-                                    <Table.Cell><Link to={`/app/apilist?appId=${app.id}&appName=${app.name}`}>api list</Link></Table.Cell>
+                                    <Table.Cell><Link to={`/app/apilist?appId=${app.id}`}>api list</Link></Table.Cell>
                                 </Table.Row>)
                             })
                         }
