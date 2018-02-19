@@ -145,15 +145,18 @@ class Steward {
         let ok = await CacheFacade.setApi(appDesc.name, id, apiSketch.path, apiSketch)
         if (!ok) {
             ctx.response.body = errCode.dbErr()
-        } else if (apiData.schema) {
-            ok = await CacheFacade.setApiSchema(appDesc.name, id, apiData.schema)
-            if (ok) {
-                apiData.id = id
-                ctx.response.body = errCode.success(apiData)
-            } else {
-                ctx.response.body = errCode.dbErr()
-            }
         } else {
+            if (apiData.schema) {
+                ok = await CacheFacade.setApiSchema(appDesc.name, id, apiData.schema)
+                if (ok) {
+                    apiData.id = id
+                    ctx.response.body = errCode.success(apiData)
+                } else {
+                    ctx.response.body = errCode.dbErr()
+                }
+            }
+            
+            apiData.id = id
             ctx.response.body = errCode.success(apiData)
         }
 

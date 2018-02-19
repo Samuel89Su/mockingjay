@@ -54,9 +54,9 @@ class steward {
                 }
             }
         }
-        let apps = await CacheFacade.getAppList(pageNum)
+        let page = await CacheFacade.getAppList(pageNum)
 
-        ctx.response.body = errCode.success(apps)
+        ctx.response.body = errCode.success(page)
         await next()
     }
 

@@ -1,4 +1,4 @@
-const appList = (state = [], action) => {
+const pagedApps = (state = [], action) => {
   switch (action.type) {
     case 'UPDATE_APPLIST':
       return action.appList
@@ -17,6 +17,6 @@ const appCfg = (state = {}, action) => {
 }
 
 export {
-  appList,
+  pagedApps,
   appCfg
 }

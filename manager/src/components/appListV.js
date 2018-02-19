@@ -15,9 +15,9 @@ class appListV extends Component {
     }
 
     componentDidMount() {
-        if (!this.props.appList
-            || !(this.props.appList instanceof Array)
-            || this.props.appList.length === 0) {
+        if (!this.props.pagedApps || this.props.pagedApps.records
+            || !(this.props.pagedApps.records instanceof Array)
+            || this.props.pagedApps.records.length === 0) {
             this.props.fetchData({ pageNum: this.state.activePage -1 })
         }
     }
@@ -34,7 +34,8 @@ class appListV extends Component {
     }
 
     render() {
-        let list = this.props.appList
+        let pagedResult = this.props.pagedApps
+        let list = this.props.pagedApps.records
         if (!list || !(list instanceof Array) ) {
             return (<div>has no state</div>)
         }
@@ -78,7 +79,7 @@ class appListV extends Component {
                     </Table>
                     
                     <div>
-                        <Pagination floated='right' activePage={ this.state.activePage } onPageChange={ this.handlePaginationChange } totalPages={ 5 } />
+                        <Pagination floated='right' activePage={ this.state.activePage } onPageChange={ this.handlePaginationChange } totalPages={ pagedResult.pageCnt } />
                     </div>
                 </div>
             </div>

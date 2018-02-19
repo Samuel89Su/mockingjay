@@ -9,7 +9,7 @@ scenarios:
   - flow:
       - loop:
           - post:
-              url: "/inventory/app/register"
-              beforeRequest: "prepareApp"
+              url: "/inventory/api/register"
+              beforeRequest: "prepareApi"
               afterResponse: "logHeaders"
-        count: 50
+        count: 2000

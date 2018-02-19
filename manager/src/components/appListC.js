@@ -29,14 +29,14 @@ function fetchRemoteAppList(dispatch, query) {
   opts.url = opts.url + '?' + queryString.stringify(query)
   return fetchRemote(opts)
   .then(
-    appList => dispatch(updateAppList(appList)),
+    pagedApps => dispatch(updateAppList(pagedApps)),
     error => console.log(error))
 }
 
 // map state to props
 const mapStateToProps = state => {
   return {
-    appList: state.appList
+    pagedApps: state.pagedApps
   }
 }
 

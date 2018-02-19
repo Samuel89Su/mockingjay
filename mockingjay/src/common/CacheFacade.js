@@ -4,6 +4,7 @@ const CacheKeyCombinator = require('./CacheKeyCombinator')
 const redisClient = require('./redisClient')
 const logger = require('./logger')
 const getComparer = require('../utils/comparerFactory')
+const assemblePagination = require('./paginatedResult')
 
 const appAndApiComparer = getComparer(null, false, CacheKeyCombinator.extractId)
 
@@ -61,16 +62,22 @@ class CacheFacade {
         
         let keyPattern = CacheKeyCombinator.appInventoryPrefix + ':*'
         let keys = await redisClient.keysAsync(keyPattern)
+        let total = keys.length
+
         let sortedKeys = keys.sort(appAndApiComparer)
         let startIdx = pageNum * pageSize
         keys = sortedKeys.slice(startIdx, startIdx + pageSize)
+
         let apps = []
         for (let i = 0; i < keys.length; i++) {
             const key = keys[i]
             let appDesc = await redisClient.getAsync(key)
             apps.push(JSON.parse(appDesc))
         }
-        return apps
+
+        let page = assemblePagination(pageNum, pageSize, total, apps)
+
+        return page
     }
 
     /**

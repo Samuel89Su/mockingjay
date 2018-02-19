@@ -1,27 +1,42 @@
-  module.exports = {
-    updateJSONBody: updateJSONBody,
-    logHeaders: logHeaders
+module.exports = {
+  prepareApp: prepareApp,
+  logHeaders: logHeaders,
+  prepareApi: prepareApi
+}
+
+function prepareApp (requestParams, context, ee, next) {
+  let timestamp = new Date().getTime() - Date.parse('2018')
+  requestParams.json = {
+    "id": 0,
+    "name": "test-" + timestamp,
+    "desc": "test " + timestamp,
+    "apiForwardTarget": "dev",
+    "targets": [{
+      "name": "dev",
+      "value": "http://127.0.0.1:" + timestamp
+    }]
   }
 
-  function updateJSONBody(requestParams, context, ee, next) {
-    let random = Math.floor(Math.random()*1000)
-    requestParams.json = {
-        "id": 0,
-        "name": "test-"+random,
-        "desc": "test "+random,
-        "apiForwardTarget": "dev",
-        "targets": [
-          {
-            "name": "dev",
-            "value": "http://127.0.0.1:"+random
-          }
-        ]
-      }
+  return next()
+}
 
-    return next()
+function prepareApi (requestParams, context, ee, next) {
+  let timestamp = new Date().getTime() - Date.parse('2018')
+  requestParams.json = {
+    "appId": 1,
+    "id": 0,
+    "name": timestamp.toString(),
+    "description": timestamp.toString(),
+    "path": "/api/" + timestamp,
+    "method": "POST",
+    "validate": true,
+    "forward": false
   }
 
-  function logHeaders(requestParams, response, context, ee, next) {
-    // console.log(response.headers)
-    return next()
-  }
+  return next()
+}
+
+function logHeaders (requestParams, response, context, ee, next) {
+  // console.log(response.headers)
+  return next()
+}
