@@ -93,9 +93,24 @@ function delByPath (obj, path) {
   return obj
 }
 
+function parseRecursive(data) {
+  if (typeof data === 'string') {
+    try {
+      data = JSON.parse(data)
+      if (typeof data === 'string') {
+        data = parseRecursive(data)
+      }
+    } catch (error) {
+    }
+
+    return data
+  }
+}
+
 export {
   deepClone,
   updateByPath,
   delByPath,
-  getPropertyByPath
+  getPropertyByPath,
+  parseRecursive
 }

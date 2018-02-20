@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import '../styles/apiSchema.scss'
-import { deepClone, updateByPath, delByPath, getPropertyByPath } from '../utils'
+import { deepClone, updateByPath, delByPath, getPropertyByPath, parseRecursive } from '../utils'
 import { Header, Button, Input, Label, TextArea, Form, Dropdown, Checkbox } from 'semantic-ui-react'
 import Btns from './btn-apply-discard'
 
@@ -20,6 +20,16 @@ class apiSchemaV extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        if (nextProps.apiSchema && nextProps.apiSchema.properties
+            && nextProps.apiSchema.properties.reqBody
+            && typeof nextProps.apiSchema.properties.reqBody === 'object') {
+            nextProps.apiSchema.properties.reqBody = JSON.stringify(nextProps.apiSchema.properties.reqBody)
+        }
+        if (nextProps.apiSchema && nextProps.apiSchema.properties
+            && nextProps.apiSchema.properties.resBody
+            && typeof nextProps.apiSchema.properties.resBody === 'object') {
+            nextProps.apiSchema.properties.resBody = JSON.stringify(nextProps.apiSchema.properties.resBody)
+        }
         this.setState(nextProps.apiSchema)
     }
 
@@ -156,7 +166,7 @@ class apiSchemaV extends Component {
                     </ul>
                     
                     <Header as='h4'>Body</Header>
-                    <TextArea rows='5' name="properties.reqBody" value={JSON.stringify(apiSchema.properties.reqBody)} onChange={this.handleChange} />
+                    <TextArea rows='5' name="properties.reqBody" value={apiSchema.properties.reqBody} onChange={this.handleChange} />
 
                     <Header as='h3'>Response</Header>
                     <Header as='h4'>Headers</Header>
@@ -184,7 +194,7 @@ class apiSchemaV extends Component {
                     </ul>
                     
                     <Header as='h4'>Body</Header>
-                    <TextArea rows='5' name="properties.resBody" value={JSON.stringify(apiSchema.properties.resBody)} onChange={this.handleChange} />
+                    <TextArea rows='5' name="properties.resBody" value={apiSchema.properties.resBody} onChange={this.handleChange} />
 
                     <input type="hidden"/>
                 </Form>
