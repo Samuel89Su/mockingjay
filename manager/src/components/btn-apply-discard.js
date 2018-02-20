@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Button } from 'semantic-ui-react'
 import '../styles/btn.scss'
 
 class Btns extends Component {
@@ -9,10 +10,11 @@ class Btns extends Component {
     render() {
         return (<div className="container-btn">
                     <div className="pane-btn">
-                        <button className="btn-submit" onClick={this.props.applyAction} >Apply</button>
+                        <Button className="btn-submit" size='massive' onClick={this.props.applyAction} >Apply</Button>
+                        <br/>
                         <div>{
                             !this.props.hideDiscard
-                            ? (<button className="btn-discard" onClick={this.props.discardAction}>Discard</button>)
+                            ? (<Button className="btn-discard"size='massive' onClick={this.props.discardAction}>Discard</Button>)
                             : <span />
                         }
                         </div>

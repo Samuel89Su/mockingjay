@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import '../styles/appCfg.scss'
+// import '../styles/appCfg.scss'
 import { deepClone, updateByPath } from '../utils'
+import { Header, Button, Input, Label, TextArea, Form, Dropdown } from 'semantic-ui-react'
 import Btns from './btn-apply-discard'
 
 class appCfgV extends Component {
@@ -27,9 +28,9 @@ class appCfgV extends Component {
         }
     }
 
-    handleChange(e) {
-        let oPath = e.target.name
-        let newState = updateByPath(deepClone(this.state), oPath, e.target.value)
+    handleChange(e, data) {
+        let oPath = data.name
+        let newState = updateByPath(deepClone(this.state), oPath, data.value)
         this.setState(newState)
     }
 
@@ -68,44 +69,46 @@ class appCfgV extends Component {
             return (<div>has no state</div>)
         }
 
+        let targerOpts = []
+        appCfg.targets.forEach(target => {
+            targerOpts.push({text:target.name, value: target.name })
+        })
+
         return (
             <div id="div_appCfg">
-                <h2>App config</h2>
-                <Link to='/'>back to list</Link>
-                <div id="fm_appCfg">
-                    <label>Name: </label>
-                    <input name='name' value={appCfg.name} onChange={this.handleChange} />
+                <Header as='h2'>App details</Header>
+                <div>
+                    <Button onClick={()=>this.props.history.push('/')} >Back to list</Button>
+                </div>
+                <Form id="fm_appCfg">
+                    <Input name='name' label='Name:' value={appCfg.name} onChange={this.handleChange} />
                     <br/>
-                    <h4>Description</h4>
-                    <textarea id="ipt_desc" name='desc' value={appCfg.desc} onChange={this.handleChange} />
+                    <Header as='h4'>Description</Header>
+                    <TextArea name='desc' rows='5' value={appCfg.desc} onChange={this.handleChange} placeholder='descripe this application' />
+                    
                     <br/>
-                    <div>
-                        <text>Targets</text>
-                        <input type="button" value="Add" onClick={this.addTagert} />
-                    </div>
-                    <label>Forward: </label>
-                    <select name='apiForwardTarget' value="dev" value={appCfg.apiForwardTarget} onChange={this.handleChange} >
-                        <option key="0" value=""></option>
-                        {
-                            appCfg.targets.map((target) => {
-                                return (<option key={target.name} value={target.name}>{target.name}</option>)
-                            })
-                        }
-                    </select>
+                    <Header as='h4'>Targets</Header>
+                    <Button onClick={this.addTagert}>Add</Button><br/>
+                    <Label>Forward: </Label>
+                    <Dropdown name='apiForwardTarget' placeholder='Select a target' 
+                        selection inline options={targerOpts} 
+                        value={appCfg.apiForwardTarget} 
+                        onChange={this.handleChange} />
+                    
                     <br/>
                     <ul>
                         {
                             appCfg.targets.map((target, index) => {
-                                return (<li className="tgt-div" key={target.name}>
-                                            <div>
-                                                <input name={'targets.' + index + '.name'}
-                                                    value={target.name}
-                                                    onChange={this.handleChange} />
-                                                <input type="button" value="Discard" name={index} onClick={this.discardTarget} />
-                                            </div>
-                                            <input name={'targets.' + index + '.value'}
+                                return (<li key={target.name}>
+                                            <Input name={'targets.' + index + '.name'}
+                                                label='Name:'
+                                                value={target.name}
+                                                onChange={this.handleChange} />
+                                            <Input name={'targets.' + index + '.value'}
+                                                label='Value:'
                                                 value={target.value}
                                                 onChange={this.handleChange} />
+                                            <Button name={index} onClick={this.discardTarget} style={{margin: '0 0 0 80px'}}>Discard</Button>
                                         </li>)
                             })
                         }
@@ -113,7 +116,7 @@ class appCfgV extends Component {
                     
                     <br/>
                     <input type="hidden"/>                    
-                </div>
+                </Form>
 
                 <Btns applyAction={this.update} hideDiscard={this.props.register} discardAction={this.discard} />
                 

@@ -44,7 +44,7 @@ class apiListV extends Component {
             <div id='api-list'>
                 <Header as='h2'>Apis</Header>
                 <div>
-                    <Button onClick={()=>{this.props.history.push('/')}} >Register</Button>
+                    <Button onClick={()=>{this.props.history.push('/')}} >Back to Apps</Button>
                     <Button onClick={this.register} >Register</Button>
                 </div>
 
