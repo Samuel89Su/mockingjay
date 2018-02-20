@@ -1,5 +1,5 @@
 config:
-  target: 'http://127.0.0.1:3000'
+  target: 'http://139.196.103.143:3000'
   phases:
     - duration: 1
       arrivalRate: 1
@@ -12,4 +12,4 @@ scenarios:
               url: "/inventory/api/register"
               beforeRequest: "prepareApi"
               afterResponse: "logHeaders"
-        count: 2000
+        count: 500

@@ -5,17 +5,23 @@ module.exports = {
 }
 
 function prepareApp (requestParams, context, ee, next) {
-  let timestamp = new Date().getTime() - Date.parse('2018')
+  let timestamp = (new Date().getTime() - Date.parse('2018')).toString()
+  let name = "test-" + timestamp
+  let url = "http://127.0.0.1:" + timestamp
   requestParams.json = {
     "id": 0,
-    "name": "test-" + timestamp,
-    "desc": "test " + timestamp,
+    "name": name,
+    "desc": name,
     "apiForwardTarget": "dev",
-    "targets": [{
+    "targets": [
+      {
       "name": "dev",
-      "value": "http://127.0.0.1:" + timestamp
-    }]
+      "value": url
+      }
+    ]
   }
+
+  // console.log(JSON.stringify(requestParams))
 
   return next()
 }
@@ -23,7 +29,7 @@ function prepareApp (requestParams, context, ee, next) {
 function prepareApi (requestParams, context, ee, next) {
   let timestamp = new Date().getTime() - Date.parse('2018')
   requestParams.json = {
-    "appId": 1,
+    "appId": 2,
     "id": 0,
     "name": timestamp.toString(),
     "description": timestamp.toString(),
