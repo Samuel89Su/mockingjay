@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom'
 import { deepClone, updateByPath } from '../utils'
 import { Header, Button, Label,
     Form, Input, TextArea, Checkbox, Dropdown } from 'semantic-ui-react'
-import Btns from './btn-apply-discard'
+import Btns from './Btn-apply-discard'
 
-class apiCfgV extends Component {
+class ApiCfgV extends Component {
     constructor(props) {
         super(props)
 
@@ -96,4 +96,4 @@ class apiCfgV extends Component {
     }
 }
 
-export default apiCfgV
+export default ApiCfgV

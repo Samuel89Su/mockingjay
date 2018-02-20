@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 import '../styles/apiSchema.scss'
 import { deepClone, updateByPath, delByPath, getPropertyByPath, parseRecursive } from '../utils'
 import { Header, Button, Input, Label, TextArea, Form, Dropdown, Checkbox } from 'semantic-ui-react'
-import Btns from './btn-apply-discard'
+import Btns from './Btn-apply-discard'
 
-class apiSchemaV extends Component {
+class ApiSchemaV extends Component {
     constructor(props) {
         super(props)
 
@@ -205,4 +205,4 @@ class apiSchemaV extends Component {
     }
 }
 
-export default apiSchemaV
+export default ApiSchemaV

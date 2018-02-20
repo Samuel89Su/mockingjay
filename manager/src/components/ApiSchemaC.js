@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import apiSchemaV  from './apiSchemaV'
+import ApiSchemaV  from './ApiSchemaV'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
 import queryString from 'query-string'
@@ -104,5 +104,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-const apiSchemaC = connect(mapStateToProps, mapDispatchToProps)(apiSchemaV )
-export default apiSchemaC;
+export default connect(mapStateToProps, mapDispatchToProps)(ApiSchemaV)

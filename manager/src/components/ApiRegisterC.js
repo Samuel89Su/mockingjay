@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import apiCfgV from './apiCfgV'
+import ApiCfgV from './ApiCfgV'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
 
@@ -48,5 +48,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-const apiRegisterC = connect(mapStateToProps, mapDispatchToProps)(apiCfgV)
-export default apiRegisterC;
+export default connect(mapStateToProps, mapDispatchToProps)(ApiCfgV);
