@@ -32,7 +32,7 @@ class apiCfgV extends Component {
 
     handleChange(e, data) {
         let oPath = data.name
-        let value = e.target.type === 'checkbox' ? e.target.checked : data.value
+        let value = data.type === 'checkbox' ? data.checked : data.value
         let newState = updateByPath(deepClone(this.state), oPath, value)
         this.setState(newState)
     }

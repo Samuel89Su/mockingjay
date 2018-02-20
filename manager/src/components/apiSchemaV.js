@@ -105,7 +105,7 @@ class apiSchemaV extends Component {
                     <span id="sp_method">{this.props.apiCfg.method}</span>
                     <span id="sp_path">{this.props.apiCfg.path}</span><br/>
                 </div>
-                <Form id="pn_schema">
+                <Form>
                     <Header as='h3'>Request</Header>
                     <Header as='h4'>Query</Header>
                     <Button name='properties.query.properties' onClick={this.addProperty}>Add</Button>
