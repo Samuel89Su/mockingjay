@@ -30,56 +30,8 @@
       margin: 5px 0 0 10px; }
 #div_apiSchema .sp-inline-form {
   margin: 0 0 0 80px; }
-#div_apiMcCfg {
-  margin: 30px 0 0 40px; }
-  #div_apiMcCfg .vice-header {
-    text-align: left;
-    width: 50%; }
-  #div_apiMcCfg .pading-right {
-    text-align: right; }
-  #div_apiMcCfg #pn_cfg {
-    text-align: left;
-    margin: 20px 0 0 10px; }
-    #div_apiMcCfg #pn_cfg #sp_method {
-      background-color: blue;
-      color: white;
-      font-size: 32;
-      margin-right: 20px; }
-    #div_apiMcCfg #pn_cfg #sp_path {
-      background-color: #b9b8b8;
-      font-size: 30; }
-    #div_apiMcCfg #pn_cfg textarea {
-      width: 500px;
-      height: 120px; }
-    #div_apiMcCfg #pn_cfg #pn_details {
-      margin: 80px 0 80px 0px;
-      text-align: left;
-      width: 100%; }
-    #div_apiMcCfg #pn_cfg #pn_details input {
-      height: 28px;
-      margin: 5px; }
-    #div_apiMcCfg #pn_cfg #pn_details label {
-      display: inline-block;
-      width: 170px; }
-    #div_apiMcCfg #pn_cfg #pn_details input[type="checkbox"] {
-      width: 20px;
-      height: 20px; }
-    #div_apiMcCfg #pn_cfg #pn_details .div-key {
-      width: 80%;
-      border: 1px dashed #000;
-      margin: 5px 0 0 20px;
-      padding: 5px; }
-    #div_apiMcCfg #pn_cfg #pn_details textarea {
-      width: 800px;
-      height: 300px; }
-    #div_apiMcCfg #pn_cfg #btn_submit {
-      position: fixed;
-      top: 640px;
-      left: 1440px;
-      width: 120px;
-      height: 50px;
-      background: blue;
-      color: white; }
+#div_apiMcCfg .sp-inline-form {
+  margin: 0 0 0 80px; }
 /* Base Application Styles */
 html {
   width: 100%;
@@ -23237,4 +23189,4 @@ body.pushable > .pusher {
     -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1); } }
 
-/*# sourceMappingURL=style_49084aef.css.map*/
+/*# sourceMappingURL=style_05988511.css.map*/
