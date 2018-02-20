@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import '../styles/appList.scss'
 import { Table, Header, Button, Pagination } from 'semantic-ui-react'
 
-class appListV extends Component {
+class AppListV extends Component {
     constructor(props) {
         super(props)
 
@@ -86,4 +86,4 @@ class appListV extends Component {
     }
 }
 
-export default appListV
+export default AppListV

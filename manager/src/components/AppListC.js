@@ -1,18 +1,18 @@
 import { connect } from 'react-redux'
 const queryString = require('query-string')
-import appListV from './appListV'
-import { apiListC, ApiRoutes } from './apiListC'
+import AppListV from './AppListV'
+import { ApiListC, ApiRoutes } from './ApiListC'
 import InventoryAPI from '../middlewares/InventoryAPI'
 import { fetchRemote } from '../middlewares/remoteFetch'
-import appCfgC from './appCfgC'
-import appRegisterC from './appRegisterC'
+import AppCfgC from './AppCfgC'
+import AppRegisterC from './AppRegisterC'
 
 // routes
 const AppRoutes = [
   ...ApiRoutes,
-  { path: '/app/register', component: appRegisterC },
-  { path: '/app/details', component: appCfgC },
-  { path: '/app/apilist', component: apiListC }
+  { path: '/app/register', component: AppRegisterC },
+  { path: '/app/details', component: AppCfgC },
+  { path: '/app/apilist', component: ApiListC }
 ]
 
 // actions
@@ -50,5 +50,5 @@ const mapDispatchToProps = dispatch => {
 }
 
 // connect & export
-const appListC = connect(mapStateToProps, mapDispatchToProps)(appListV)
-export { appListC, AppRoutes };
+const AppListC = connect(mapStateToProps, mapDispatchToProps)(AppListV)
+export { AppListC, AppRoutes }

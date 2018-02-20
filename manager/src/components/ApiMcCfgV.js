@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 import '../styles/apiMcCfg.scss'
 import { deepClone, updateByPath, delByPath, getPropertyByPath } from '../utils'
 import { Header, Button, Input, Label, TextArea, Form, Dropdown, Checkbox } from 'semantic-ui-react'
-import Btns from './btn-apply-discard'
+import Btns from './BtnApplyDiscard'
 
-class apiMcCfgV extends Component {
+class ApiMcCfgV extends Component {
     constructor(props) {
         super(props)
 
@@ -282,4 +282,4 @@ class apiMcCfgV extends Component {
     }
 }
 
-export default apiMcCfgV
+export default ApiMcCfgV
