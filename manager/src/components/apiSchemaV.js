@@ -63,7 +63,8 @@ class apiSchemaV extends Component {
         let newState = delByPath(deepClone(this.state), oPath)
         let key = oPath.split('.').pop()
         oPath = oPath.replace(key, data.value)
-        let newState = updateByPath(deepClone(newState), oPath, property)
+        newState = updateByPath(deepClone(newState), oPath, property)
+        this.setState(newState)
     }
 
     addProperty (e, data) {
