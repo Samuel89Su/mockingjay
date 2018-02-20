@@ -5,45 +5,9 @@
 
 /* app list end */
 /* api list begin */
-#api-list {
-  text-align: left;
-  /* ID */
-  /* Name */
-  /* Method */
-  /* Validate */
-  /* Forward */
-  /* Path */
-  /* Desc */
-  /* Details */
-  /* Schema */
-  /* MockCfg */ }
-  #api-list .operations a {
-    margin: 0 30px 0 0; }
-  #api-list table {
-    width: 1400px;
-    text-align: left; }
-  #api-list table tr {
-    height: 30px; }
-  #api-list table tr th:first-child {
-    width: 70px; }
-  #api-list table tr th:nth-child(2) {
-    width: 150px; }
-  #api-list table tr th:nth-child(3) {
-    width: 110px; }
-  #api-list table tr th:nth-child(4) {
-    width: 110px; }
-  #api-list table tr th:nth-child(5) {
-    width: 110px; }
-  #api-list table tr th:nth-child(6) {
-    width: 200px; }
-  #api-list table tr th:nth-child(7) {
-    width: 300px; }
-  #api-list table tr th:nth-child(8) {
-    width: 120px; }
-  #api-list table tr th:nth-child(9) {
-    width: 120px; }
-  #api-list table tr th:nth-child(10) {
-    width: 120px; }
+#api-list table {
+  width: 90%;
+  text-align: left; }
 
 /* api list end */
 #div_apiCfg {
@@ -78,26 +42,20 @@
       background: #7a0505;
       color: white; }
 .container-btn {
-  background: orange;
   position: fixed;
   height: 100%;
   width: 100%; }
   .container-btn .pane-btn {
-    background: orchid;
     position: fixed;
     right: 100px;
     bottom: 40px;
     width: 150px;
     height: 120px; }
     .container-btn .pane-btn .btn-submit {
-      width: 120px;
-      height: 50px;
       background: blue;
       color: white;
       margin: 5px 0 0 10px; }
     .container-btn .pane-btn .btn-discard {
-      width: 120px;
-      height: 50px;
       background: #7a0505;
       color: white;
       margin: 5px 0 0 10px; }
@@ -191,21 +149,6 @@
       height: 50px;
       background: blue;
       color: white; }
-#div_appCfg {
-  text-align: left;
-  margin: 30px 0 0 40px;
-  background: yellow; }
-  #div_appCfg #fm_appCfg {
-    background: green;
-    margin: 20px 0 0 0; }
-    #div_appCfg #fm_appCfg input {
-      height: 28px;
-      width: 500px; }
-    #div_appCfg #fm_appCfg input[type="button"] {
-      width: 70px; }
-    #div_appCfg #fm_appCfg #ipt_desc {
-      height: 120px;
-      width: 500px; }
 /* Base Application Styles */
 @font-face {
   font-family: "iconfont";
@@ -23368,4 +23311,4 @@ body.pushable > .pusher {
     -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1); } }
 
-/*# sourceMappingURL=style_4b1b2bd6.css.map*/
+/*# sourceMappingURL=style_1fa47780.css.map*/
