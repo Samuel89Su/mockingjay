@@ -1,9 +1,7 @@
 import { connect } from 'react-redux'
+import queryString from 'query-string'
 import apiCfgV from './apiCfgV'
-import {
-  fetchRemote,
-  fakeDiscard
-} from '../middlewares/remoteFetch'
+import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
 
 // actions
@@ -38,7 +36,7 @@ function discardRemoteAppCfg(apiCfg, history) {
   let api = InventoryAPI.apiDiscard
   let fetchOpts = Object.assign({}, api)
   let payload = JSON.stringify(apiCfg)
-  return fakeDiscard(fetchOpts, payload)
+  return fetchRemote(fetchOpts, payload)
     .then(
       () => {
         history.back()
@@ -48,9 +46,14 @@ function discardRemoteAppCfg(apiCfg, history) {
 
 // map state to props
 const mapStateToProps = state => {
+  let query = queryString.parse(window.location.search)
+  delete query.id
+  query = queryString.stringify(query)
+
   return {
     apiCfg: state.apiCfg,
-    register: false
+    register: false,
+    appQuery: query
   }
 }
 

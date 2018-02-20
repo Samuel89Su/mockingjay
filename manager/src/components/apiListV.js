@@ -80,9 +80,9 @@ class apiListV extends Component {
                                             <Table.Cell>{ api.forward.toString() }</Table.Cell>
                                             <Table.Cell>{ api.path }</Table.Cell>
                                             <Table.Cell>{ api.description }</Table.Cell>
-                                            <Table.Cell><Link to={`/api/details?appName=${this.state.appName}&id=${api.id}`}>details</Link></Table.Cell>
-                                            <Table.Cell><Link to={`/api/schema?appName=${this.state.appName}&id=${api.id}`}>schema</Link></Table.Cell>
-                                            <Table.Cell><Link to={`/api/mockcfg?appName=${this.state.appName}&id=${api.id}`}>mockcfg</Link></Table.Cell>
+                                            <Table.Cell><Link to={`/api/details${this.props.location.search}&id=${api.id}`}>details</Link></Table.Cell>
+                                            <Table.Cell><Link to={`/api/schema${this.props.location.search}&id=${api.id}`}>schema</Link></Table.Cell>
+                                            <Table.Cell><Link to={`/api/mockcfg${this.props.location.search}&id=${api.id}`}>mockcfg</Link></Table.Cell>
                                         </Table.Row>)
                                 })
                             }

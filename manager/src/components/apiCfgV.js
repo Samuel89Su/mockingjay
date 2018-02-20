@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import '../styles/apiCfg.scss'
+//import '../styles/apiCfg.scss'
 import { deepClone, updateByPath } from '../utils'
+import { Header, Button, Label,
+    Form, Input, TextArea, Checkbox, Dropdown } from 'semantic-ui-react'
 import Btns from './btn-apply-discard'
 
 class apiCfgV extends Component {
@@ -28,9 +30,9 @@ class apiCfgV extends Component {
         }
     }
 
-    handleChange(e) {
-        let oPath = e.target.name
-        let value = e.target.type === 'checkbox' ? e.target.checked : e.target.value
+    handleChange(e, data) {
+        let oPath = data.name
+        let value = e.target.type === 'checkbox' ? e.target.checked : data.value
         let newState = updateByPath(deepClone(this.state), oPath, value)
         this.setState(newState)
     }
@@ -55,35 +57,38 @@ class apiCfgV extends Component {
 
         return (
             <div id="div_apiCfg">
-                <h2>Api config</h2>
-                <Link to='/app/apilist?appId=1'>back to list</Link>
-                <form id="fm_apiCfg">
-                    <label htmlFor="ipt_name">Name: </label>
-                    <input id="ipt_name" name="name" value={apiCfg.name} onChange={this.handleChange} /><br/>
-                
-                    <h4>Description</h4>
-                    <textarea id="ipt_description" name="description" value={apiCfg.description} onChange={this.handleChange} /><br/>
+                <Header as='h2'>Api config</Header>
+                <div>
+                    <Button onClick={()=>this.props.history.push(`/app/apilist?${this.props.appQuery}`)} >Back to list</Button>
+                </div>
+                <Form id="fm_apiCfg">
+                    <Input name='name' label='Name:' value={apiCfg.name} onChange={this.handleChange} />
+                    <Header as='h4'>Description</Header>
+                    <TextArea name="description" rows='4' value={apiCfg.description} onChange={this.handleChange} placeholder='descripe this api' />
                     
-                    <label htmlFor="ipt_method">Method: </label>
-                    <select id="ipt_method" name="method" value={apiCfg.method} onChange={this.handleChange}>
-                    <option value="GET">GET</option>
-                    <option value="POST">POST</option>
-                    </select><br/>
+                    <Label>Method: </Label>
+                    <Dropdown name='method' placeholder='Select a method' 
+                        selection inline options={[{text:'GET', value:'GET'}, {text:'POST', value:'POST'}]} 
+                        value={apiCfg.method} 
+                        onChange={this.handleChange} />
+                    <br/>
                     
-                    <label htmlFor="ipt_path">Path: </label>
-                    <input id="ipt_path" name="path" value={apiCfg.path} onChange={this.handleChange} /><br/>
+                    <Input label='Path: ' name="path" value={apiCfg.path} onChange={this.handleChange} /><br/>
                     
-                    <label htmlFor="ipt_validate">Validate: </label>
-                    <input type="checkbox" id="ipt_validate" name="validate" checked={apiCfg.validate} onChange={this.handleChange} /><br/>
+                    <Checkbox label='Validate req' name="validate" toggle checked={apiCfg.validate} onChange={this.handleChange} />
                     
-                    <label htmlFor="ipt_forward">Forward: </label>
-                    <input type="checkbox" id="ipt_forward" name="forward" checked={apiCfg.forward} onChange={this.handleChange} /><br/>
+                    <Checkbox label="Forward req" name="forward" toggle checked={apiCfg.forward} onChange={this.handleChange} />
+                    <br/>
                     
-                    <label htmlFor="ipt_logReq">LogReq: </label>
-                    <input id="ipt_logReq" name="logReq" value={apiCfg.logReq} onChange={this.handleChange} /><br/>
+                    <Label>LogReq: </Label>
+                    <Dropdown name='logReq' placeholder='Select a log level' 
+                        selection inline options={[{text:'Req', value:1}, 
+                            {text:'Res', value:2}]} 
+                        value={apiCfg.logReq} 
+                        onChange={this.handleChange} />
                 
                     <input type="hidden" />
-              </form>
+              </Form>
 
               <Btns applyAction={this.update} hideDiscard={this.props.register} discardAction={this.discard} />
             </div>

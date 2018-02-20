@@ -27,12 +27,12 @@ function prepareApp (requestParams, context, ee, next) {
 }
 
 function prepareApi (requestParams, context, ee, next) {
-  let timestamp = new Date().getTime() - Date.parse('2018')
+  let timestamp = (new Date().getTime() - Date.parse('2018')).toString()
   requestParams.json = {
     "appId": 2,
     "id": 0,
-    "name": timestamp.toString(),
-    "description": timestamp.toString(),
+    "name": timestamp,
+    "description": timestamp,
     "path": "/api/" + timestamp,
     "method": "POST",
     "validate": true,

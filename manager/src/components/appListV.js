@@ -68,8 +68,8 @@ class appListV extends Component {
                                     <Table.Cell>{ app.name }</Table.Cell>
                                     <Table.Cell>{ app.desc }</Table.Cell>
                                     <Table.Cell>{ app.apiForwardTarget }</Table.Cell>
-                                    <Table.Cell><Link to={'/app/details?appId='+app.id}>details</Link></Table.Cell>
-                                    <Table.Cell><Link to={`/app/apilist?appId=${app.id}`}>api list</Link></Table.Cell>
+                                    <Table.Cell><Link to={`/app/details?appId=${app.id}&appName=${app.name}`}>details</Link></Table.Cell>
+                                    <Table.Cell><Link to={`/app/apilist?appId=${app.id}&appName=${app.name}`}>api list</Link></Table.Cell>
                                 </Table.Row>)
                             })
                         }

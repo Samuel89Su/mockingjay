@@ -365,7 +365,7 @@ class Steward {
         let args = ctx.request.body
 
         let apiSchema = await CacheFacade.getApiSchema(args.appName, parseInt(args.id))
-        if (apiSchema.properties) {
+        if (apiSchema && apiSchema.properties) {
             for (const key in apiSchema.properties) {
                 if (apiSchema.properties.hasOwnProperty(key)) {
                     const prop = apiSchema.properties[key]
@@ -373,7 +373,7 @@ class Steward {
                 }
             }
         }
-        ctx.response.body = errCode.success(apiSchema)
+        ctx.response.body = errCode.success(apiSchema?apiSchema:{})
 
         await next()
     }

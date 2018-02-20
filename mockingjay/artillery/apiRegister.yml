@@ -12,4 +12,4 @@ scenarios:
               url: "/inventory/api/register"
               beforeRequest: "prepareApi"
               afterResponse: "logHeaders"
-        count: 500
+        count: 300

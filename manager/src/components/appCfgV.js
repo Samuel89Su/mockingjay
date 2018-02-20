@@ -82,14 +82,11 @@ class appCfgV extends Component {
                 </div>
                 <Form id="fm_appCfg">
                     <Input name='name' label='Name:' value={appCfg.name} onChange={this.handleChange} />
-                    <br/>
                     <Header as='h4'>Description</Header>
                     <TextArea name='desc' rows='5' value={appCfg.desc} onChange={this.handleChange} placeholder='descripe this application' />
-                    
-                    <br/>
                     <Header as='h4'>Targets</Header>
                     <Button onClick={this.addTagert}>Add</Button><br/>
-                    <Label>Forward: </Label>
+                    <Label size='large'>Forward: </Label>
                     <Dropdown name='apiForwardTarget' placeholder='Select a target' 
                         selection inline options={targerOpts} 
                         value={appCfg.apiForwardTarget} 
@@ -115,7 +112,7 @@ class appCfgV extends Component {
                     </ul>
                     
                     <br/>
-                    <input type="hidden"/>                    
+                    <input type="hidden"/>
                 </Form>
 
                 <Btns applyAction={this.update} hideDiscard={this.props.register} discardAction={this.discard} />

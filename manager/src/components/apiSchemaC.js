@@ -34,9 +34,61 @@ function updateRemoteApiSchema(apiSchema, dispatch) {
 
 // map state to props
 const mapStateToProps = state => {
+  let query = queryString.parse(window.location.search)
+  delete query.id
+  query = queryString.stringify(query)
+
   return {
-    apiSchema: state.apiSchema,
-    apiCfg: state.apiCfg
+    apiSchema: (state.apiSchema && state.apiSchema.hasOwnProperty('type')) ? 
+                state.apiSchema 
+                : {
+                    "$schema": "http://json-schema.org/draft-06/schema#",
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "description": {
+                            "type": "string"
+                        },
+                        "path": {
+                            "type": "string",
+                            "pattern": null
+                        },
+                        "method": {
+                            "type": "string",
+                            "pattern": null
+                        },
+                        "query": {
+                            "type": "object",
+                            "properties": {
+                            },
+                            "required": []
+                        },
+                        "reqHeaders": {
+                            "type": "object",
+                            "properties": {
+                            },
+                            "required": []
+                        },
+                        "reqBody": {
+                            "type": "string",
+                            "minLength": 2,
+                            "maxLength": 10
+                        },
+                        "resHeaders": {
+                            "type": "object",
+                            "properties": {},
+                            "required": []
+                        },
+                        "resBody": {
+                          "type": "object"
+                        }
+                    },
+                    "required": ["name", "description", "path", "method", "reqHeaders", "resHeaders", "reqBody"]
+                  },
+    apiCfg: state.apiCfg,
+    appQuery: query
   }
 }
   
