@@ -16,7 +16,7 @@
   width: 100%; }
   .container-btn .pane-btn {
     position: fixed;
-    right: 100px;
+    right: 125px;
     bottom: 40px;
     width: 150px;
     height: 120px; }
@@ -23189,4 +23189,4 @@ body.pushable > .pusher {
     -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1); } }
 
-/*# sourceMappingURL=style_05988511.css.map*/
+/*# sourceMappingURL=style_22f5d199.css.map*/

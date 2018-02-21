@@ -7,7 +7,7 @@ const errCode = require('./errCode')
 const commonBodyParser = require('../common/bodyParser')
 const cfgSchema = require('../Schemas/apiCfgSchema')
 const apiRegistrationSchema = require('../Schemas/apiRegistrationSchema')
-const jsonParse = require('../utils/jsonParser')
+const jsonParse = require('../utils').parse
 const CacheFacade = require('../common/CacheFacade')
 
 const ajv = new Ajv(); // options can be passed, e.g. {allErrors: true}

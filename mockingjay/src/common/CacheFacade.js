@@ -3,8 +3,9 @@
 const CacheKeyCombinator = require('./CacheKeyCombinator')
 const redisClient = require('./redisClient')
 const logger = require('./logger')
-const getComparer = require('../utils/comparerFactory')
+const getComparer = require('../utils').getComparer
 const assemblePagination = require('./paginatedResult')
+const parse = require('../utils').parse
 
 const appAndApiComparer = getComparer(null, false, CacheKeyCombinator.extractId)
 
@@ -420,7 +421,7 @@ class CacheFacade {
         let key = CacheKeyCombinator.buildApiSchemaKey(appName, id)
         let apiSchemaRaw = await redisClient.getAsync(key)
         if (apiSchemaRaw) {
-            let apiSchema = JSON.parse(apiSchemaRaw)
+            let apiSchema = parse(apiSchemaRaw)
             return apiSchema
         } else {
             return null

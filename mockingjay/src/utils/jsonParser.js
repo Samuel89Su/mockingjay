@@ -3,10 +3,7 @@ function parse(rawValue) {
         if (typeof rawValue === 'string') {
             try {
                 rawValue = JSON.parse(rawValue)
-            
-                if (typeof rawValue === 'object') {
-                    rawValue = parse(rawValue)
-                }
+                rawValue = parse(rawValue)
             } catch (err) {
                 return rawValue
             }
@@ -28,7 +25,7 @@ function parse(rawValue) {
 
         return rawValue
     } catch (error) {
-        console.log(error)
+        // console.log(error)
     }
 }
 

@@ -94,17 +94,27 @@ function delByPath (obj, path) {
 }
 
 function parseRecursive(data) {
-  if (typeof data === 'string') {
+  if (!data) {
+  }
+  else if (typeof data === 'string') {
     try {
       data = JSON.parse(data)
-      if (typeof data === 'string') {
-        data = parseRecursive(data)
-      }
     } catch (error) {
     }
-
-    return data
+  } else if (typeof data === 'object' && data instanceof Array) {
+    for (let i = 0; i < data.length; i++) {
+      data[i] = parseRecursive(data[i])      
+    }
+  } else if (typeof data === 'object') {
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        const prop = data[key];
+        data[key] = parseRecursive(prop)
+      }
+    }
   }
+
+  return data
 }
 
 export {

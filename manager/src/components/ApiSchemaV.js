@@ -5,6 +5,7 @@ import { deepClone, updateByPath, delByPath, getPropertyByPath, parseRecursive }
 import { Header, Button, Input, Label, TextArea, Form, Dropdown, Checkbox } from 'semantic-ui-react'
 import Btns from './BtnApplyDiscard'
 import queryString from 'query-string'
+import Prompt from './Prompt'
 
 class ApiSchemaV extends Component {
     constructor(props) {
@@ -21,17 +22,18 @@ class ApiSchemaV extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.apiSchema && nextProps.apiSchema.properties
-            && nextProps.apiSchema.properties.reqBody
-            && typeof nextProps.apiSchema.properties.reqBody === 'object') {
-            nextProps.apiSchema.properties.reqBody = JSON.stringify(nextProps.apiSchema.properties.reqBody)
+        let schema = parseRecursive(nextProps.apiSchema)
+        if (schema && schema.properties
+            && schema.properties.reqBody
+            && typeof schema.properties.reqBody === 'object') {
+            schema.properties.reqBody = JSON.stringify(schema.properties.reqBody)
         }
-        if (nextProps.apiSchema && nextProps.apiSchema.properties
-            && nextProps.apiSchema.properties.resBody
-            && typeof nextProps.apiSchema.properties.resBody === 'object') {
-            nextProps.apiSchema.properties.resBody = JSON.stringify(nextProps.apiSchema.properties.resBody)
+        if (schema && schema.properties
+            && schema.properties.resBody
+            && typeof schema.properties.resBody === 'object') {
+            schema.properties.resBody = JSON.stringify(schema.properties.resBody)
         }
-        this.setState(nextProps.apiSchema)
+        this.setState({schema: schema})
     }
 
     componentWillMount() {
@@ -45,13 +47,13 @@ class ApiSchemaV extends Component {
 
     handleChange (e, data) {
         let oPath = data.name
-        let newState = updateByPath(deepClone(this.state), oPath, data.value)
-        this.setState(newState)
+        let schema = updateByPath(deepClone(this.state.schema), oPath, data.value)
+        this.setState({schema: schema})
     }
 
     updateRequired (event, data) {
         let paths = data.name.split('.')
-        let dummy = deepClone(this.state)
+        let dummy = deepClone(this.state.schema)
         let required = dummy
         for (let i = 0; i < paths.length - 1; i++) {
             const path = paths[i];
@@ -70,42 +72,41 @@ class ApiSchemaV extends Component {
             }
         }
 
-        this.setState(dummy)
+        this.setState({schema: schema})
     }
 
     updatePropertyKey (e, data) {
         let oPath = data.name
-        let property = getPropertyByPath(this.state, oPath)
-        let newState = delByPath(deepClone(this.state), oPath)
+        let property = getPropertyByPath(this.state.schema, oPath)
+        let schema = delByPath(deepClone(this.state.schema), oPath)
         let key = oPath.split('.').pop()
         oPath = oPath.replace(key, data.value)
-        newState = updateByPath(deepClone(newState), oPath, property)
-        this.setState(newState)
+        schema = updateByPath(deepClone(schema), oPath, property)
+        this.setState({schema: schema})
     }
 
-    addProperty (e, data) {
-        let timestamp = (new Date().getTime() - Date.parse('2018')).toString()
-        let oPath = data.name + '.' + timestamp
+    addProperty (data) {
+        let oPath = data.name + '.' + data.key
         let value = { type: 'string', pattern: '' }
-        let newState = updateByPath(deepClone(this.state), oPath, value)
-        this.setState(newState)
+        let schema = updateByPath(deepClone(this.state.schema), oPath, value)
+        this.setState({schema: schema})
     }
 
     delProperty (e, data) {
         let oPath = data.name
-        let newState = delByPath(deepClone(this.state), oPath)
-        this.setState(newState)
+        let schema = delByPath(deepClone(this.state.schema), oPath)
+        this.setState({schema: schema})
     }
 
     update (e) {
       e.target.disabled = true
-      let apiSchema = this.state
+      let apiSchema = this.state.schema
       let dummy = { appId: this.props.apiCfg.appId, id:this.props.apiCfg.id, schema: apiSchema }
       this.props.onUpdateClick(dummy)
     }
 
     render() {
-        let apiSchema = this.state
+        let apiSchema = this.state.schema
         if (!apiSchema || !apiSchema.hasOwnProperty('type')) {
             return (<div>has no state</div>)
         }
@@ -120,7 +121,7 @@ class ApiSchemaV extends Component {
                 <Form>
                     <Header as='h3'>Request</Header>
                     <Header as='h4'>Query</Header>
-                    <Button name='properties.query.properties' onClick={this.addProperty}>Add</Button>
+                    <Prompt text='Add' onClose={(ok, key) => { if(ok) { this.addProperty({ name: 'properties.query.properties', key: key })} }}/>
                     <ul>
                     {
                         Object.keys(apiSchema.properties.query.properties).map((key, index) => {
