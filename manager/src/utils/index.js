@@ -117,10 +117,48 @@ function parseRecursive(data) {
   return data
 }
 
+/**
+ * convert object to array, DO NOT recursive
+ * @param {Object} obj 
+ * @returns {Array<Object>} [{key: '', value: ..}]
+ */
+function object2Array (obj) {
+  let dummy = []
+  if (obj && typeof obj === 'object') {
+    for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            const value = obj[key];
+            dummy.push({ key: key, value: value })
+        }
+    }
+  }
+  return dummy
+}
+
+/**
+ * convert array to object, DO NOT recursive
+ * @param {Array<Object>} [{key: '', value: ..}]
+ * @returns {Object} 
+ */
+function array2Object (arr) {
+  let dummy = {}
+  if (arr && arr instanceof Array && arr.length > 0) {
+    arr.forEach(kv => {
+      if (kv.key && typeof kv.key === 'string'
+        && kv.value) {
+          dummy[kv.key] = kv.value
+      }
+    })
+  }
+  return dummy
+}
+
 export {
   deepClone,
   updateByPath,
   delByPath,
   getPropertyByPath,
-  parseRecursive
+  parseRecursive,
+  object2Array,
+  array2Object
 }

@@ -15,14 +15,14 @@ class AppCfgV extends Component {
         this.addTagert = this.addTagert.bind(this)
         this.discardTarget = this.discardTarget.bind(this)
 
-        this.state = props.appCfg
+        this.state = { appCfg: props.appCfg }
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.state.id === 0 && nextProps.appCfg.id > 0) {
+        if (this.state.appCfg.id === 0 && nextProps.appCfg.id > 0) {
             this.props.history.push(`/app/details?appId=${nextProps.appCfg.id}&appName=${nextProps.appCfg.name}`)
         } else {
-            this.setState(nextProps.appCfg)
+            this.setState({ appCfg: nextProps.appCfg })
         }
     }
 
@@ -38,41 +38,41 @@ class AppCfgV extends Component {
 
     handleChange(e, data) {
         let oPath = data.name
-        let newState = updateByPath(deepClone(this.state), oPath, data.value)
-        this.setState(newState)
+        let appCfg = updateByPath(deepClone(this.state.appCfg), oPath, data.value)
+        this.setState({ appCfg: appCfg })
     }
 
     addTagert() {
-        let newState = deepClone(this.state)
-        newState.targets.push({
+        let appCfg = deepClone(this.state.appCfg)
+        appCfg.targets.push({
             name: new Date().valueOf().toString(),
             value: ''
         })
-        this.setState(newState)
+        this.setState({ appCfg: appCfg })
     }
 
     discardTarget(e) {
-        let newState = deepClone(this.state)
+        let appCfg = deepClone(this.state.appCfg)
         var index = parseInt(e.target.name)
-        newState.targets.splice(index,1)
-        this.setState(newState)
+        appCfg.targets.splice(index,1)
+        this.setState({ appCfg: appCfg })
     }
 
     update(e) {
       e.target.disabled = true
-      let appCfg = this.state
+      let appCfg = this.state.appCfg
       this.props.onUpdateClick(appCfg)
       e.target.disabled = false
     }
 
     discard(e) {
       e.target.disabled = true
-      let appCfg = this.state
+      let appCfg = this.state.appCfg
       this.props.onDiscardClick(appCfg)
     }
 
     render() {
-        let appCfg = this.state
+        let appCfg = this.state.appCfg
         if (!appCfg || !appCfg.hasOwnProperty('name')) {
             return (<div>has no state</div>)
         }

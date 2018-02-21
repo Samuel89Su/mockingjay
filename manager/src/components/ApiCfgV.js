@@ -15,17 +15,17 @@ class ApiCfgV extends Component {
         this.discard = this.discard.bind(this)
         this.handleChange = this.handleChange.bind(this)
 
-        this.state = props.apiCfg
+        this.state = { apiCfg: props.apiCfg }
     }
 
     componentWillReceiveProps(nextProps) {
         if (!nextProps.apiCfg) {
             this.props.history.goBack()
         }        
-        if (this.state.id === 0 && nextProps.apiCfg.id > 0) {
+        if (this.state.apiCfg.id === 0 && nextProps.apiCfg.id > 0) {
             this.props.history.push(`/api/details?appId=${this.state.query.appId}&appName=${this.state.query.appName}&id=${nextProps.apiCfg.id}`)
         } else {
-            this.setState(nextProps.apiCfg)
+            this.setState({ apiCfg: nextProps.apiCfg })
         }
     }
 
@@ -43,24 +43,24 @@ class ApiCfgV extends Component {
     handleChange(e, data) {
         let oPath = data.name
         let value = data.type === 'checkbox' ? data.checked : data.value
-        let newState = updateByPath(deepClone(this.state), oPath, value)
-        this.setState(newState)
+        let apiCfg = updateByPath(deepClone(this.state.apiCfg), oPath, value)
+        this.setState({ apiCfg: apiCfg })
     }
 
     update(e) {
       e.target.disabled = true
-      let apiCfg = this.state
+      let apiCfg = this.state.apiCfg
       this.props.onUpdateClick(apiCfg)
     }
 
     discard(e) {
       e.target.disabled = true
-      let apiCfg = this.state
+      let apiCfg = this.state.apiCfg
       this.props.onDiscardClick(apiCfg, this.props.history)
     }
 
     render() {
-        let apiCfg = this.state
+        let apiCfg = this.state.apiCfg
         if (!apiCfg || !apiCfg.hasOwnProperty('name')) {
             return (<div>has no state</div>)
         }

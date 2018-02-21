@@ -19,11 +19,11 @@ class ApiMcCfgV extends Component {
         this.addKey = this.addKey.bind(this)
         this.discardKey = this.discardKey.bind(this)
 
-        this.state = props.apiMcCfg
+        this.state = { apiMcCfg: props.apiMcCfg }
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState(nextProps.apiMcCfg)
+        this.setState({ apiMcCfg: nextProps.apiMcCfg })
     }
 
     componentWillMount() {
@@ -38,13 +38,13 @@ class ApiMcCfgV extends Component {
     handleChange(e, data) {
         let oPath = data.name
         let value = data.type === 'checkbox' ? data.checked : data.value
-        let newState = updateByPath(deepClone(this.state), oPath, value)
-        this.setState(newState)
+        let apiMcCfg = updateByPath(deepClone(this.state.apiMcCfg), oPath, value)
+        this.setState({ apiMcCfg: apiMcCfg })
     }
 
     update(e) {
       e.target.disabled = true
-      let apiMcCfg = this.state
+      let apiMcCfg = this.state.apiMcCfg
       let length = apiMcCfg.mockCfg.reqDescriptor.queries.length
       if (length > 0) {
         let last = apiMcCfg.mockCfg.reqDescriptor.queries[length - 1]
@@ -100,7 +100,7 @@ class ApiMcCfgV extends Component {
     }
 
     addKey(type) {
-        let cfg = this.state
+        let cfg = this.state.apiMcCfg
         let dummy = {}
         let key = null
         switch (type) {
@@ -154,11 +154,11 @@ class ApiMcCfgV extends Component {
 
         dummy.push(key)
         
-        this.setState(cfg)
+        this.setState({ apiMcCfg: cfg })
     }
 
     discardKey(type, key) {
-        let cfg = this.state
+        let cfg = this.state.apiMcCfg
         let dummy = {}
         switch (type) {
             case 'query':
@@ -183,11 +183,11 @@ class ApiMcCfgV extends Component {
         }
         dummy.splice(idx, 1)
 
-        this.setState(cfg)
+        this.setState({ apiMcCfg: cfg })
     }
 
     render() {
-        let apiMcCfg = this.state
+        let apiMcCfg = this.state.apiMcCfg
         if (!apiMcCfg || !apiMcCfg.hasOwnProperty('path')) {
             return (<div>has no state</div>)
         }

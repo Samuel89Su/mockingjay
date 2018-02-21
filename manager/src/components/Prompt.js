@@ -28,6 +28,7 @@ class Prompt extends Component {
     render () {
         return (
         <Modal trigger={<Button content={this.props.text} onClick={ this.open } />}
+            size='mini'
             open={this.state.modalOpen}
             onClose={() => this.click({ name: 'false' })}>
             <Modal.Content>
