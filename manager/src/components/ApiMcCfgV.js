@@ -194,11 +194,6 @@ class ApiMcCfgV extends Component {
 
         return (
             <div id="div_apiMcCfg">
-                <Header as='h2'>Mock Config</Header>                
-                <div>
-                    <Button onClick={()=>this.props.history.push(`/app/apilist?appId=${this.state.query.appId}&appName=${this.state.query.appName}`)} >Back to list</Button>
-                </div>
-                
                 <Header as='h3'>General</Header>
                 <div>
                     <span id="sp_method">{ apiMcCfg.method }</span>

@@ -67,10 +67,6 @@ class ApiCfgV extends Component {
 
         return (
             <div id="div_apiCfg">
-                <Header as='h2'>Api config</Header>
-                <div>
-                    <Button onClick={()=>this.props.history.push(`/app/apilist?appId=${this.state.query.appId}&appName=${this.state.query.appName}`)} >Back to list</Button>
-                </div>
                 <Form id="fm_apiCfg">
                     <Input name='name' label='Name:' value={apiCfg.name} onChange={this.handleChange} />
                     <Header as='h4'>Description</Header>

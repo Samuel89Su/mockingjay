@@ -112,10 +112,6 @@ class ApiSchemaV extends Component {
 
         return (
             <div id="div_apiSchema">
-                <Header as='h2'>Schema</Header>
-                <div>
-                    <Button onClick={()=>this.props.history.push(`/app/apilist?appId=${this.state.query.appId}&appName=${this.state.query.appName}`)} >Back to list</Button>
-                </div>
                 <Header as='h3'>General</Header>
                 <div>
                     <span id="sp_method">{this.props.apiCfg.method}</span>
