@@ -1,5 +1,4 @@
 import { connect } from 'react-redux'
-import queryString from 'query-string'
 import ApiCfgV from './ApiCfgV'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
@@ -46,14 +45,9 @@ function discardRemoteAppCfg(apiCfg, history) {
 
 // map state to props
 const mapStateToProps = state => {
-  let query = queryString.parse(window.location.search)
-  delete query.id
-  query = queryString.stringify(query)
-
   return {
     apiCfg: state.apiCfg,
-    register: false,
-    appQuery: query
+    register: false
   }
 }
 

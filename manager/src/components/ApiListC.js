@@ -7,13 +7,12 @@ import ApiCfgC from './ApiCfgC'
 import ApiSchemaC from './ApiSchemaC'
 import ApiMcCfgC from './ApiMcCfgC'
 import ApiRegisterC from './ApiRegisterC'
+import ApiDetailsTab from './ApiDetailsTab'
 
 // routes
 const ApiRoutes = [
     { path: '/api/register', component: ApiRegisterC },
-    { path: '/api/details', component: ApiCfgC },
-    { path: '/api/schema', component: ApiSchemaC },
-    { path: '/api/mockcfg', component: ApiMcCfgC }
+    { path: '/api/details', component: ApiDetailsTab }
 ]
 
 // actions

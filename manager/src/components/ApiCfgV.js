@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import queryString from 'query-string'
 //import '../styles/apiCfg.scss'
 import { deepClone, updateByPath } from '../utils'
 import { Header, Button, Label,
@@ -20,13 +21,22 @@ class ApiCfgV extends Component {
     componentWillReceiveProps(nextProps) {
         if (!nextProps.apiCfg) {
             this.props.history.goBack()
+        }        
+        if (this.state.id === 0 && nextProps.apiCfg.id > 0) {
+            this.props.history.push(`/api/details?appId=${this.state.query.appId}&appName=${this.state.query.appName}&id=${nextProps.apiCfg.id}`)
+        } else {
+            this.setState(nextProps.apiCfg)
         }
-        this.setState(nextProps.apiCfg)
     }
 
     componentWillMount() {
+        let search = (this.props.location && this.props.location.search)
+            ? this.props.location.search
+            : window.location.search
+        let query = queryString.parse(search)
+        this.setState({ query: query })
         if (!this.props.register) {
-            this.props.onMounted(this.props.location.search)
+            this.props.onMounted(search)
         }
     }
 
@@ -59,7 +69,7 @@ class ApiCfgV extends Component {
             <div id="div_apiCfg">
                 <Header as='h2'>Api config</Header>
                 <div>
-                    <Button onClick={()=>this.props.history.push(`/app/apilist?${this.props.appQuery}`)} >Back to list</Button>
+                    <Button onClick={()=>this.props.history.push(`/app/apilist?appId=${this.state.query.appId}&appName=${this.state.query.appName}`)} >Back to list</Button>
                 </div>
                 <Form id="fm_apiCfg">
                     <Input name='name' label='Name:' value={apiCfg.name} onChange={this.handleChange} />

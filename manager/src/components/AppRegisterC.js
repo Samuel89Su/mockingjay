@@ -24,16 +24,19 @@ function updateRemoteAppCfg(appCfg, dispatch) {
 
 // map state to props
 const mapStateToProps = state => {
+  let appCfg = {
+    id: 0,
+    name: '',
+    desc: '',
+    apiForwardTarget: '',
+    targets: []
+  }
+  if (state.appCfg && state.appCfg.id && state.appCfg.id > 0) {
+    appCfg = state.appCfg
+  }
   return {
-    appCfg: (!state.appCfg || !state.appCfg.name) ? {
-              id: 0,
-              name: '',
-              desc: '',
-              apiForwardTarget: '',
-              targets: []
-            }
-            : state.appCfg,
-    register: true
+    appCfg: appCfg,
+    register: appCfg.id === 0
   }
 }
   

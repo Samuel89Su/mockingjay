@@ -24,18 +24,21 @@ function updateRemoteApiCfg(apiCfg, dispatch) {
 
 // map state to props
 const mapStateToProps = state => {
+  let apiCfg = {
+    'id': 0,
+    name: '',
+    description: '',
+    path: '/',
+    method: 'POST',
+    appId: 1,
+    forward:  false
+  }
+  if (state.apiCfg && state.apiCfg.id && state.apiCfg.id > 0) {
+    apiCfg = state.apiCfg
+  }
   return {
-    apiCfg: (!state.apiCfg || !state.apiCfg.name)
-        ? {
-            name: '',
-            description: '',
-            path: '/',
-            method: 'POST',
-            appId: 1,
-            forward:  false
-          }
-        : state.apiCfg,
-    register: true
+    apiCfg: apiCfg,
+    register: apiCfg.id === 0
   }
 }
 

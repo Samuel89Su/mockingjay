@@ -15,7 +15,11 @@ class ApiListV extends Component {
     }    
 
     componentWillMount() {
-        let query = queryString.parse(this.props.location.search)
+        let search = (this.props.location && this.props.location.search)
+                        ? this.props.location.search
+                        : window.location.search
+        let query = queryString.parse(search)
+        this.setState({ query: query })
         query.pageNum = this.state.activePage - 1
         this.props.fetchData(query)
     }
@@ -25,7 +29,7 @@ class ApiListV extends Component {
     }
 
     handlePaginationChange(e, data) {
-        let query = queryString.parse(this.props.location.search)
+        let query = this.state.query
         query.pageNum = data.activePage - 1
         this.setState({ 
             activePage: data.activePage
@@ -39,6 +43,10 @@ class ApiListV extends Component {
         if (!list || !(list instanceof Array) ) {
             return (<div>has no state</div>)
         }
+
+        let detailsQuery = Object.assign({}, this.state.query)
+        delete detailsQuery.pageNum
+        let detailsSearch = '?' + queryString.stringify(detailsQuery)
 
         return (
             <div id='api-list'>
@@ -60,8 +68,6 @@ class ApiListV extends Component {
                                 <Table.HeaderCell>Path</Table.HeaderCell>
                                 <Table.HeaderCell>Desc</Table.HeaderCell>
                                 <Table.HeaderCell>Details</Table.HeaderCell>
-                                <Table.HeaderCell>Schema</Table.HeaderCell>
-                                <Table.HeaderCell>MockCfg</Table.HeaderCell>
                             </Table.Row>
                         </Table.Header>
                         <Table.Body>
@@ -80,9 +86,7 @@ class ApiListV extends Component {
                                             <Table.Cell>{ api.forward.toString() }</Table.Cell>
                                             <Table.Cell>{ api.path }</Table.Cell>
                                             <Table.Cell>{ api.description }</Table.Cell>
-                                            <Table.Cell><Link to={`/api/details${this.props.location.search}&id=${api.id}`}>details</Link></Table.Cell>
-                                            <Table.Cell><Link to={`/api/schema${this.props.location.search}&id=${api.id}`}>schema</Link></Table.Cell>
-                                            <Table.Cell><Link to={`/api/mockcfg${this.props.location.search}&id=${api.id}`}>mockcfg</Link></Table.Cell>
+                                            <Table.Cell><Link to={`/api/details${detailsSearch}&id=${api.id}`}>details</Link></Table.Cell>
                                         </Table.Row>)
                                 })
                             }

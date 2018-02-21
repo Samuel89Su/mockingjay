@@ -12,9 +12,9 @@ class ApiDetailsTab extends Component {
     render() {
         return (<Tab menu={{ color: 'olive', inverted: true, attached: false, tabular: false }} 
                 panes={[
-                    { menuItem: 'Details', render: () => <Tab.Pane attached={false}><ApiCfgC/></Tab.Pane> },
-                    { menuItem: 'Schema', render: () => <Tab.Pane attached={false}><ApiSchemaC/></Tab.Pane> },
-                    { menuItem: 'Mock', render: () => <Tab.Pane attached={false}><ApiMcCfgC/></Tab.Pane> }
+                    { menuItem: 'Details', render: () => <Tab.Pane attached={false}><ApiCfgC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> },
+                    { menuItem: 'Schema', render: () => <Tab.Pane attached={false}><ApiSchemaC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> },
+                    { menuItem: 'Mock', render: () => <Tab.Pane attached={false}><ApiMcCfgC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> }
                   ]} />)
     }
 }

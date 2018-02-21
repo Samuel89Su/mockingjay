@@ -34,10 +34,6 @@ function updateRemoteApiMcCfg(apiMcCfg, dispatch) {
 
 // map state to props
 const mapStateToProps = state => {
-  let query = queryString.parse(window.location.search)
-  delete query.id
-  query = queryString.stringify(query)
-
   return {
     apiMcCfg: (!state.apiMcCfg || !state.apiMcCfg.path)
               ? {
@@ -70,8 +66,7 @@ const mapStateToProps = state => {
                 }
               }
               : state.apiMcCfg,
-    apiCfg: state.apiCfg,
-    appQuery: query
+    apiCfg: state.apiCfg
   }
 }
   

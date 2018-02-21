@@ -4,6 +4,7 @@ import '../styles/apiSchema.scss'
 import { deepClone, updateByPath, delByPath, getPropertyByPath, parseRecursive } from '../utils'
 import { Header, Button, Input, Label, TextArea, Form, Dropdown, Checkbox } from 'semantic-ui-react'
 import Btns from './BtnApplyDiscard'
+import queryString from 'query-string'
 
 class ApiSchemaV extends Component {
     constructor(props) {
@@ -34,7 +35,12 @@ class ApiSchemaV extends Component {
     }
 
     componentWillMount() {
-        this.props.onMounted(this.props.location.search)
+        let search = (this.props.location && this.props.location.search)
+                        ? this.props.location.search
+                        : window.location.search
+        let query = queryString.parse(search)
+        this.setState({ query: query })
+        this.props.onMounted(search)
     }
 
     handleChange (e, data) {
@@ -108,7 +114,7 @@ class ApiSchemaV extends Component {
             <div id="div_apiSchema">
                 <Header as='h2'>Schema</Header>
                 <div>
-                    <Button onClick={()=>this.props.history.push(`/app/apilist?${this.props.appQuery}`)} >Back to list</Button>
+                    <Button onClick={()=>this.props.history.push(`/app/apilist?appId=${this.state.query.appId}&appName=${this.state.query.appName}`)} >Back to list</Button>
                 </div>
                 <Header as='h3'>General</Header>
                 <div>

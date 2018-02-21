@@ -19,12 +19,20 @@ class AppCfgV extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState(nextProps.appCfg)
+        if (this.state.id === 0 && nextProps.appCfg.id > 0) {
+            this.props.history.push(`/app/details?appId=${nextProps.appCfg.id}&appName=${nextProps.appCfg.name}`)
+        } else {
+            this.setState(nextProps.appCfg)
+        }
     }
 
     componentWillMount() {
         if (!this.props.register) {
-            this.props.onMounted(this.props.location.search)
+            let search = (this.props.location && this.props.location.search)
+                            ? this.props.location.search
+                            : window.location.search
+            this.setState({ search: search })
+            this.props.onMounted(search)
         }
     }
 
@@ -71,7 +79,9 @@ class AppCfgV extends Component {
 
         let targerOpts = []
         appCfg.targets.forEach(target => {
-            targerOpts.push({text:target.name, value: target.name })
+            if (target && target.name) {
+                targerOpts.push({text:target.name, value: target.name })
+            }
         })
 
         return (
@@ -96,17 +106,19 @@ class AppCfgV extends Component {
                     <ul>
                         {
                             appCfg.targets.map((target, index) => {
-                                return (<li key={target.name}>
-                                            <Input name={'targets.' + index + '.name'}
-                                                label='Name:'
-                                                value={target.name}
-                                                onChange={this.handleChange} />
-                                            <Input name={'targets.' + index + '.value'}
-                                                label='Value:'
-                                                value={target.value}
-                                                onChange={this.handleChange} />
-                                            <Button name={index} onClick={this.discardTarget} style={{margin: '0 0 0 80px'}}>Discard</Button>
-                                        </li>)
+                                if (target && target.name) {
+                                    return (<li key={target.name}>
+                                        <Input name={'targets.' + index + '.name'}
+                                            label='Name:'
+                                            value={target.name}
+                                            onChange={this.handleChange} />
+                                        <Input name={'targets.' + index + '.value'}
+                                            label='Value:'
+                                            value={target.value}
+                                            onChange={this.handleChange} />
+                                        <Button name={index} onClick={this.discardTarget} style={{margin: '0 0 0 80px'}}>Discard</Button>
+                                    </li>)
+                                }                                
                             })
                         }
                     </ul>

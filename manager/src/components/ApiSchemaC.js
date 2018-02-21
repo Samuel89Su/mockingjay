@@ -87,8 +87,7 @@ const mapStateToProps = state => {
                     },
                     "required": ["name", "description", "path", "method", "reqHeaders", "resHeaders", "reqBody"]
                   },
-    apiCfg: state.apiCfg,
-    appQuery: query
+    apiCfg: state.apiCfg
   }
 }
   
