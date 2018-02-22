@@ -9,6 +9,7 @@ class CacheKeyCombinator {
         this.appInventoryPrefix = 'appinventory'
         this.apiInventoryPrefix = 'apiinventory'
         this.schemaPostfix = 'schema'
+        this.examplePostfix = 'example'
 
         this.appIdKey = 'appId'
         this.apiIdKey = 'apiId'
@@ -18,6 +19,7 @@ class CacheKeyCombinator {
         this.buildApiSchemaKey = this.buildApiSchemaKey.bind(this)
         this.buildMockCfgKey = this.buildMockCfgKey.bind(this)
         this.buildApiKeyPrefix = this.buildApiKeyPrefix.bind(this)
+        this.buildApiExampleKey = this.buildApiExampleKey.bind(this)
 
         this.extractAppId = this.extractId.bind(this) 
     }
@@ -69,6 +71,16 @@ class CacheKeyCombinator {
             let key = `${this.buildApiKeyPrefix(appName.toLowerCase(), false)}${degist}`
             return key
         }
+    }
+
+    /**
+     * combine api example cache key
+     * @param {String} appName app name
+     * @param {Number} apiId api id
+     * @returns {String} cache key
+     */
+    buildApiExampleKey (appName, apiId) {
+        return `${this.buildApiKeyPrefix(appName, false)}${apiId}_${this.examplePostfix}`
     }
 
     /**

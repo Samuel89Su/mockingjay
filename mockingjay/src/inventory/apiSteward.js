@@ -29,23 +29,28 @@ class Steward {
         this.getApiMockCfg = this.getApiMockCfg.bind(this)
         this.updateSchema = this.updateSchema.bind(this)
         this.updateMockCfg = this.updateMockCfg.bind(this)
+        this.getExample = this.getExample.bind(this)
+        this.updateExample = this.updateExample.bind(this)
     }
 
     getRouter() {
+        this.router.use('/*', commonBodyParser)
         this.router.get(['/', '/echo'], (ctx, next) => {
             ctx.response.body = 'you are in api inventory now.'
         })
         this.router.get('/list', this.list)
         this.router.get('/get', this.get)
-        this.router.post('/register', commonBodyParser, this.register)
-        this.router.post('/update', commonBodyParser, this.update)
-        this.router.post('/discard', commonBodyParser, this.discard)
-        this.router.post('/updateschema', commonBodyParser, this.updateSchema)
-        this.router.post('/mockcfg', commonBodyParser, this.mockCfg)
-        this.router.post('/updatemockcfg', commonBodyParser, this.updateMockCfg)
-        this.router.post('/removemockcfg', commonBodyParser, this.removeMockCfg)
-        this.router.post('/getapischema', commonBodyParser, this.getApiSchema)
-        this.router.post('/getmockcfg', commonBodyParser, this.getApiMockCfg)
+        this.router.post('/register', this.register)
+        this.router.post('/update', this.update)
+        this.router.post('/discard', this.discard)
+        this.router.post('/updateschema', this.updateSchema)
+        this.router.post('/mockcfg', this.mockCfg)
+        this.router.post('/updatemockcfg', this.updateMockCfg)
+        this.router.post('/removemockcfg', this.removeMockCfg)
+        this.router.post('/getapischema', this.getApiSchema)
+        this.router.post('/getmockcfg', this.getApiMockCfg)
+        this.router.post('/getexample', this.getExample)
+        this.router.post('/updateexample', this.updateExample)
 
         return this.router
     }
@@ -150,7 +155,7 @@ class Steward {
                     ctx.response.body = errCode.dbErr()
                 }
             }
-            
+
             apiData.id = id
             ctx.response.body = errCode.success(apiData)
         }
@@ -373,7 +378,7 @@ class Steward {
                 }
             }
         }
-        ctx.response.body = errCode.success(apiSchema?apiSchema:{})
+        ctx.response.body = errCode.success(apiSchema ? apiSchema : {})
 
         await next()
     }
@@ -413,6 +418,46 @@ class Steward {
         } else {
             return appDesc
         }
+    }
+
+    async getExample(ctx, next) {
+        let args = ctx.request.body
+
+        let apiExample = await CacheFacade.getApiExample(args.appName, parseInt(args.id))
+        ctx.response.body = errCode.success(apiExample ? apiExample : {})
+
+        await next()
+    }
+
+    async updateExample(ctx, next) {
+        let apiData = ctx.request.body
+        apiData = jsonParse(apiData)
+        if (!apiData.appId || apiData.appId === 0 || !apiData.id || apiData.id === 0) {
+            ctx.response.status = 400
+            ctx.response.body = 'parameter not completed'
+            return await next()
+        }
+
+        let appDesc = await this.getAppConfig(apiData.appId)
+        if (!appDesc) {
+            ctx.response.body = errCode.resNotFound()
+            return await next()
+        }
+
+        if (!apiData.example) {
+            ctx.response.status = 400
+            ctx.response.body = 'example is missing'
+            return await next()
+        }
+
+        let ok = await CacheFacade.setApiExample(appDesc.name, apiData.id, apiData.example)
+        if (ok) {
+            ctx.response.body = errCode.success(apiData.schema)
+        } else {
+            ctx.response.body = errCode.dbErr()
+        }
+
+        await next()
     }
 }
 

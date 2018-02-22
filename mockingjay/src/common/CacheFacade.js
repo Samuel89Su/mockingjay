@@ -360,15 +360,18 @@ class CacheFacade {
                 return false
             }
 
+            // delete api
             let api = JSON.parse(apiRaw)
             let ok = await redisClient.delAsync(key) > 0
             if (!ok) {
                 return ok
             }
 
+            // delete schema, mock config & example
             let schemaKey = CacheKeyCombinator.buildApiSchemaKey(appName, id)
             let mockCfgKey = CacheKeyCombinator.buildMockCfgKey(appName, api.path)
-            ok &= await redisClient.delAsync(schemaKey + ' ' + mockCfgKey) > 0
+            let exampleKey = CacheKeyCombinator.buildApiExampleKey(appName, id)
+            ok &= await redisClient.delAsync(schemaKey + ' ' + mockCfgKey + '' + exampleKey) > 0
             return ok
         }
 
@@ -483,6 +486,43 @@ class CacheFacade {
         return ok
     }
 
+    /**
+     * get api example
+     * @param {String} appName app name
+     * @param {Number} id api id
+     * @returns {Object} api example
+     */
+    async getApiExample(appName, id) {
+        if (typeof appName !== 'string' || !appName || !Number.isInteger(id) || id < 1) {
+            throw new Error('invalid appName or id')
+        }
+
+        let key = CacheKeyCombinator.buildApiExampleKey(appName, id)
+        let apiExampleRaw = await redisClient.getAsync(key)
+        if (apiExampleRaw) {
+            let apiExample = parse(apiExampleRaw)
+            return apiExample
+        } else {
+            return null
+        }
+    }
+
+    /**
+     * 
+     * @param {String} appName app name
+     * @param {Number} apiId api id
+     * @param {Object} example apip example
+     * @returns {Boolean} success
+     */
+    async setApiExample(appName, apiId, example){
+        if (typeof appName !== 'string' || !appName || !Number.isInteger(id) || id < 1 || typeof example !== 'object' || !example) {
+            throw new Error('invalid appName or id')
+        }
+
+        let key = CacheKeyCombinator.buildApiExampleKey(appName, id)
+        let ok = await redisClient.setAsync(key, JSON.stringify(example)) === 'OK'
+        return ok
+    }
 }
 
 exports = module.exports = new CacheFacade()
