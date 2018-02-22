@@ -510,11 +510,11 @@ class CacheFacade {
     /**
      * 
      * @param {String} appName app name
-     * @param {Number} apiId api id
+     * @param {Number} id api id
      * @param {Object} example apip example
      * @returns {Boolean} success
      */
-    async setApiExample(appName, apiId, example){
+    async setApiExample(appName, id, example){
         if (typeof appName !== 'string' || !appName || !Number.isInteger(id) || id < 1 || typeof example !== 'object' || !example) {
             throw new Error('invalid appName or id')
         }
