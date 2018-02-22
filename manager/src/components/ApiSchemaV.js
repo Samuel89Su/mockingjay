@@ -1,11 +1,11 @@
+'use strict'
+
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import '../styles/apiSchema.scss'
 import { deepClone, updateByPath, delByPath, getPropertyByPath, parseRecursive, object2Array, array2Object } from '../utils'
 import { Header, Button, Input, Label, TextArea, Form, Dropdown, Checkbox } from 'semantic-ui-react'
 import Btns from './BtnApplyDiscard'
 import queryString from 'query-string'
-import Prompt from './Prompt'
 
 class ApiSchemaV extends Component {
     constructor(props) {
@@ -14,7 +14,6 @@ class ApiSchemaV extends Component {
         this.update = this.update.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.updateRequired = this.updateRequired.bind(this)
-        //this.updatePropertyKey = this.updatePropertyKey.bind(this)
         this.addQueryOrHeader = this.addQueryOrHeader.bind(this)
         this.delProperty = this.delProperty.bind(this)
         this.preprocessSchema = this.preprocessSchema.bind(this)

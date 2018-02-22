@@ -15,9 +15,7 @@ exports = module.exports = {
             'required': []
         },
         'reqBody': {
-            'type': 'object',
-            'properties': {},
-            'required': []
+            'type': 'string'
         },
         'resHeader': {
             'type': 'object',
@@ -25,9 +23,7 @@ exports = module.exports = {
             'required': []
         },
         'resBody': {
-            'type': 'object',
-            'properties': {},
-            'required': []
+            'type': 'string'
         },
     },
     'required': ['query', 'reqHeader', 'resHeader']

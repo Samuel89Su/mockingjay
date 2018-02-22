@@ -76,6 +76,16 @@ const InventoryAPI = {
     url: '/inventory/api/removemockcfg',
     method: 'POST',
     headers: contentTypeHeader
+  },
+  apiExample: {
+    url: '/inventory/api/getexample',
+    method: 'POST',
+    headers: contentTypeHeader
+  },
+  apiExampleUpdate: {
+    url: '/inventory/api/updateexample',
+    method: 'POST',
+    headers: contentTypeHeader
   }
 }
 

@@ -5,6 +5,7 @@ import ApiSchemaC from './ApiSchemaC'
 import ApiMcCfgC from './ApiMcCfgC'
 import queryString from 'query-string'
 import { Button } from 'semantic-ui-react'
+import ApiExampleC from './ApiExampleC'
 
 class ApiDetailsTab extends Component {
     constructor(props) {
@@ -29,7 +30,8 @@ class ApiDetailsTab extends Component {
                     panes={[
                         { menuItem: 'Details', render: () => <Tab.Pane attached={false}><ApiCfgC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> },
                         { menuItem: 'Schema', render: () => <Tab.Pane attached={false}><ApiSchemaC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> },
-                        { menuItem: 'Mock', render: () => <Tab.Pane attached={false}><ApiMcCfgC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> }
+                        { menuItem: 'Mock', render: () => <Tab.Pane attached={false}><ApiMcCfgC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> },
+                        { menuItem: 'Example', render: () => <Tab.Pane attached={false}><ApiExampleC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> }
                 ]} />
             </div>)
     }

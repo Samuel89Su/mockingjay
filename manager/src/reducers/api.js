@@ -34,9 +34,19 @@ const apiMcCfg = (state = {}, action) => {
   }
 }
 
+const apiExample = (state = {}, action) => {
+  switch (action.type) {
+    case 'UPDATE_APIEXAMPLE':
+      return action.apiExample
+    default:
+      return state
+  }
+}
+
 export {
   pagedApis,
   apiCfg,
   apiSchema,
-  apiMcCfg
+  apiMcCfg,
+  apiExample
 }
