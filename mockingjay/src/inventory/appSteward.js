@@ -6,9 +6,9 @@ const logger = require('../common/logger')
 const errCode = require('./errCode')
 const bodyParser = require('../common/bodyParser')
 const appSchema = require('../Schemas/appSchema')
-const schemaRaker = require('../utils/jsonRaker')
+const schemaRaker = require('../utils').rake
 const CacheFacade = require('../common/CacheFacade')
-const getComparer = require('../utils/comparerFactory')
+const getComparer = require('../utils').getComparer
 
 const appComparer = getComparer('id')
 

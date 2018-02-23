@@ -1,8 +1,5 @@
 'use strict'
 
-const crypto = require('crypto')
-// const MD5 = crypto.createHash('md5')
-
 class CacheKeyCombinator {
     constructor () {
 
@@ -67,8 +64,8 @@ class CacheKeyCombinator {
         } else if (!apiPath || apiPath === '') {
             throw new Error('path is undefined or null')
         } else {
-            let degist = crypto.createHash('md5').update(apiPath.toLowerCase()).digest('hex')
-            let key = `${this.buildApiKeyPrefix(appName.toLowerCase(), false)}${degist}`
+            apiPath = apiPath.toLowerCase()
+            let key = `${this.buildApiKeyPrefix(appName.toLowerCase(), false)}${apiPath}`
             return key
         }
     }

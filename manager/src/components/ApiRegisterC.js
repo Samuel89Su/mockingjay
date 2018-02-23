@@ -12,6 +12,15 @@ const updateApiCfg = apiCfg => {
 }
 
 // dispatchers
+function fetchRemoteApiCfg(urlSearch, dispatch) {
+  let fetchOpts = Object.assign({}, InventoryAPI.apiGet)
+  fetchOpts.url += urlSearch
+  return fetchRemote(fetchOpts)
+    .then(
+      apiCfg => dispatch(updateApiCfg(apiCfg)),
+      error => (error) => {})
+}
+
 function updateRemoteApiCfg(apiCfg, dispatch) {
   let api = !apiCfg.id ? InventoryAPI.apiRegister : InventoryAPI.apiUpdate
   let fetchOpts = Object.assign({}, api)
@@ -20,6 +29,18 @@ function updateRemoteApiCfg(apiCfg, dispatch) {
     .then(
       apiCfg => dispatch(updateApiCfg(apiCfg)),
       error => console.log(error))
+}
+
+function discardRemoteAppCfg(apiCfg, history) {
+  let api = InventoryAPI.apiDiscard
+  let fetchOpts = Object.assign({}, api)
+  let payload = JSON.stringify(apiCfg)
+  return fetchRemote(fetchOpts, payload)
+    .then(
+      () => {
+        history.back()
+      },
+      error => (error) => {})
 }
 
 // map state to props
@@ -45,8 +66,14 @@ const mapStateToProps = state => {
 // map dispatch to props
 const mapDispatchToProps = dispatch => {
   return {
+    onMounted: apiKey => {
+      fetchRemoteApiCfg(apiKey, dispatch)
+    },
     onUpdateClick: apiCfg => {
       updateRemoteApiCfg(apiCfg, dispatch)
+    },
+    onDiscardClick: (apiCfg, history) => {
+      discardRemoteAppCfg(apiCfg, history)
     }
   }
 }

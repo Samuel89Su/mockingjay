@@ -1,22 +1,22 @@
-'use strict';
+'use strict'
 
-const Http = require('http');
-const VM = require('vm');
-const cloneReq = require('../utils/cloneReq');
-const logger = require('../common/logger');
-const validationConst = require('../common/validationConst');
+const Http = require('http')
+const VM = require('vm')
+const cloneReq = require('../utils').cloneReq
+const logger = require('../common/logger')
+const validationConst = require('../common/validationConst')
 
 
 const reservedHeaderKeys = ['content-type', 'content-length', 'date', 'connection', 'status',
     'content-encoding', 'cache-control', 'age', 'etag', 'expires',
     'last-modified', 'server'
-];
+]
 
 class ResponseBaker {
     constructor(arg) {
-        this.bake = this.bake.bind(this);
-        this.processReservedHeader = this.processReservedHeader.bind(this);
-        this.responseValueFactory = this.responseValueFactory.bind(this);
+        this.bake = this.bake.bind(this)
+        this.processReservedHeader = this.processReservedHeader.bind(this)
+        this.responseValueFactory = this.responseValueFactory.bind(this)
     }
 
     async bake(ctx, responseDescriptor) {
@@ -24,23 +24,23 @@ class ResponseBaker {
         // bake body first, some header would be set after body get value.
         if (responseDescriptor.body && !responseDescriptor.body.optional) {
             if (responseDescriptor.body.reactor) {
-                let reactor = responseDescriptor.body.reactor;
+                let reactor = responseDescriptor.body.reactor
                 switch (reactor.type) {
                     case validationConst.valReactorTypes.fixed:
-                        ctx.response.body = reactor.value;
-                        break;
+                        ctx.response.body = reactor.value
+                        break
                     case validationConst.valReactorTypes.custom:
                         {
-                            let reactorResult = this.responseValueFactory(ctx.request, reactor.value);
+                            let reactorResult = this.responseValueFactory(ctx.request, reactor.value)
                             if (!reactorResult.errMsg) {
-                                ctx.response.body = reactorResult.data;
+                                ctx.response.body = reactorResult.data
                             } else {
-                                ctx.response.body = reactorResult.errMsg;
+                                ctx.response.body = reactorResult.errMsg
                             }
                         }
-                        break;
+                        break
                     default:
-                        break;
+                        break
                 }
             }
         }
@@ -48,29 +48,29 @@ class ResponseBaker {
         // bake headers
         if (responseDescriptor.headers && responseDescriptor.headers.length > 0) {
             for (let i = 0; i < responseDescriptor.headers.length; i++) {
-                const header = responseDescriptor.headers[i];
+                const header = responseDescriptor.headers[i]
                 if (!header.optional) {
                     if (reservedHeaderKeys.includes(header.key)) {
                         if (this.processReservedHeader(ctx, header)) {
-                            ctx.response.body = reactorResult.errMsg;
+                            ctx.response.body = reactorResult.errMsg
                         }
                     } else {
                         switch (header.reactor.type) {
                             case validationConst.valReactorTypes.fixed:
                                 ctx.set(header.key, header.reactor.value)
-                                break;
+                                break
                             case validationConst.valReactorTypes.custom:
                                 {
-                                    let reactorResult = this.responseValueFactory(ctx.request, header.reactor.value);
+                                    let reactorResult = this.responseValueFactory(ctx.request, header.reactor.value)
                                     if (!reactorResult.errMsg) {
-                                        ctx.set(header.key, reactorResult.data);
+                                        ctx.set(header.key, reactorResult.data)
                                     } else {
-                                        ctx.response.body = reactorResult.errMsg;
+                                        ctx.response.body = reactorResult.errMsg
                                     }
                                 }
-                                break;
+                                break
                             default:
-                                break;
+                                break
                         }
                     }
 
@@ -89,66 +89,66 @@ class ResponseBaker {
 
     // return error message
     processReservedHeader(ctx, headerDescriptor) {
-        let errMsg = null;
-        let val = null;
+        let errMsg = null
+        let val = null
         switch (headerDescriptor.reactor.type) {
             case validationConst.valReactorTypes.fixed:
-                val = headerDescriptor.reactor.value;
-                break;
+                val = headerDescriptor.reactor.value
+                break
             case validationConst.valReactorTypes.custom:
                 {
-                    let reactorResult = this.responseValueFactory(ctx.request, headerDescriptor.reactor.value);
+                    let reactorResult = this.responseValueFactory(ctx.request, headerDescriptor.reactor.value)
                     if (!reactorResult.errMsg) {
-                        val = reactorResult.data;
+                        val = reactorResult.data
                     } else {
-                        errMsg = reactorResult.errMsg;
+                        errMsg = reactorResult.errMsg
                     }
                 }
-                break;
+                break
             default:
-                break;
+                break
         }
 
         if (errMsg) {
-            return errMsg;
+            return errMsg
         }
 
         if (val) {
             switch (headerDescriptor.key) {
                 case 'content-type':
-                    ctx.response.type = val;
-                    break;
+                    ctx.response.type = val
+                    break
 
                 default:
-                    break;
+                    break
             }
         }
 
-        return errMsg;
+        return errMsg
     }
 
     // return { data: null, errMsg: null }
     responseValueFactory(req, rawScript) {
         try {
-            let dummyReq = cloneReq(req);
+            let dummyReq = cloneReq(req)
 
             let sandbox = {
                 request: dummyReq,
                 retVal: null,
-            };
-            VM.createContext(sandbox);
-            VM.runInContext(rawScript, sandbox);
+            }
+            VM.createContext(sandbox)
+            VM.runInContext(rawScript, sandbox)
 
             let result = {
                 data: sandbox.retVal,
                 errMsg: null
-            };
-            return result;
+            }
+            return result
         } catch (error) {
-            logger.error(error);
-            return { data: null, errMsg: `error in custom value generation { ${ rawScript } }, msg: ${ error.message }` };
+            logger.error(error)
+            return { data: null, errMsg: `error in custom value generation { ${ rawScript } }, msg: ${ error.message }` }
         }
     }
 }
 
-exports = module.exports = new ResponseBaker();
+exports = module.exports = new ResponseBaker()
