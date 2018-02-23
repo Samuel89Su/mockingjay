@@ -52,7 +52,7 @@ const mapStateToProps = state => {
       }
     }
   }
-  if (state.apiMcCfg) {
+  if (state.apiMcCfg && typeof state.apiMcCfg.mock === 'boolean') {
     mockCfg = state.apiMcCfg
     mockCfg.appId = state.apiCfg.appId
     mockCfg.path = state.apiCfg.path
