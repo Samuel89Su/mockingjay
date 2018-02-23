@@ -234,7 +234,7 @@ class ApiSchemaV extends Component {
                     <Button name='properties.query.properties' onClick={ this.addQueryOrHeader }>Add</Button>
                     <ul>
                     {
-                        (apiSchema.properties && apiSchema.properties.query 
+                        (apiSchema.properties && apiSchema.properties.query
                             && apiSchema.properties.query.properties && apiSchema.properties.query.properties instanceof Array) ?
                             apiSchema.properties.query.properties.map((item, index) => {
                                 return (<li key={index}>
@@ -291,7 +291,7 @@ class ApiSchemaV extends Component {
                     <Button name='properties.resHeaders.properties' onClick={ this.addQueryOrHeader }>Add</Button>
                     <ul>
                     {
-                        (apiSchema.properties && apiSchema.properties.resHeaders 
+                        (apiSchema.properties && apiSchema.properties.resHeaders
                             && apiSchema.properties.resHeaders.properties && apiSchema.properties.resHeaders.properties instanceof Array) ?
                             apiSchema.properties.resHeaders.properties.map((item, index) => {
                                 return (<li key={index}>

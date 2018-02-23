@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-// import '../styles/appCfg.scss'
+import '../styles/appCfg.scss'
 import { deepClone, updateByPath } from '../utils'
 import { Header, Button, Input, Label, TextArea, Form, Dropdown } from 'semantic-ui-react'
 import Btns from './BtnApplyDiscard'
@@ -97,9 +96,10 @@ class AppCfgV extends Component {
                     <Header as='h4'>Targets</Header>
                     <Button onClick={this.addTagert}>Add</Button><br/>
                     <Label size='large'>Forward: </Label>
-                    <Dropdown name='apiForwardTarget' placeholder='Select a target' 
-                        selection inline options={targerOpts} 
-                        value={appCfg.apiForwardTarget} 
+                    <Dropdown name='apiForwardTarget' placeholder='Select a target'
+                        selection inline
+                        options={targerOpts}
+                        value={appCfg.apiForwardTarget}
                         onChange={this.handleChange} />
                     
                     <br/>
@@ -111,12 +111,13 @@ class AppCfgV extends Component {
                                         <Input name={'targets.' + index + '.name'}
                                             label='Name:'
                                             value={target.name}
-                                            onChange={this.handleChange} />
+                                            onChange={this.handleChange}/>
                                         <Input name={'targets.' + index + '.value'}
                                             label='Value:'
                                             value={target.value}
                                             onChange={this.handleChange} />
-                                        <Button name={index} onClick={this.discardTarget} style={{margin: '0 0 0 80px'}}>Discard</Button>
+                                        <span className='sp-inline-form'/>
+                                        <Button name={index} onClick={this.discardTarget}>Discard</Button>
                                     </li>)
                                 }                                
                             })

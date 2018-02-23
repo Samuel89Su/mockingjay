@@ -18,10 +18,10 @@ function rake(json, schema) {
         for (const key in json) {
             if (json.hasOwnProperty(key)) {
                 const prop = json[key];
-                if (!schema.properties[key]) {
+                if (!schema.properties.hasOwnProperty(key)) {
                     delete json[key]
                 } else {
-                    schema.properties[key] = rake(prop, schema.properties[key])
+                    json[key] = rake(prop, schema.properties[key])
                 }
             }
         }
