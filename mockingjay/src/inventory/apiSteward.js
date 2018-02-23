@@ -186,10 +186,21 @@ class Steward {
 
         // check is existed
         let apiId = apiData.id
-        let apiDesc = await CacheFacade.getApi(appDesc.name, apiId, apiData.path)
+        let apiDesc = await CacheFacade.getApi(appDesc.name, apiId, null)
         if (!apiDesc) {
             ctx.response.body = errCode.resNotFound()
             return await next()
+        }
+
+        if (apiData.path) {
+            apiData.path = apiData.path.toLowerCase()
+        }
+        let ok = true
+        if (apiDesc.path && apiDesc.path !== apiData.path) {
+            ok = await CacheFacade.renameApiCacheKey(appDesc.name, apiId, apiDesc.path, apiData.path)
+            if (!ok) {
+                ctx.response.body = errCode.dbErr()
+            } 
         }
 
         let apiSketch = {
@@ -202,7 +213,7 @@ class Steward {
             validate: apiData.validate,
             forward: apiData.forward
         }
-        let ok = await CacheFacade.setApi(appDesc.name, apiId, apiData.path, apiSketch)
+        ok = await CacheFacade.setApi(appDesc.name, apiId, apiData.path, apiSketch)
         if (!ok) {
             ctx.response.body = errCode.dbErr()
         } else if (apiData.schema) {

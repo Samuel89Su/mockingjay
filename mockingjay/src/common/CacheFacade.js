@@ -31,6 +31,7 @@ class CacheFacade {
         this.setApiSchema = this.setApiSchema.bind(this)
         this.getApiMockCfg = this.getApiMockCfg.bind(this)
         this.setApiMockCfg = this.setApiMockCfg.bind(this)
+        this.renameApiCacheKey = this.renameApiCacheKey.bind(this)
     }
 
     /**
@@ -521,6 +522,21 @@ class CacheFacade {
 
         let key = CacheKeyCombinator.buildApiExampleKey(appName, id)
         let ok = await redisClient.setAsync(key, JSON.stringify(example)) === 'OK'
+        return ok
+    }
+
+    /**
+     * rename redis cache key
+     * @param {String} appName app name
+     * @param {String} id api id
+     * @param {String} oldPath old path
+     * @param {String} newPath new path
+     * @returns {Boolean} true if success
+     */
+    async renameApiCacheKey(appName, id, oldPath, newPath) {
+        let oldKey = CacheKeyCombinator.buildApiDescKey(appName, id, oldPath)
+        let newKey = CacheKeyCombinator.buildApiDescKey(appName, id, newPath)
+        let ok = await redisClient.renameAsync(oldKey, newKey) === 'OK'
         return ok
     }
 }
