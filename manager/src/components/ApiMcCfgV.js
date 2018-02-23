@@ -195,15 +195,15 @@ class ApiMcCfgV extends Component {
         return (
             <div id="div_apiMcCfg">
                 <Form>
-                    <Checkbox label='Mock' name='mock' toggle 
-                        checked={apiMcCfg.mock} 
+                    <Checkbox label='Mock' name='mock' toggle
+                        checked={apiMcCfg.mock}
                         onChange={this.handleChange} />
-                    <Checkbox label='Validate Request' toggle 
+                    {/* <Checkbox label='Validate Request' toggle
                         name="mockCfg.validateReq" onChange={this.handleChange}
-                        checked={apiMcCfg.mockCfg.validateReq} className='sp-inline-form'/>
+                        checked={apiMcCfg.mockCfg.validateReq} className='sp-inline-form'/> */}
 
                     <div id="dv_mockCfg">
-                        <Header as='h3'>Request description</Header>
+                        {/* <Header as='h3'>Request description</Header>
                         <Header as='h4'>Queries</Header>
                         <Button onClick={()=>this.addKey('query')}>Add</Button>
                         <ul>
@@ -244,8 +244,9 @@ class ApiMcCfgV extends Component {
                         <div>
                             <Checkbox label='Required' toggle name="mockCfg.reqDescriptor.body.required" checked={apiMcCfg.mockCfg.reqDescriptor.body.required} onChange={this.handleChange} />
                             { this.createValidator('mockCfg.reqDescriptor.body', apiMcCfg.mockCfg.reqDescriptor.body.validator) }
-                        </div>
-                        <Header as='h3'>Response description</Header>
+                        </div> */}
+
+                        <Header as='h3'>Response</Header>
                         <Header as='h4'>Headers</Header>
                         <Button onClick={()=>this.addKey('resHeader')}>Add</Button>
                         <ul>
@@ -254,8 +255,8 @@ class ApiMcCfgV extends Component {
                                 return (
                                 <li key={index}>
                                     <Input label='Key: ' name={'mockCfg.resDescriptor.headers.' + index + '.key'} value={header.key} onChange={this.handleChange} />
-                                    <Checkbox label='Optional' toggle className='sp-inline-form' 
-                                        name={'mockCfg.resDescriptor.headers.' + index + '.required'} checked={header.optional} value={header.optional} onChange={this.handleChange} />
+                                    <Checkbox label='Optional' toggle className='sp-inline-form'
+                                        name={'mockCfg.resDescriptor.headers.' + index + '.optional'} checked={header.optional} onChange={this.handleChange} />
                                     <Button onClick={() => this.discardKey('resHeader', header.key)}>Discard</Button>
                                     <Header as='h5'>Reactor</Header>
                                     { this.createReactor('mockCfg.resDescriptor.headers.' + index, header.reactor) }

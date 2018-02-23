@@ -173,9 +173,12 @@ async function validateSchema(ctx, next) {
                 ctx.body = errors
                 return
             }
+        } else {
+            await next()
         }
+    } else {
+        await next()
     }
-    await next()
 }
 
 async function forwardReq(ctx, next) {
@@ -260,7 +263,10 @@ function parseKeyVals(src, schema) {
 
     keys.forEach(key => {
         if (src[key]) {
-            src[key] = JSON.parse(src[key])
+            try {
+                src[key] = JSON.parse(src[key])
+            } catch (error) {
+            }
         }
     })
 

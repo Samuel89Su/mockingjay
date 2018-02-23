@@ -40,52 +40,52 @@ const mapStateToProps = state => {
 
   return {
     apiSchema: (state.apiSchema && state.apiSchema.hasOwnProperty('type')) ? 
-                state.apiSchema 
+                state.apiSchema
                 : {
-                    "$schema": "http://json-schema.org/draft-06/schema#",
-                    "type": "object",
-                    "properties": {
-                        "name": {
-                            "type": "string"
+                    '$schema': 'http://json-schema.org/draft-06/schema#',
+                    'type': 'object',
+                    'properties': {
+                        'name': {
+                            'type': 'string'
                         },
-                        "description": {
-                            "type": "string"
+                        'description': {
+                            'type': 'string'
                         },
-                        "path": {
-                            "type": "string",
-                            "pattern": null
+                        'path': {
+                            'type': 'string',
+                            'regexp': null
                         },
-                        "method": {
-                            "type": "string",
-                            "pattern": null
+                        'method': {
+                            'type': 'string',
+                            'regexp': null
                         },
-                        "query": {
-                            "type": "object",
-                            "properties": {
+                        'query': {
+                            'type': 'object',
+                            'properties': {
                             },
-                            "required": []
+                            'required': []
                         },
-                        "reqHeaders": {
-                            "type": "object",
-                            "properties": {
+                        'reqHeaders': {
+                            'type': 'object',
+                            'properties': {
                             },
-                            "required": []
+                            'required': []
                         },
-                        "reqBody": {
-                            "type": "string",
-                            "minLength": 2,
-                            "maxLength": 10
+                        'reqBody': {
+                            'type': 'string',
+                            'minLength': 2,
+                            'maxLength': 10
                         },
-                        "resHeaders": {
-                            "type": "object",
-                            "properties": {},
-                            "required": []
+                        'resHeaders': {
+                            'type': 'object',
+                            'properties': {},
+                            'required': []
                         },
-                        "resBody": {
-                          "type": "object"
+                        'resBody': {
+                          'type': 'object'
                         }
                     },
-                    "required": ["name", "description", "path", "method", "reqHeaders", "resHeaders", "reqBody"]
+                    'required': ['name', 'description', 'path', 'method', 'reqHeaders', 'resHeaders', 'reqBody']
                   },
     apiCfg: state.apiCfg
   }

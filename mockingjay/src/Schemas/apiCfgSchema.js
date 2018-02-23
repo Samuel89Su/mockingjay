@@ -135,9 +135,7 @@ const schema = {
                                                 "type": "string",
                                                 "pattern": "(fixed|custom)"
                                             },
-                                            "value": {
-                                                "type": "string"
-                                            }
+                                            "value": {}
                                         },
                                         "required": ["type", "value"]
                                     }
@@ -158,9 +156,7 @@ const schema = {
                                                 "type": "string",
                                                 "pattern": "(fixed|custom)"
                                             },
-                                            "value": {
-                                                "type": "string"
-                                            }
+                                            "value": {}
                                         },
                                         "required": ["type", "value"]
                                 }

@@ -57,7 +57,7 @@ class ResponseBaker {
                     } else {
                         switch (header.reactor.type) {
                             case validationConst.valReactorTypes.fixed:
-                                ctx.response.headers[header.key] = header.reactor.value;
+                                ctx.set(header.key, header.reactor.value)
                                 break;
                             case validationConst.valReactorTypes.custom:
                                 {

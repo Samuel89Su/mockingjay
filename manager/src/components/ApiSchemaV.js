@@ -140,7 +140,7 @@ class ApiSchemaV extends Component {
 
     addQueryOrHeader (e, data) {
         let oPath = data.name
-        let value = { key: '', value: { type: 'string', pattern: '' } }
+        let value = { key: '', value: { type: 'string', regexp: '' } }
         let schema = deepClone(this.state.schema)
         let arr = getPropertyByPath(schema, oPath)
         arr.push(value)
@@ -237,9 +237,9 @@ class ApiSchemaV extends Component {
                                                 label='Key:'
                                                 value={item.key}
                                                 onChange={this.handleChange} />
-                                            <Input name={`properties.query.properties.${index}.value.pattern`}
+                                            <Input name={`properties.query.properties.${index}.value.regexp`}
                                                 label='Pattern:'
-                                                value={item.value.pattern}
+                                                value={item.value.regexp}
                                                 onChange={this.handleChange} />
                                             <span className='sp-inline-form'/>
                                             <Checkbox label='Required' name={`properties.query.properties.${index}.value.required`} toggle 
@@ -264,9 +264,9 @@ class ApiSchemaV extends Component {
                                                 label='Key:'
                                                 value={item.key}
                                                 onChange={this.handleChange} />
-                                            <Input name={`properties.reqHeaders.properties.${index}.value.pattern`}
+                                            <Input name={`properties.reqHeaders.properties.${index}.value.regexp`}
                                                 label='Pattern:'
-                                                value={item.value.pattern}
+                                                value={item.value.regexp}
                                                 onChange={this.handleChange} />
                                             <span className='sp-inline-form'/>
                                             <Checkbox label='Required' name={`properties.reqHeaders.properties.${index}.value.required`} toggle 
@@ -294,9 +294,9 @@ class ApiSchemaV extends Component {
                                                 label='Key:'
                                                 value={item.key}
                                                 onChange={this.handleChange} />
-                                            <Input name={`properties.resHeaders.properties.${index}.value.pattern`}
+                                            <Input name={`properties.resHeaders.properties.${index}.value.regexp`}
                                                 label='Pattern:'
-                                                value={item.value.pattern}
+                                                value={item.value.regexp}
                                                 onChange={this.handleChange} />
                                             <span className='sp-inline-form'/>
                                             <Checkbox label='Required' name={`properties.resHeaders.properties.${index}.value.required`} toggle 
