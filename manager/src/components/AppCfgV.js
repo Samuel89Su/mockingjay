@@ -90,7 +90,7 @@ class AppCfgV extends Component {
                     <Button onClick={()=>this.props.history.push('/')} >Back to list</Button>
                 </div>
                 <Form id="fm_appCfg">
-                    <Input name='name' label='Name:' value={appCfg.name} onChange={this.handleChange} />
+                    <Input name='name' label='Name:' value={appCfg.name} disabled={!this.props.register} onChange={this.handleChange} />
                     <Header as='h4'>Description</Header>
                     <TextArea name='desc' rows='5' value={appCfg.desc} onChange={this.handleChange} placeholder='descripe this application' />
                     <Header as='h4'>Targets</Header>
@@ -119,7 +119,7 @@ class AppCfgV extends Component {
                                         <span className='sp-inline-form'/>
                                         <Button name={index} onClick={this.discardTarget}>Discard</Button>
                                     </li>)
-                                }                                
+                                }
                             })
                         }
                     </ul>
