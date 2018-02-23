@@ -28,7 +28,7 @@
       background: #7a0505;
       color: white;
       margin: 5px 0 0 10px; }
-#div_apiSchema .sp-inline-form {
+.sp-inline-form {
   margin: 0 0 0 80px; }
 #div_apiMcCfg .sp-inline-form {
   margin: 0 0 0 80px; }
@@ -23191,4 +23191,4 @@ body.pushable > .pusher {
     -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1); } }
 
-/*# sourceMappingURL=style_5f8cb569.css.map*/
+/*# sourceMappingURL=style_a51d2d18.css.map*/
