@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import '../styles/apiSchema.scss'
 import { deepClone, updateByPath, delByPath, getPropertyByPath, parseRecursive, object2Array, array2Object } from '../utils'
-import { Header, Button, Input, Label, TextArea, Form, Dropdown, Checkbox } from 'semantic-ui-react'
+import { Header, Button, Input, TextArea, Form, Checkbox } from 'semantic-ui-react'
 import Btns from './BtnApplyDiscard'
 import queryString from 'query-string'
 
@@ -223,11 +223,6 @@ class ApiSchemaV extends Component {
 
         return (
             <div id="div_apiSchema">
-                <Header as='h3'>General</Header>
-                <div>
-                    <span id="sp_method">{this.props.apiCfg.method}</span>
-                    <span id="sp_path">{this.props.apiCfg.path}</span><br/>
-                </div>
                 <Form>
                     <Header as='h3'>Request</Header>
                     <Header as='h4'>Query</Header>

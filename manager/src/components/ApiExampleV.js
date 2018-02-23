@@ -116,11 +116,6 @@ class ApiExampleV extends Component {
 
         return (
             <div id="div_apiExample">
-                <Header as='h3'>General</Header>
-                <div>
-                    <span id="sp_method">{this.props.apiCfg.method}</span>
-                    <span id="sp_path">{this.props.apiCfg.path}</span><br/>
-                </div>
                 <Form>
                     <Header as='h3'>Request</Header>
                     <Header as='h4'>Query</Header>

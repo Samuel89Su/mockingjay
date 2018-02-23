@@ -398,12 +398,7 @@ class Steward {
 
         let mockCfg = await CacheFacade.getApiMockCfg(appDesc.name, apiDesc.path)
         if (!mockCfg) {
-            mockCfg = {
-                appId: appDesc.id,
-                id: apiDesc.id,
-                method: apiDesc.method,
-                path: apiDesc.path
-            }
+            mockCfg = {}
         }
 
         ctx.response.body = errCode.success(mockCfg)

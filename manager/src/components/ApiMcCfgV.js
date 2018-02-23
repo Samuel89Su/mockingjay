@@ -194,12 +194,6 @@ class ApiMcCfgV extends Component {
 
         return (
             <div id="div_apiMcCfg">
-                <Header as='h3'>General</Header>
-                <div>
-                    <span id="sp_method">{ apiMcCfg.method }</span>
-                    <span id="sp_path">{ apiMcCfg.path }</span><br/>
-                </div>
-
                 <Form>
                     <Checkbox label='Mock' name='mock' toggle 
                         checked={apiMcCfg.mock} 

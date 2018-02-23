@@ -6,6 +6,7 @@ import queryString from 'query-string'
 
 // actions
 const updateApiMcCfg = apiMcCfg => {
+  apiMcCfg = apiMcCfg ? apiMcCfg : {}
   return {
       type: 'UPDATE_APIMCCFG',
       apiMcCfg
@@ -39,6 +40,8 @@ const mapStateToProps = state => {
               ? {
                 appId: state.apiCfg.appId,
                 id: state.apiCfg.id,
+                method: state.apiCfg.method,
+                path: state.apiCfg.path,
                 mock: false,
                 mockCfg: {
                   validateReq: false,
