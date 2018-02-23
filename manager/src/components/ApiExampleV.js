@@ -2,8 +2,8 @@
 
 import React, { Component } from 'react'
 import '../styles/apiSchema.scss'
-import { deepClone, updateByPath, delByPath, getPropertyByPath, parseRecursive, object2Array, array2Object } from '../utils'
-import { Header, Button, Input, Label, TextArea, Form, Dropdown, Checkbox } from 'semantic-ui-react'
+import { deepClone, updateByPath, getPropertyByPath, parseRecursive, object2Array, array2Object } from '../utils'
+import { Header, Button, Input, TextArea, Form } from 'semantic-ui-react'
 import Btns from './BtnApplyDiscard'
 import queryString from 'query-string'
 
