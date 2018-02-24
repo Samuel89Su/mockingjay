@@ -5,13 +5,14 @@ var Ajv = require('ajv')
 const logger = require('../common/logger')
 const errCode = require('./errCode')
 const commonBodyParser = require('../common/bodyParser')
-const cfgSchema = require('../Schemas/apiCfgSchema')
+const mockCfgSchema = require('../Schemas/mockCfgSchema')
 const apiRegistrationSchema = require('../Schemas/apiRegistrationSchema')
 const jsonParse = require('../utils').parse
 const CacheFacade = require('../common/CacheFacade')
+const schemaRaker = require('../utils').rake
 
 const ajv = new Ajv(); // options can be passed, e.g. {allErrors: true}
-const cfgValidate = ajv.compile(cfgSchema)
+const mockCfgValidate = ajv.compile(mockCfgSchema)
 const apiSchemaValidate = ajv.compile(apiRegistrationSchema)
 
 class Steward {
@@ -21,7 +22,6 @@ class Steward {
         this.register = this.register.bind(this)
         this.update = this.update.bind(this)
         this.remove = this.discard.bind(this)
-        this.config = this.mockCfg.bind(this)
         this.updateConfig = this.updateMockCfg.bind(this)
         this.removeConfig = this.removeMockCfg.bind(this)
         this.getAppConfig = this.getAppConfig.bind(this)
@@ -44,7 +44,6 @@ class Steward {
         this.router.post('/update', this.update)
         this.router.post('/discard', this.discard)
         this.router.post('/updateschema', this.updateSchema)
-        this.router.post('/mockcfg', this.mockCfg)
         this.router.post('/updatemockcfg', this.updateMockCfg)
         this.router.post('/removemockcfg', this.removeMockCfg)
         this.router.post('/getapischema', this.getApiSchema)
@@ -200,7 +199,7 @@ class Steward {
             ok = await CacheFacade.renameApiCacheKey(appDesc.name, apiId, apiDesc.path, apiData.path)
             if (!ok) {
                 ctx.response.body = errCode.dbErr()
-            } 
+            }
         }
 
         let apiSketch = {
@@ -296,54 +295,36 @@ class Steward {
         await next()
     }
 
-    async mockCfg(ctx, next) {
-        let apiConfig = ctx.request.body
-        // validate
-        var valid = cfgValidate(apiConfig)
-        if (!valid) {
-            ctx.response.status = 400
-            ctx.response.body = cfgValidate.errors
-            return await next()
-        }
-
-        let appDesc = await this.getAppConfig(apiConfig.appId)
-        if (!appDesc) {
-            ctx.response.body = errCode.resNotFound()
-            return await next()
-        }
-
-        let ok = await CacheFacade.setApiMockCfg(appDesc.name, apiConfig.path, apiConfig)
-        if (ok) {
-            ctx.response.body = errCode.success(apiConfig)
-        } else {
-            ctx.response.body = errCode.dbErr()
-        }
-
-        await next()
-    }
-
     async updateMockCfg(ctx, next) {
         let mockCfg = ctx.request.body
         mockCfg = jsonParse(mockCfg)
-        // validate
-        var valid = cfgValidate(mockCfg)
-        if (!valid) {
+        if (!mockCfg || !mockCfg.appId || Number.isNaN(mockCfg.appId) ||
+            !mockCfg.path || typeof mockCfg.path !== 'string') {
             ctx.response.status = 400
-            ctx.response.body = cfgValidate.errors
-            return await next()
-        } else if (!mockCfg.id) {
-            ctx.response.status = 400
-            ctx.response.body = "id missing."
+            ctx.response.body = "appId or path is not valid."
             return await next()
         }
 
-        let appDesc = await this.getAppConfig(mockCfg.appId)
+        let appId = mockCfg.appId
+        let path = mockCfg.path
+
+        mockCfg = schemaRaker(mockCfg, mockCfgSchema)
+
+        // validate
+        var valid = mockCfgValidate(mockCfg)
+        if (!valid) {
+            ctx.response.status = 400
+            ctx.response.body = mockCfgValidate.errors
+            return await next()
+        }
+
+        let appDesc = await this.getAppConfig(appId)
         if (!appDesc) {
             ctx.response.body = errCode.resNotFound()
             return await next()
         }
 
-        let ok = await CacheFacade.setApiMockCfg(appDesc.name, mockCfg.path, mockCfg)
+        let ok = await CacheFacade.setApiMockCfg(appDesc.name, path, mockCfg)
         if (ok) {
             ctx.response.body = errCode.success(mockCfg)
         } else {

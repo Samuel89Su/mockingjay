@@ -47,11 +47,6 @@ const InventoryAPI = {
     method: 'POST',
     headers: contentTypeHeader
   },
-  addMockCfg: {
-    url: '/inventory/api/mockcfg',
-    method: 'POST',
-    headers: contentTypeHeader
-  },
   apiSchema: {
     url: '/inventory/api/getapischema',
     method: 'POST',

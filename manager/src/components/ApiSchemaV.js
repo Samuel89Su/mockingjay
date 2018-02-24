@@ -140,7 +140,7 @@ class ApiSchemaV extends Component {
 
     addQueryOrHeader (e, data) {
         let oPath = data.name
-        let value = { key: '', value: { type: 'string', regexp: '' } }
+        let value = { key: '', value: { type: ['string', 'number'], regexp: '' } }
         let schema = deepClone(this.state.schema)
         let arr = getPropertyByPath(schema, oPath)
         arr.push(value)

@@ -232,16 +232,16 @@ async function forwardReq(ctx, next) {
 
 async function mock(ctx, next) {
     let apiSketch = ctx.apiSketch
-    let mockConfig = await CacheFacade.getApiMockCfg(apiSketch.appName, apiSketch.path)
-    if (!mockConfig) {
+    let mockCfg = await CacheFacade.getApiMockCfg(apiSketch.appName, apiSketch.path)
+    if (!mockCfg) {
         ctx.status = 400
         ctx.body = 'mock config not found'
     } else {
-        if (!mockConfig) {
+        if (!mockCfg) {
             await this.set404(ctx // mocking
             )
-        } else if (mockConfig.mock) {
-            await mocking(ctx, mockConfig.mockCfg)
+        } else if (mockCfg.mock) {
+            await mocking(ctx, mockCfg)
         }
     }
 

@@ -105,7 +105,7 @@ function parse(rawValue) {
  * @returns {object} new object
  */
 function rake(json, schema) {
-    if (!json || !schema) {
+    if (undefined === json || !schema) {
         return null
     } else if (typeof json !== 'object' && !(json instanceof Array)) {
         return json
@@ -118,10 +118,10 @@ function rake(json, schema) {
         for (const key in json) {
             if (json.hasOwnProperty(key)) {
                 const prop = json[key];
-                if (!schema.properties[key]) {
+                if (!schema.properties.hasOwnProperty(key)) {
                     delete json[key]
                 } else {
-                    schema.properties[key] = rake(prop, schema.properties[key])
+                    json[key] = rake(prop, schema.properties[key])
                 }
             }
         }
