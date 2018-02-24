@@ -134,7 +134,7 @@ class ApiExampleV extends Component {
                                                 value={item.value}
                                                 onChange={this.handleChange} />
                                             <span className='sp-inline-form'/>
-                                            <Button name={`query.${index}`} onClick={this.delProperty}>Discard</Button>
+                                            <Button name={`query.${index}`} onClick={this.delProperty}>Remove</Button>
                                         </li>)
                             })
                         : <div />
@@ -157,7 +157,7 @@ class ApiExampleV extends Component {
                                                 value={item.value}
                                                 onChange={this.handleChange} />
                                             <span className='sp-inline-form'/>
-                                            <Button name={`reqHeader.${index}`} onClick={this.delProperty}>Discard</Button>
+                                            <Button name={`reqHeader.${index}`} onClick={this.delProperty}>Remove</Button>
                                         </li>)
                             })
                             : <div />
@@ -183,7 +183,7 @@ class ApiExampleV extends Component {
                                                 value={item.value}
                                                 onChange={this.handleChange} />
                                             <span className='sp-inline-form'/>
-                                            <Button name={`resHeader.${index}`} onClick={this.delProperty}>Discard</Button>
+                                            <Button name={`resHeader.${index}`} onClick={this.delProperty}>Remove</Button>
                                         </li>)
                             })
                             : <div />

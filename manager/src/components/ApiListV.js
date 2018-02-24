@@ -50,10 +50,10 @@ class ApiListV extends Component {
 
         return (
             <div id='api-list'>
-                <Header as='h2'>Apis</Header>
+                <Header as='h2'>API</Header>
                 <div>
-                    <Button onClick={()=>{this.props.history.push('/')}} >Back to Apps</Button>
-                    <Button onClick={this.register} >Register</Button>
+                    <Button onClick={()=>{this.props.history.push('/')}} >返回应用列表</Button>
+                    <Button onClick={this.register} >添加</Button>
                 </div>
 
                 <div>
@@ -61,13 +61,13 @@ class ApiListV extends Component {
                         <Table.Header fullWidth>
                             <Table.Row>
                                 <Table.HeaderCell>ID</Table.HeaderCell>
-                                <Table.HeaderCell>Name</Table.HeaderCell>
-                                <Table.HeaderCell>Method</Table.HeaderCell>
-                                <Table.HeaderCell>Validate</Table.HeaderCell>
-                                <Table.HeaderCell>Forward</Table.HeaderCell>
-                                <Table.HeaderCell>Path</Table.HeaderCell>
-                                <Table.HeaderCell>Desc</Table.HeaderCell>
-                                <Table.HeaderCell>Details</Table.HeaderCell>
+                                <Table.HeaderCell>名称</Table.HeaderCell>
+                                <Table.HeaderCell>方法</Table.HeaderCell>
+                                <Table.HeaderCell>验证数据</Table.HeaderCell>
+                                <Table.HeaderCell>代理</Table.HeaderCell>
+                                <Table.HeaderCell>路径</Table.HeaderCell>
+                                <Table.HeaderCell>描述</Table.HeaderCell>
+                                <Table.HeaderCell>详情</Table.HeaderCell>
                             </Table.Row>
                         </Table.Header>
                         <Table.Body>

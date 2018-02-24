@@ -197,10 +197,11 @@ class ApiMcCfgV extends Component {
         return (
             <div id="div_apiMcCfg">
                 <Form>
-                    <Checkbox label='Mock' name='mock' toggle
+                    <Checkbox label='启用Mock' name='mock' toggle
                         checked={mockCfg.mock}
                         onChange={this.handleChange} />
-
+                    <br/>
+                    <text>支持两种Mock规则，fixed: 固定，custom： 编写自定义 js 脚本为变量retVal(已定义)赋值，可使用 request 变量中的 query、header、body </text>
                     <div id="dv_mockCfg">
                         <Header as='h3'>Response</Header>
                         <Header as='h4'>Headers</Header>
@@ -213,8 +214,8 @@ class ApiMcCfgV extends Component {
                                     <Input label='Key: ' name={'resDescriptor.headers.' + index + '.key'} value={header.key} onChange={this.handleChange} />
                                     <Checkbox label='Optional' toggle className='sp-inline-form'
                                         name={'resDescriptor.headers.' + index + '.optional'} checked={header.optional} onChange={this.handleChange} />
-                                    <Button onClick={() => this.discardKey('resHeader', header.key)}>Discard</Button>
-                                    <Header as='h5'>Reactor</Header>
+                                    <Button onClick={() => this.discardKey('resHeader', header.key)}>Remove</Button>
+                                    <Header as='h5'>Rule</Header>
                                     { this.createReactor('resDescriptor.headers.' + index, header.reactor) }
                                 </li>)
                             })

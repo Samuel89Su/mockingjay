@@ -41,9 +41,9 @@ class AppListV extends Component {
 
         return (
             <div id='app-list'>
-                <Header as='h2'>Apps</Header>
+                <Header as='h2'>应用</Header>
                 <div>
-                    <Button onClick={this.register} >Register</Button>
+                    <Button onClick={this.register} >创建应用</Button>
                 </div>
                 
                 <div>
@@ -51,10 +51,10 @@ class AppListV extends Component {
                         <Table.Header fullWidth>
                             <Table.Row>
                                 <Table.HeaderCell>ID</Table.HeaderCell>
-                                <Table.HeaderCell>Name</Table.HeaderCell>
-                                <Table.HeaderCell>Description</Table.HeaderCell>
-                                <Table.HeaderCell>Forward</Table.HeaderCell>
-                                <Table.HeaderCell>Details</Table.HeaderCell>
+                                <Table.HeaderCell>名称</Table.HeaderCell>
+                                <Table.HeaderCell>描述</Table.HeaderCell>
+                                <Table.HeaderCell>代理</Table.HeaderCell>
+                                <Table.HeaderCell>详情</Table.HeaderCell>
                                 <Table.HeaderCell>API List</Table.HeaderCell>
                             </Table.Row>
                         </Table.Header>
@@ -68,8 +68,8 @@ class AppListV extends Component {
                                     <Table.Cell>{ app.name }</Table.Cell>
                                     <Table.Cell>{ app.desc }</Table.Cell>
                                     <Table.Cell>{ app.apiForwardTarget }</Table.Cell>
-                                    <Table.Cell><Link to={`/app/details?appId=${app.id}&appName=${app.name}`}>details</Link></Table.Cell>
-                                    <Table.Cell><Link to={`/app/apilist?appId=${app.id}&appName=${app.name}`}>api list</Link></Table.Cell>
+                                    <Table.Cell><Link to={`/app/details?appId=${app.id}&appName=${app.name}`}>详情</Link></Table.Cell>
+                                    <Table.Cell><Link to={`/app/apilist?appId=${app.id}&appName=${app.name}`}>api 列表</Link></Table.Cell>
                                 </Table.Row>)
                             })
                         }

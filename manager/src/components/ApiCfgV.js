@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import queryString from 'query-string'
-//import '../styles/apiCfg.scss'
+// import '../styles/apiCfg.scss'
 import { deepClone, updateByPath } from '../utils'
 import { Header, Button, Label,
     Form, Input, TextArea, Checkbox, Dropdown } from 'semantic-ui-react'
@@ -68,8 +68,8 @@ class ApiCfgV extends Component {
         return (
             <div id="div_apiCfg">
                 <Form id="fm_apiCfg">
-                    <Input name='name' label='Name:' value={apiCfg.name} onChange={this.handleChange} />
-                    <Header as='h4'>Description</Header>
+                    <Input name='name' label='名称:' value={apiCfg.name} onChange={this.handleChange} />
+                    <Header as='h4'>描述</Header>
                     <TextArea name="description" rows='4' value={apiCfg.description} onChange={this.handleChange} placeholder='descripe this api' />
                     
                     <Label>Method: </Label>
@@ -81,12 +81,12 @@ class ApiCfgV extends Component {
                     
                     <Input label='Path: ' name="path" value={apiCfg.path} onChange={this.handleChange} /><br/>
                     
-                    <Checkbox label='Validate req' name="validate" toggle checked={apiCfg.validate} onChange={this.handleChange} />
+                    <Checkbox label='验证数据' name="validate" toggle checked={apiCfg.validate} onChange={this.handleChange} />
                     
-                    <Checkbox label="Forward req" name="forward" toggle checked={apiCfg.forward} onChange={this.handleChange} />
+                    <Checkbox label="代理" name="forward" toggle checked={apiCfg.forward} onChange={this.handleChange} />
                     <br/>
                     
-                    <Label>LogReq: </Label>
+                    <Label>Logging: </Label>
                     <Dropdown name='logReq' placeholder='Select a log level' 
                         selection inline options={[{text:'Req', value:1}, 
                             {text:'Res', value:2}]} 

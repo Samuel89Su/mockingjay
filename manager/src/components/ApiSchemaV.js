@@ -226,6 +226,7 @@ class ApiSchemaV extends Component {
                 <Form>
                     <Header as='h3'>Request</Header>
                     <Header as='h4'>Query</Header>
+                    <text>使用正则表达式进行数据验证</text><br/>
                     <Button name='properties.query.properties' onClick={ this.addQueryOrHeader }>Add</Button>
                     <ul>
                     {
@@ -238,14 +239,14 @@ class ApiSchemaV extends Component {
                                                 value={item.key}
                                                 onChange={this.handleChange} />
                                             <Input name={`properties.query.properties.${index}.value.regexp`}
-                                                label='Pattern:'
+                                                label='Value Pattern:'
                                                 value={item.value.regexp}
                                                 onChange={this.handleChange} />
                                             <span className='sp-inline-form'/>
                                             <Checkbox label='Required' name={`properties.query.properties.${index}.value.required`} toggle 
                                                 checked={item.value.required} 
                                                 onChange={this.handleChange} />
-                                            <Button name={`properties.query.properties.${index}`} onClick={this.delProperty}>Discard</Button>
+                                            <Button name={`properties.query.properties.${index}`} onClick={this.delProperty}>Remove</Button>
                                         </li>)
                             })
                         : <div />
@@ -253,6 +254,7 @@ class ApiSchemaV extends Component {
                     </ul>
                     
                     <Header as='h4'>Headers</Header>
+                    <text>使用正则表达式进行数据验证</text><br/>
                     <Button name='properties.reqHeaders.properties' onClick={ this.addQueryOrHeader }>Add</Button>
                     <ul>
                     {
@@ -265,24 +267,26 @@ class ApiSchemaV extends Component {
                                                 value={item.key}
                                                 onChange={this.handleChange} />
                                             <Input name={`properties.reqHeaders.properties.${index}.value.regexp`}
-                                                label='Pattern:'
+                                                label='Value Pattern:'
                                                 value={item.value.regexp}
                                                 onChange={this.handleChange} />
                                             <span className='sp-inline-form'/>
                                             <Checkbox label='Required' name={`properties.reqHeaders.properties.${index}.value.required`} toggle 
                                                 checked={item.value.required} 
                                                 onChange={this.handleChange} />
-                                            <Button name={`properties.reqHeaders.properties.${index}`} onClick={this.delProperty}>Discard</Button>
+                                            <Button name={`properties.reqHeaders.properties.${index}`} onClick={this.delProperty}>Remove</Button>
                                         </li>)
                             })
                             : <div />
                     }
                     </ul>
                     
-                    <Header as='h4'>Body</Header>
+                    <Header as='h4'>Body Schema</Header>
+                    <text>使用Json Schema进行数据验证</text><br/>
                     <TextArea rows='5' name="properties.reqBody" value={apiSchema.properties.reqBody} onChange={this.handleChange} />
                     <Header as='h3'>Response</Header>
                     <Header as='h4'>Headers</Header>
+                    <text>使用正则表达式进行数据验证</text><br/>
                     <Button name='properties.resHeaders.properties' onClick={ this.addQueryOrHeader }>Add</Button>
                     <ul>
                     {
@@ -295,21 +299,22 @@ class ApiSchemaV extends Component {
                                                 value={item.key}
                                                 onChange={this.handleChange} />
                                             <Input name={`properties.resHeaders.properties.${index}.value.regexp`}
-                                                label='Pattern:'
+                                                label='Value Pattern:'
                                                 value={item.value.regexp}
                                                 onChange={this.handleChange} />
                                             <span className='sp-inline-form'/>
                                             <Checkbox label='Required' name={`properties.resHeaders.properties.${index}.value.required`} toggle 
                                                 checked={item.value.required} 
                                                 onChange={this.handleChange} />
-                                            <Button name={`properties.resHeaders.properties.${index}`} onClick={this.delProperty}>Discard</Button>
+                                            <Button name={`properties.resHeaders.properties.${index}`} onClick={this.delProperty}>Remove</Button>
                                         </li>)
                             })
                             : <div />
                     }
                     </ul>
                     
-                    <Header as='h4'>Body</Header>
+                    <Header as='h4'>Body Schema</Header>
+                    <text>使用Json Schema进行数据验证</text><br/>
                     <TextArea rows='5' name="properties.resBody" value={apiSchema.properties.resBody} onChange={this.handleChange} />
 
                     <input type="hidden"/>

@@ -87,15 +87,15 @@ class AppCfgV extends Component {
             <div id="div_appCfg">
                 <Header as='h2'>App details</Header>
                 <div>
-                    <Button onClick={()=>this.props.history.push('/')} >Back to list</Button>
+                    <Button onClick={()=>this.props.history.push('/')} >返回应用列表</Button>
                 </div>
                 <Form id="fm_appCfg">
-                    <Input name='name' label='Name:' value={appCfg.name} disabled={!this.props.register} onChange={this.handleChange} />
-                    <Header as='h4'>Description</Header>
+                    <Input name='name' label='名称:' value={appCfg.name} disabled={!this.props.register} onChange={this.handleChange} />
+                    <Header as='h4'>描述</Header>
                     <TextArea name='desc' rows='5' value={appCfg.desc} onChange={this.handleChange} placeholder='descripe this application' />
-                    <Header as='h4'>Targets</Header>
-                    <Button onClick={this.addTagert}>Add</Button><br/>
-                    <Label size='large'>Forward: </Label>
+                    <Header as='h4'>代理</Header>
+                    <Button onClick={this.addTagert}>添加</Button><br/>
+                    <Label size='large'>代理到: </Label>
                     <Dropdown name='apiForwardTarget' placeholder='Select a target'
                         selection inline
                         options={targerOpts}
@@ -109,15 +109,15 @@ class AppCfgV extends Component {
                                 if (target && target.name) {
                                     return (<li key={target.name}>
                                         <Input name={'targets.' + index + '.name'}
-                                            label='Name:'
+                                            label='名称:'
                                             value={target.name}
                                             onChange={this.handleChange}/>
                                         <Input name={'targets.' + index + '.value'}
-                                            label='Value:'
+                                            label='BaseUrl:'
                                             value={target.value}
                                             onChange={this.handleChange} />
                                         <span className='sp-inline-form'/>
-                                        <Button name={index} onClick={this.discardTarget}>Discard</Button>
+                                        <Button name={index} onClick={this.discardTarget}>删除</Button>
                                     </li>)
                                 }
                             })

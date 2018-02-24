@@ -10,14 +10,8 @@ class Btns extends Component {
     render() {
         return (<div className="container-btn">
                     <div className="pane-btn">
-                        <Button className="btn-submit" size='massive' onClick={this.props.applyAction} >Apply</Button>
+                        <Button className="btn-submit" size='massive' onClick={this.props.applyAction} >Update</Button>
                         <br/>
-                        <div>{
-                            !this.props.hideDiscard
-                            ? (<Button className="btn-discard"size='massive' onClick={this.props.discardAction}>Discard</Button>)
-                            : <span />
-                        }
-                        </div>
                     </div>
                 </div>)
     }
