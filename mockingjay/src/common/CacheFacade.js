@@ -64,7 +64,7 @@ class CacheFacade {
         
         let startIdx = pageNum * pageSize        
         let keyPattern = CacheKeyCombinator.appInventoryPrefix + ':*'
-        let scanResult = await redisClient.scanAsync(0, 'MATCH', keyPattern)
+        let scanResult = await redisClient.scanAsync(0, 'MATCH', keyPattern, 'COUNT', 1000 * 1000)
 
         let keys = scanResult[1]
         let total = keys.length
