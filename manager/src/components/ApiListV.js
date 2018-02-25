@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import queryString from 'query-string'
 import '../styles/apiList.scss'
-import { Table, Header, Button, Pagination } from 'semantic-ui-react'
+import { Table, Header, Button, Pagination, Search } from 'semantic-ui-react'
 
 class ApiListV extends Component {
     constructor(props) {
@@ -10,6 +10,7 @@ class ApiListV extends Component {
 
         this.register = this.register.bind(this)
         this.handlePaginationChange = this.handlePaginationChange.bind(this)
+        this.search = this.search.bind(this)
 
         this.state = { activePage: 1 }
     }    
@@ -22,6 +23,10 @@ class ApiListV extends Component {
         this.setState({ query: query })
         query.pageNum = this.state.activePage - 1
         this.props.fetchData(query)
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({isSearching: false})
     }
 
     register(event, data) {
@@ -37,12 +42,20 @@ class ApiListV extends Component {
         this.props.fetchData(query)
     }
 
+    search(e, data) {
+        this.setState({isSearching: true, partialName: data.value})
+
+        this.props.fetchData({ ...this.state.query, partialName: data.value })
+    }
+
     render() {
         let pagedApis = this.props.pagedApis
         let list = this.props.pagedApis.records
         if (!list || !(list instanceof Array) ) {
             return (<div>has no state</div>)
         }
+
+        let { isSearching, partialName } = this.state
 
         let detailsQuery = Object.assign({}, this.state.query)
         delete detailsQuery.pageNum
@@ -54,6 +67,13 @@ class ApiListV extends Component {
                 <div>
                     <Button onClick={()=>{this.props.history.push('/')}} >返回应用列表</Button>
                     <Button onClick={this.register} >添加</Button>
+                    <div className='div-search'>
+                        <Search loading={isSearching}
+                            open={false}
+                            onSearchChange={this.search}
+                            value={partialName}
+                            className='search' />
+                    </div>
                 </div>
 
                 <div>

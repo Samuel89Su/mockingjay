@@ -3,8 +3,16 @@
 #app-list {
 
   table {
-    width: 90%;
+    width: 100%;
     text-align: left;
+  }
+
+  .div-search {
+    display: inline;
+
+    .search {
+      float: right;
+    }
   }
 }
 

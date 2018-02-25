@@ -32,9 +32,13 @@ class CacheFacade {
         this.getApiMockCfg = this.getApiMockCfg.bind(this)
         this.setApiMockCfg = this.setApiMockCfg.bind(this)
         this.renameApiCacheKey = this.renameApiCacheKey.bind(this)
+        this.searchAppByPartialName = this.searchAppByPartialName.bind(this)
+        this.searchApiByPartialPath = this.searchApiByPartialPath.bind(this)
 
         this.redisFullyScan = this.redisFullyScan.bind(this)
         this.scanFirst = this.scanFirst.bind(this)
+        this.internalGetApps = this.internalGetApps.bind(this)
+        this.internalGetApis = this.internalGetApis.bind(this)
     }
 
     /**
@@ -66,6 +70,34 @@ class CacheFacade {
         }
 
         let keyPattern = CacheKeyCombinator.appInventoryPrefix + ':*'
+
+        let page = await this.internalGetApps(keyPattern, pageNum)
+
+        return page
+    }
+
+    /**
+     * search app by partial name
+     * @param {String} partialName partial app name
+     * @param {Number} pageNum page num
+     * @returns {Promise<Object>} { pageNum: {Number}, pageSize: {Number}, total: {Number}, pageCnt: {Number}, records: {Array<Object>} }
+     */
+    async searchAppByPartialName(partialName, pageNum) {
+        if (typeof partialName !== 'string' || !partialName) {
+            throw new Error('invalid arguments')
+        }
+        if (!pageNum) {
+            pageNum = 0
+        }
+
+        let keyPattern = CacheKeyCombinator.appInventoryPrefix + ':*' + partialName + '*'
+
+        let page = await this.internalGetApps(keyPattern, pageNum)
+
+        return page
+    }
+
+    async internalGetApps(keyPattern, pageNum) {
         let keys = await this.redisFullyScan(keyPattern)
 
         let total = keys.length
@@ -94,7 +126,7 @@ class CacheFacade {
      * @returns {Promise<Object>}
      */
     async getApp(name, id) {
-        if (typeof name !== 'string' && !Number.isInteger(id)) {
+        if ((typeof name !== 'string' || !name) && !Number.isInteger(id)) {
             throw new Error('invalid arguments')
         }
 
@@ -232,6 +264,35 @@ class CacheFacade {
         }
 
         let keyPattern = CacheKeyCombinator.buildApiDescKey(appName, '*', '/*')
+        
+        let page = await this.internalGetApis(keyPattern, pageNum)
+
+        return page
+    }
+
+    /**
+     * get api list by app name.
+     * @param {String} appName
+     * @param {Number} pageNum
+     * @returns {Promise<Array<Object>>}
+     */
+    async searchApiByPartialPath(appName, partialPath, pageNum) {
+        if (typeof appName !== 'string' || !appName || typeof partialPath !== 'string' || !partialPath) {
+            throw new Error('invalid appName')
+        }
+
+        if (!pageNum) {
+            pageNum = 0
+        }
+
+        let keyPattern = CacheKeyCombinator.buildApiDescKey(appName, '*', '/*' + partialPath + '*')
+
+        let page = await this.internalGetApis(keyPattern, pageNum)
+
+        return page
+    }
+
+    async internalGetApis(keyPattern, pageNum) {
         let keys = await this.redisFullyScan(keyPattern)
         let total = keys.length
 
@@ -484,7 +545,7 @@ class CacheFacade {
      * get api example
      * @param {String} appName app name
      * @param {Number} id api id
-     * @returns {Object} api example
+     * @returns {Promise<Object>} api example
      */
     async getApiExample(appName, id) {
         if (typeof appName !== 'string' || !appName || !Number.isInteger(id) || id < 1) {
@@ -506,7 +567,7 @@ class CacheFacade {
      * @param {String} appName app name
      * @param {Number} id api id
      * @param {Object} example apip example
-     * @returns {Boolean} success
+     * @returns {Promise<Boolean>} success
      */
     async setApiExample(appName, id, example) {
         if (typeof appName !== 'string' || !appName || !Number.isInteger(id) || id < 1 || typeof example !== 'object' || !example) {
@@ -524,7 +585,7 @@ class CacheFacade {
      * @param {String} id api id
      * @param {String} oldPath old path
      * @param {String} newPath new path
-     * @returns {Boolean} true if success
+     * @returns {Promise<Boolean>} true if success
      */
     async renameApiCacheKey(appName, id, oldPath, newPath) {
         let oldKey = CacheKeyCombinator.buildApiDescKey(appName, id, oldPath)
@@ -536,7 +597,7 @@ class CacheFacade {
     /**
      * fully scan in redis by key pattern
      * @param {String} pattern key pattern
-     * @returns {Array<String>} keys
+     * @returns {Promise<Array<String>>} keys
      */
     async redisFullyScan(pattern) {
         if (!pattern || pattern === ' ') {
@@ -562,7 +623,7 @@ class CacheFacade {
     /**
      * get first key by pattern
      * @param {String} pattern key pattern
-     * @returns {String} first key
+     * @returns {Promise<String>} first key
      */
     async scanFirst(pattern) {
         if (!pattern || pattern === ' ') {

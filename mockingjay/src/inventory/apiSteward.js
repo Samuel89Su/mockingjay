@@ -58,15 +58,21 @@ class Steward {
     async list(ctx, next) {
         let appId = -1
         let pageNum = 0
+        let partialname = ''
         if (ctx.query) {
             for (const key in ctx.query) {
-                if (key.toLowerCase() === 'appid') {
-                    appId = parseInt(ctx.query[key])
-                } else if (key.toLowerCase() === 'pagenum') {
-                    pageNum = parseInt(ctx.query[key])
+                let lowercaseKey = key.toLowerCase()
+                let value = ctx.query[key]
+                if (lowercaseKey === 'appid') {
+                    appId = parseInt(value)
+                } else if (lowercaseKey === 'pagenum') {
+                    pageNum = parseInt(value)
+                } else if (lowercaseKey === 'partialname') {
+                    partialname = value
                 }
             }
         }
+
         if (1 > appId) {
             ctx.response.status = 400
             ctx.response.body = 'appId CAN NOT be null or empty'
@@ -77,7 +83,12 @@ class Steward {
             if (!appDesc) {
                 ctx.response.body = errCode.resNotFound()
             } else {
-                let page = await CacheFacade.getApiList(appDesc.name, pageNum)
+                let page = null
+                if (partialname) {
+                    page = await CacheFacade.searchApiByPartialPath(appDesc.name, partialname, pageNum)
+                } else {
+                    page = await CacheFacade.getApiList(appDesc.name, pageNum)
+                }
 
                 ctx.response.body = errCode.success(page)
             }
