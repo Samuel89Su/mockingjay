@@ -62,13 +62,13 @@ class CacheFacade {
             pageNum = 0
         }
         
+        let startIdx = pageNum * pageSize        
         let keyPattern = CacheKeyCombinator.appInventoryPrefix + ':*'
-        let keys = await redisClient.keysAsync(keyPattern)
-        let total = keys.length
+        let scanResult = await redisClient.scanAsync(0, 'MATCH', keyPattern)
 
-        let sortedKeys = keys.sort(appAndApiComparer)
-        let startIdx = pageNum * pageSize
-        keys = sortedKeys.slice(startIdx, startIdx + pageSize)
+        let keys = scanResult[1]
+        let total = keys.length
+        keys = keys.slice(startIdx, startIdx + pageSize)
 
         let apps = []
         for (let i = 0; i < keys.length; i++) {
