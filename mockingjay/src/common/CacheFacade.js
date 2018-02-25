@@ -7,7 +7,7 @@ const getComparer = require('../utils').getComparer
 const assemblePagination = require('./paginatedResult')
 const parse = require('../utils').parse
 
-const appAndApiComparer = getComparer(null, false, CacheKeyCombinator.extractId)
+const appAndApiComparer = getComparer()
 
 const pageSize = 10
 
@@ -32,6 +32,9 @@ class CacheFacade {
         this.getApiMockCfg = this.getApiMockCfg.bind(this)
         this.setApiMockCfg = this.setApiMockCfg.bind(this)
         this.renameApiCacheKey = this.renameApiCacheKey.bind(this)
+
+        this.redisFullyScan = this.redisFullyScan.bind(this)
+        this.scanFirst = this.scanFirst.bind(this)
     }
 
     /**
@@ -61,16 +64,18 @@ class CacheFacade {
         if (!pageNum) {
             pageNum = 0
         }
-        
-        let startIdx = pageNum * pageSize        
-        let keyPattern = CacheKeyCombinator.appInventoryPrefix + ':*'
-        let scanResult = await redisClient.scanAsync(0, 'MATCH', keyPattern)
 
-        let keys = scanResult[1]
+        let keyPattern = CacheKeyCombinator.appInventoryPrefix + ':*'
+        let keys = await this.redisFullyScan(keyPattern)
+
         let total = keys.length
+
+        keys = keys.sort(appAndApiComparer)
+        let startIdx = pageNum * pageSize
         keys = keys.slice(startIdx, startIdx + pageSize)
 
         let apps = []
+        
         for (let i = 0; i < keys.length; i++) {
             const key = keys[i]
             let appDesc = await redisClient.getAsync(key)
@@ -108,10 +113,7 @@ class CacheFacade {
 
             let keyPattern = CacheKeyCombinator.buildAppCfgKey(name, id)
 
-            let keys = await redisClient.keysAsync(keyPattern)
-            if (keys && keys.length > 0) {
-                key = keys[0]
-            }
+            key = await this.scanFirst(keyPattern)
         }
 
         if (key) {
@@ -168,10 +170,7 @@ class CacheFacade {
 
             let keyPattern = CacheKeyCombinator.buildAppCfgKey(name, id)
 
-            let keys = await redisClient.keysAsync(keyPattern)
-            if (keys && keys.length > 0) {
-                key = keys[0]
-            }
+            key = await this.scanFirst(keyPattern)
         }
 
         if (key) {
@@ -181,7 +180,7 @@ class CacheFacade {
             }
 
             let appSubPattern = CacheKeyCombinator.buildApiKeyPrefix(name, true)
-            let keys = await redisClient.keysAsync(appSubPattern)
+            let keys = await this.redisFullyScan(appSubPattern)
             if (keys && keys.length > 0) {
                 let joinedKey = ''
                 for (let i = 0; i < keys.length; i++) {
@@ -209,8 +208,8 @@ class CacheFacade {
         }
 
         let keyPattern = CacheKeyCombinator.buildAppCfgKey(name, '*')
-        let keys = await redisClient.keysAsync(keyPattern)
-        if (keys && keys.length > 0) {
+        let key = await this.scanFirst(keyPattern)
+        if (key) {
             return true
         } else {
             return false
@@ -233,12 +232,12 @@ class CacheFacade {
         }
 
         let keyPattern = CacheKeyCombinator.buildApiDescKey(appName, '*', '/*')
-        let keys = await redisClient.keysAsync(keyPattern)
+        let keys = await this.redisFullyScan(keyPattern)
         let total = keys.length
 
-        let sortedKeys = keys.sort(appAndApiComparer)
+        keys = keys.sort(appAndApiComparer)
         let startIdx = pageNum * pageSize
-        keys = sortedKeys.slice(startIdx, startIdx + pageSize)
+        keys = keys.slice(startIdx, startIdx + pageSize)
 
         let apis = []
         if (keys && keys.length > 0) {
@@ -284,10 +283,7 @@ class CacheFacade {
 
             let keyPattern = CacheKeyCombinator.buildApiDescKey(appName, id, apiPath)
 
-            let keys = await redisClient.keysAsync(keyPattern)
-            if (keys && keys.length > 0) {
-                key = keys[0]
-            }
+            key = await this.scanFirst(keyPattern)
         }
 
         if (key) {
@@ -349,10 +345,7 @@ class CacheFacade {
 
             let keyPattern = CacheKeyCombinator.buildApiDescKey(appName, id, apiPath)
 
-            let keys = await redisClient.keysAsync(keyPattern)
-            if (keys && keys.length > 0) {
-                key = keys[0]
-            }
+            key = await this.scanFirst(keyPattern)
         }
 
         if (key) {
@@ -515,7 +508,7 @@ class CacheFacade {
      * @param {Object} example apip example
      * @returns {Boolean} success
      */
-    async setApiExample(appName, id, example){
+    async setApiExample(appName, id, example) {
         if (typeof appName !== 'string' || !appName || !Number.isInteger(id) || id < 1 || typeof example !== 'object' || !example) {
             throw new Error('invalid appName or id')
         }
@@ -538,6 +531,63 @@ class CacheFacade {
         let newKey = CacheKeyCombinator.buildApiDescKey(appName, id, newPath)
         let ok = await redisClient.renameAsync(oldKey, newKey) === 'OK'
         return ok
+    }
+
+    /**
+     * fully scan in redis by key pattern
+     * @param {String} pattern key pattern
+     * @returns {Array<String>} keys
+     */
+    async redisFullyScan(pattern) {
+        if (!pattern || pattern === ' ') {
+            throw new Error('invalid pattern')
+        }
+
+        try {
+            let keys = []
+            let cursor = 0
+            do {
+                let tempR = await redisClient.scanAsync(cursor, 'MATCH', pattern, 'COUNT', 200)
+                if (tempR && tempR instanceof Array && tempR.length > 1) {
+                    cursor = parseInt(tempR[0])
+                    keys = keys.concat(tempR[1])
+                }
+            } while (cursor > 0)
+            return keys
+        } catch (error) {
+            throw error
+        }
+    }
+
+    /**
+     * get first key by pattern
+     * @param {String} pattern key pattern
+     * @returns {String} first key
+     */
+    async scanFirst(pattern) {
+        if (!pattern || pattern === ' ') {
+            throw new Error('invalid pattern')
+        }
+
+        try {
+            let keys = []
+            let cursor = 0
+            do {
+                let tempR = await redisClient.scanAsync(cursor, 'MATCH', pattern, 'COUNT', 200)
+                if (tempR && tempR instanceof Array && tempR.length > 1) {
+                    cursor = parseInt(tempR[0])
+                    keys = keys.concat(tempR[1])
+                }
+            } while (cursor > 0 && keys.length === 0)
+
+            if (keys.length > 0) {
+                return keys[0]
+            } else {
+                return null
+            }
+        } catch (error) {
+            throw error
+        }
     }
 }
 

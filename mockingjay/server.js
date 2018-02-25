@@ -5,6 +5,7 @@ const serve = require('koa-static')
 const router = require('./router')
 const logger = require('./src/common/logger')
 const preStart = require('./src/preStart')
+const rename = require('./test/common/CacheFacade.test')
 
 preStart()
 
