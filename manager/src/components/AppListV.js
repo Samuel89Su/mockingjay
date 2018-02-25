@@ -62,7 +62,8 @@ class AppListV extends Component {
                             open={false}
                             onSearchChange={this.search}
                             value={partialName}
-                            className='search' />
+                            className='search'
+                            placeholder='名称模糊搜索' />
                     </div>
                 </div>
                 

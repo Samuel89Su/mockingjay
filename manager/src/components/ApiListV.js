@@ -72,7 +72,8 @@ class ApiListV extends Component {
                             open={false}
                             onSearchChange={this.search}
                             value={partialName}
-                            className='search' />
+                            className='search'
+                            placeholder='路径模糊搜索' />
                     </div>
                 </div>
 
