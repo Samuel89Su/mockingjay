@@ -7,7 +7,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Master-Server",
             "program": "${workspaceFolder}\\index.js"
         }
     ]
