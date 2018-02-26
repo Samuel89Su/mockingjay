@@ -47,14 +47,25 @@ class steward {
      */
     async list(ctx, next) {
         let pageNum = 0
+        let partialname = ''
         if (ctx.query) {
             for (const key in ctx.query) {
-                if (key.toLowerCase() === 'pagenum') {
-                    pageNum = parseInt(ctx.query[key])
+                let lowercaseKey = key.toLowerCase()
+                let value = ctx.query[key]
+                if (lowercaseKey === 'pagenum') {
+                    pageNum = parseInt(value)
+                } else if (lowercaseKey === 'partialname') {
+                    partialname = value
                 }
             }
         }
-        let page = await CacheFacade.getAppList(pageNum)
+
+        let page = null
+        if (partialname) {
+            page = await CacheFacade.searchAppByPartialName(partialname, pageNum)
+        } else {
+            page = await CacheFacade.getAppList(pageNum)
+        }
 
         ctx.response.body = errCode.success(page)
         await next()

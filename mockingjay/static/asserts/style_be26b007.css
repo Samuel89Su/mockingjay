@@ -1,13 +1,23 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin);/* app list begin */
 #app-list table {
-  width: 90%;
+  width: 100%;
   text-align: left; }
+
+#app-list .div-search {
+  display: inline; }
+  #app-list .div-search .search {
+    float: right; }
 
 /* app list end */
 /* api list begin */
 #api-list table {
-  width: 90%;
+  width: 100%;
   text-align: left; }
+
+#api-list .div-search {
+  display: inline; }
+  #api-list .div-search .search {
+    float: right; }
 
 /* api list end */
 .container-btn {
@@ -23191,4 +23201,4 @@ body.pushable > .pusher {
     -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1); } }
 
-/*# sourceMappingURL=style_25708b6a.css.map*/
+/*# sourceMappingURL=style_be26b007.css.map*/

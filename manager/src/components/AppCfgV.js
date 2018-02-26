@@ -30,7 +30,6 @@ class AppCfgV extends Component {
             let search = (this.props.location && this.props.location.search)
                             ? this.props.location.search
                             : window.location.search
-            this.setState({ search: search })
             this.props.onMounted(search)
         }
     }

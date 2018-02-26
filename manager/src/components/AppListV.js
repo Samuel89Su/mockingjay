@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import '../styles/appList.scss'
-import { Table, Header, Button, Pagination } from 'semantic-ui-react'
+import { Table, Header, Button, Pagination, Search } from 'semantic-ui-react'
 
 class AppListV extends Component {
     constructor(props) {
@@ -9,6 +9,7 @@ class AppListV extends Component {
 
         this.register = this.register.bind(this)
         this.handlePaginationChange = this.handlePaginationChange.bind(this)
+        this.search = this.search.bind(this)
 
         this.state = { activePage: 1 }
     }
@@ -21,6 +22,10 @@ class AppListV extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({isSearching: false})
+    }
+
     register(event, data) {
         this.props.history.push('/app/register')
     }
@@ -29,7 +34,13 @@ class AppListV extends Component {
         this.setState({ 
             activePage: data.activePage
             })
-        this.props.fetchData({ pageNum: data.activePage -1 })
+        this.props.fetchData({ pageNum: data.activePage -1, partialName: this.state.partialName })
+    }
+
+    search(e, data) {
+        this.setState({isSearching: true, partialName: data.value})
+
+        this.props.fetchData({ pageNum: this.state.activePage -1, partialName: data.value })
     }
 
     render() {
@@ -39,11 +50,21 @@ class AppListV extends Component {
             return (<div>has no state</div>)
         }
 
+        let { isSearching, partialName } = this.state
+
         return (
             <div id='app-list'>
                 <Header as='h2'>应用</Header>
                 <div>
                     <Button onClick={this.register} >创建应用</Button>
+                    <div className='div-search'>
+                        <Search loading={isSearching}
+                            open={false}
+                            onSearchChange={this.search}
+                            value={partialName}
+                            className='search'
+                            placeholder='名称模糊搜索' />
+                    </div>
                 </div>
                 
                 <div>
