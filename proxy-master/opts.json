@@ -1,6 +1,0 @@
-{
-    "context": ["/inventory"],
-    "target": "http://localhost:54187",
-    "router": { 
-    }
-}

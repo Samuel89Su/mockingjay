@@ -44,8 +44,8 @@ function serveStatic (root, options) {
     throw new TypeError('root path must be a string')
   }
 
-  var autoCompleteHtmlExtension = !options.autoCompleteHtmlExtension ? false : options.autoCompleteHtmlExtension
-  delete options.autoCompleteHtmlExtension
+  var mockDotNetMVCRoute = !options.mockDotNetMVCRoute ? false : options.mockDotNetMVCRoute
+  delete options.mockDotNetMVCRoute
 
   // copy options object
   var opts = Object.create(options || null)
@@ -95,7 +95,7 @@ function serveStatic (root, options) {
       path = ''
     }
 
-    if(autoCompleteHtmlExtension && path.lastIndexOf('.') < path.lastIndexOf('/')) {
+    if(mockDotNetMVCRoute && path.lastIndexOf('.') < path.lastIndexOf('/')) {
         path += '.html'
     }
 
