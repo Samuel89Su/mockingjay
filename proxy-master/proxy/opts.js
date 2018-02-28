@@ -1,3 +1,4 @@
+'use strict'
 
 exports = module.exports = {
     target: 'http://teacher.235.mistong.com',

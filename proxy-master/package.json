@@ -19,7 +19,8 @@
     "http-proxy-middleware": "^0.17.4",
     "nodemon": "^1.14.12",
     "opn": "^5.2.0",
-    "query-string": "^5.1.0"
+    "query-string": "^5.1.0",
+    "ws": "^4.1.0"
   },
   "devDependencies": {
     "nodemon": "^1.15.1"

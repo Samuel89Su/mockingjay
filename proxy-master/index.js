@@ -1,3 +1,5 @@
+'use strict'
+
 /**
  * Module dependencies.
  */
@@ -7,24 +9,18 @@ const proxy = require('http-proxy-middleware')
 const { URL } = require('url')
 const { host, port } = require('./cfg')
 const serveStatic = require('./serve-static')
-const defaultOpts = require('./defaultOpts')
-const userOpts = require('./opts')
+const ws = require('./ws')
+const proxyEventEmitter = require('./eventEmitter')
+const defaultProxy = require('./proxy/default')(port, proxyEventEmitter)
 
 try {
-  const opts = Object.assign({}, userOpts, defaultOpts)
-  const filter = opts.filter
-  delete opts.context
 
   const app = connect()
   
   /**
-   * Configure proxy middleware
-   */
-  const userProxy = filter ? proxy(filter, opts) : proxy(opts)
-  /**
    * Add the proxy to connect
    */
-  app.use('/', userProxy)
+  app.use('/', defaultProxy)
 
   const serve = serveStatic('static', { 'index': ['index.html'], mockDotNetMVCRoute: true })
   app.use(serve)
