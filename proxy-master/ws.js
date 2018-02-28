@@ -1,8 +1,9 @@
 const proxyEventEmitter = require('./eventEmitter')
+const { port } = require('./cfg')
 
 var WebSocketServer = require('ws').Server,
     wss = new WebSocketServer({
-        port: 40510
+        port: port + 1
     })
 
 wss.on('connection', function (ws) {
@@ -10,7 +11,7 @@ wss.on('connection', function (ws) {
         ws.send(payload)
     })
 
-    ws.on('message', function (message) {
-        console.log('received: %s', message)
-    })
+    // ws.on('message', function (message) {
+    //     console.log('received: %s', message)
+    // })
 })

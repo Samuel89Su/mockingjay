@@ -25,13 +25,13 @@ function getProxyResHandler(port, proxyEventEmitter) {
             if (query.fromurl) {
                 let redirectUrl = new URL(query.fromurl)
                 if (redirectUrl.host === 'teacher.235.mistong.com' || redirectUrl.host === 'my.235.mistong.com') {
-                    console.log('origin redirect url: ' + location)
+                    // console.log('origin redirect url: ' + location)
 
                     query.fromurl = query.fromurl.replace(redirectUrl.host, 'localhost:' + port)
                     proxyRes.headers.location = proxyRes.headers.location.replace(search, '?' + queryString.stringify(query))
                 }
             }
-            console.log('modified redirect to: ' + proxyRes.headers.location)
+            // console.log('modified redirect to: ' + proxyRes.headers.location)
         }
 
         proxyEventEmitter.emit('proxyEvent', JSON.stringify({
@@ -95,7 +95,6 @@ function fetchFiles(filePath, recursive) {
                 var isDir = stats.isDirectory(); //是文件夹
                 if (isFile) {
                     fileNames.push(filedir)
-                    console.log(filedir)
                 }
                 if (isDir && recursive) {
                     fileNames.push(fetchFiles(filedir)); //递归，如果是文件夹，就继续遍历该文件夹下面的文件
