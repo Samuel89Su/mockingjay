@@ -5,14 +5,15 @@ const http = require('http')
 const connect = require('connect')
 const proxy = require('http-proxy-middleware')
 const { URL } = require('url')
+const { host, port } = require('./cfg')
 const serveStatic = require('./serve-static')
 const defaultOpts = require('./defaultOpts')
 const userOpts = require('./opts')
 
 try {
-  const filter = userOpts.filter
-  delete userOpts.context
   const opts = Object.assign({}, userOpts, defaultOpts)
+  const filter = opts.filter
+  delete opts.context
 
   const app = connect()
   
@@ -28,7 +29,7 @@ try {
   const serve = serveStatic('static', { 'index': ['index.html'], mockDotNetMVCRoute: true })
   app.use(serve)
 
-  http.createServer(app).listen(3200, '0.0.0.0')
+  http.createServer(app).listen(port, host)
 
 } catch (error) {
   console.log(error)

@@ -13,7 +13,7 @@ async function rename() {
             const key = appKeys[i];
             let id = CacheKeyCombinator.extractAppId(key).toString()
             let newId = id.padStart(4, '0')
-            let newKey = key.replace(/\:[0-9]{1,5}_/, ':' + newId + '_')
+            let newKey = key.replace(/\:\d{1,5}_/, ':' + newId + '_')
 
             await redisClient.renameAsync(key, newKey)
         }
@@ -26,7 +26,7 @@ async function rename() {
             const key = apiKeys[i];
             let id = CacheKeyCombinator.extractAppId(key).toString()
             let newId = id.padStart(5, '0')
-            let newKey = key.replace(/\:[0-9]{1,5}_/, ':' + newId + '_')
+            let newKey = key.replace(/\:\d{1,5}_/, ':' + newId + '_')
 
             await redisClient.renameAsync(key, newKey)
         }

@@ -103,13 +103,13 @@ class CacheKeyCombinator {
     }
 
     /**
-     * ':[0-9]{1,5}_'
+     * ':\d{1,5}_'
      * @param {String} key cache key
      * @returns {Number} id
      */
     extractId (key) {
-        let idPart = key.match(':[0-9]{1,5}_')[0]
-        let idRaw = idPart.match('[0-9]{1,5}')[0]
+        let idPart = key.match(':\d{1,5}_')[0]
+        let idRaw = idPart.match('\d{1,5}')[0]
         return parseInt(idRaw)
     }
 }
