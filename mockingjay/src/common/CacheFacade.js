@@ -34,6 +34,7 @@ class CacheFacade {
         this.renameApiCacheKey = this.renameApiCacheKey.bind(this)
         this.searchAppByPartialName = this.searchAppByPartialName.bind(this)
         this.searchApiByPartialPath = this.searchApiByPartialPath.bind(this)
+        this.renameAppAndApiKey = this.renameAppAndApiKey.bind(this)
 
         this.redisFullyScan = this.redisFullyScan.bind(this)
         this.scanFirst = this.scanFirst.bind(this)
@@ -649,6 +650,35 @@ class CacheFacade {
         } catch (error) {
             throw error
         }
+    }
+
+    async renameAppAndApiKey() {
+        let appKeyPattern = CacheKeyCombinator.appInventoryPrefix + ':*_*'
+        let appKeys = await this.redisFullyScan(appKeyPattern)
+        for (let i = 0; i < appKeys.length; i++) {
+            let appKey = appKeys[i]
+            let appId = appKey.substr(13, appKey.indexOf('_')-13)
+            if (appId.length < 4) {
+                let newAppId = appId.padStart(4, '0')
+                let newKey = appKey.replace(':'+appId+'_', ':'+newAppId+'_')
+                await redisClient.renameAsync(appKey, newKey)
+            }
+        }
+
+        let apiKeyPattern = CacheKeyCombinator.apiInventoryPrefix + ':*:*_*'
+        let apiKeys = await this.redisFullyScan(apiKeyPattern)
+        for (let i = 0; i < apiKeys.length; i++) {
+            let apiKey = apiKeys[i]
+            let startIdx = apiKey.lastIndexOf(':') + 1
+            let len = apiKey.indexOf('_') - startIdx
+            let apiId = apiKey.substr(startIdx, len)
+            if (apiId.length < 5) {
+                let newApiId = apiId.padStart(5, '0')
+                let newKey = apiKey.replace(':'+apiId+'_', ':'+newApiId+'_')
+                await redisClient.renameAsync(apiKey, newKey)
+            }
+        }
+
     }
 }
 

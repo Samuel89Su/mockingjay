@@ -24,17 +24,21 @@ class steward {
         this.register = this.register.bind(this)
         this.update = this.update.bind(this)
         this.discard = this.discard.bind(this)
+        this.cahceKeyLenCheck = this.cahceKeyLenCheck.bind(this)
     }
 
     getRouter() {
+        this.router.use('/*', bodyParser)
+
         this.router.get(['/', '/echo'], (ctx, next) => {
             ctx.response.body = 'you are in app inventory now.'
         })
         this.router.get('/list', this.list)
         this.router.get('/get', this.get)
-        this.router.post('/register', bodyParser, this.register)
-        this.router.post('/update', bodyParser, this.update)
-        this.router.post('/discard', bodyParser, this.discard)
+        this.router.post('/register', this.register)
+        this.router.post('/update', this.update)
+        this.router.post('/discard', this.discard)
+        this.router.post('/cahceKeyLenCheck', this.cahceKeyLenCheck)
 
         return this.router
     }
@@ -164,6 +168,12 @@ class steward {
             ctx.response.body = errCode.success(ok)
         }
 
+        await next()
+    }
+
+    async cahceKeyLenCheck(ctx, next) {
+        await CacheFacade.renameAppAndApiKey()
+        ctx.response.body = errCode.success('ok')
         await next()
     }
 }
