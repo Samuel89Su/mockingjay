@@ -1,6 +1,6 @@
-'use strict';
+'use strict'
 
-const Webpack = require('webpack');
+const Webpack = require('webpack')
 
 module.exports = {
   output: {
@@ -45,4 +45,4 @@ module.exports = {
       }
     ]
   }
-};
+}
