@@ -6,6 +6,7 @@ import ApiMcCfgC from './ApiMcCfgC'
 import queryString from 'query-string'
 import { Button } from 'semantic-ui-react'
 import ApiExampleC from './ApiExampleC'
+import '../styles/details-tab.scss'
 
 class ApiDetailsTab extends Component {
     constructor(props) {
@@ -22,7 +23,7 @@ class ApiDetailsTab extends Component {
 
     render() {
         return (
-            <div>
+            <div className='details-tab'>
                 <div>
                     <Button onClick={()=>this.props.history.push(`/app/apilist?appId=${this.state.query.appId}&appName=${this.state.query.appName}`)} >返回接口列表</Button>
                 </div>

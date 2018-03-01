@@ -1,11 +1,11 @@
 'use strict'
 
 import React, { Component } from 'react'
-import '../styles/apiSchema.scss'
 import { deepClone, updateByPath, getPropertyByPath, parseRecursive, object2Array, array2Object } from '../utils'
 import { Header, Button, Input, TextArea, Form } from 'semantic-ui-react'
 import Btns from './BtnApplyDiscard'
 import queryString from 'query-string'
+import RawSchemaEditor from './RawSchemaEditor'
 
 class ApiExampleV extends Component {
     constructor(props) {
@@ -119,18 +119,17 @@ class ApiExampleV extends Component {
                 <Form>
                     <Header as='h3'>Request</Header>
                     <Header as='h4'>Query</Header>
-                    <Button name='query' onClick={ this.addQueryOrHeader }>Add</Button>
                     <ul>
                     {
                         (example && example.query && example.query instanceof Array) ?
                             example.query.map((item, index) => {
                                 return (<li key={index}>
                                             <Input name={`query.${index}.key`}
-                                                label='Key:'
+                                                label='Key:' size='mini'
                                                 value={item.key}
                                                 onChange={this.handleChange} />
                                             <Input name={`query.${index}.value`}
-                                                label='Value:'
+                                                label='Value:' size='mini'
                                                 value={item.value}
                                                 onChange={this.handleChange} />
                                             <span className='sp-inline-form'/>
@@ -140,9 +139,10 @@ class ApiExampleV extends Component {
                         : <div />
                     }
                     </ul>
+                    <Button name='query' size='mini' onClick={ this.addQueryOrHeader }>Add</Button>
+                    <RawSchemaEditor name='query' schema={example.query} handleChange={this.handleChange} />
                     
                     <Header as='h4'>Headers</Header>
-                    <Button name='reqHeader' onClick={ this.addQueryOrHeader }>Add</Button>
                     <ul>
                     {
                         (example && example.reqHeader && example.reqHeader instanceof Array) ?
@@ -163,12 +163,13 @@ class ApiExampleV extends Component {
                             : <div />
                     }
                     </ul>
+                    <Button name='reqHeader' size='mini' onClick={ this.addQueryOrHeader }>Add</Button>
+                    <RawSchemaEditor name='query' schema={example.reqHeader} handleChange={this.handleChange} />
                     
                     <Header as='h4'>Body</Header>
                     <TextArea rows='5' name="reqBody" value={example.reqBody} onChange={this.handleChange} />
                     <Header as='h3'>Response</Header>
                     <Header as='h4'>Headers</Header>
-                    <Button name='resHeader' onClick={ this.addQueryOrHeader }>Add</Button>
                     <ul>
                     {
                         (example && example.resHeader && example.resHeader instanceof Array) ?
@@ -189,6 +190,8 @@ class ApiExampleV extends Component {
                             : <div />
                     }
                     </ul>
+                    <Button name='resHeader' size='mini' onClick={ this.addQueryOrHeader }>Add</Button>
+                    <RawSchemaEditor name='query' schema={example.resHeader} handleChange={this.handleChange} />
                     
                     <Header as='h4'>Body</Header>
                     <TextArea rows='5' name="resBody" value={example.resBody} onChange={this.handleChange} />
