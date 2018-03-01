@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import '../styles/apiSchema.scss'
 import { deepClone, updateByPath, delByPath, getPropertyByPath, parseRecursive, object2Array, array2Object } from '../utils'
-import { Header, Button, Input, TextArea, Form, Checkbox } from 'semantic-ui-react'
+import { Header, Button, Input, TextArea, Form, Checkbox, Dropdown } from 'semantic-ui-react'
 import Btns from './BtnApplyDiscard'
 import queryString from 'query-string'
 
@@ -238,6 +238,12 @@ class ApiSchemaV extends Component {
                                                 label='Key:'
                                                 value={item.key}
                                                 onChange={this.handleChange} />
+                                            <Dropdown name={`properties.query.properties.${index}.value.type`}
+                                                placeholder='Select a target'
+                                                selection inline
+                                                options={[{name:'String',value:'string'},{name:'number',value:'number'}]}
+                                                value={item.value.type}
+                                                onChange={this.handleChange} />
                                             <Input name={`properties.query.properties.${index}.value.regexp`}
                                                 label='Value Pattern:'
                                                 value={item.value.regexp}
@@ -258,13 +264,19 @@ class ApiSchemaV extends Component {
                     <Button name='properties.reqHeaders.properties' onClick={ this.addQueryOrHeader }>Add</Button>
                     <ul>
                     {
-                        (apiSchema.properties && apiSchema.properties.reqHeaders 
+                        (apiSchema.properties && apiSchema.properties.reqHeaders
                             && apiSchema.properties.reqHeaders.properties && apiSchema.properties.reqHeaders.properties instanceof Array) ?
                             apiSchema.properties.reqHeaders.properties.map((item, index) => {
                                 return (<li key={index}>
                                             <Input name={`properties.reqHeaders.properties.${index}.key`}
                                                 label='Key:'
                                                 value={item.key}
+                                                onChange={this.handleChange} />
+                                            <Dropdown name={`properties.reqHeaders.properties.${index}.value.type`}
+                                                placeholder='Select a target'
+                                                selection inline
+                                                options={[{name:'String',value:'string'},{name:'number',value:'number'}]}
+                                                value={item.value.type}
                                                 onChange={this.handleChange} />
                                             <Input name={`properties.reqHeaders.properties.${index}.value.regexp`}
                                                 label='Value Pattern:'
@@ -297,6 +309,12 @@ class ApiSchemaV extends Component {
                                             <Input name={`properties.resHeaders.properties.${index}.key`}
                                                 label='Key:'
                                                 value={item.key}
+                                                onChange={this.handleChange} />
+                                            <Dropdown name={`properties.resHeaders.properties.${index}.value.type`}
+                                                placeholder='Select a target'
+                                                selection inline
+                                                options={[{name:'String',value:'string'},{name:'number',value:'number'}]}
+                                                value={item.value.type}
                                                 onChange={this.handleChange} />
                                             <Input name={`properties.resHeaders.properties.${index}.value.regexp`}
                                                 label='Value Pattern:'
