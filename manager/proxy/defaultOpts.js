@@ -6,7 +6,6 @@ const {
 const queryString = require('query-string')
 const fs = require('fs')
 const path = require('path')
-const proxy = require('http-proxy-middleware')
 
 const defaultOpts = {
     changeOrigin: true, // for vhosted sites, changes host header to match to target's host
@@ -47,6 +46,11 @@ function getProxyResHandler(port, proxyEventEmitter) {
                 statusCode: proxyRes.statusCode
             }))
         }
+        
+        console.log(JSON.stringify({
+            reqUrl: req.url,
+            statusCode: proxyRes.statusCode
+        }))
     }
 }
 
@@ -82,6 +86,10 @@ function getFilter(root, proxyEventEmitter) {
                 proxy: doProxy
             }))
         }
+        console.log(JSON.stringify({
+            pathName: pathname,
+            proxy: doProxy
+        }))
 
         return doProxy
     }
@@ -94,12 +102,14 @@ function getFilter(root, proxyEventEmitter) {
 function fetchFiles(filePath, recursive) {
     let fileNames = []
     try {
+        console.log('local file path: ' + filePath)
         //根据文件路径读取文件，返回文件列表
         let files = fs.readdirSync(filePath)
         //遍历读取到的文件列表
         files.forEach((filename) => {
             //获取当前文件的绝对路径
             var filedir = path.join(filePath, filename)
+            console.log('fileDir: ' + filedir)
             try {
                 //根据文件路径获取文件信息，返回一个fs.Stats对象
                 let stats = fs.statSync(filedir)

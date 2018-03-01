@@ -6,7 +6,6 @@ const {
 const queryString = require('query-string')
 const fs = require('fs')
 const path = require('path')
-const proxy = require('http-proxy-middleware')
 
 const defaultOpts = {
     changeOrigin: true, // for vhosted sites, changes host header to match to target's host

@@ -1,6 +1,7 @@
 'use strict'
 
 const Webpack = require('webpack')
+const proxyOpts = require('../proxy/defaultOpts')('./src', 8100);
 
 module.exports = {
   output: {
@@ -36,13 +37,10 @@ module.exports = {
     hot: true,
     port: 8100,
     historyApiFallback: true,
-    proxy:
-      [{
-        context: [
-          '/inventory' // '**', '!/', '!**/index.html', '!/bundle.js', '!/favicon.ico'
-        ],
-        target: 'http://127.0.0.1:3000/'
-      }
-    ]
+    proxy: [{
+      context: proxyOpts.filter,
+      target: proxyOpts.opts.target,
+      router: proxyOpts.opts.router
+    }]
   }
 }
