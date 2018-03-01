@@ -1,6 +1,8 @@
 'use strict'
 
-const { URL } = require('url')
+const {
+    URL
+} = require('url')
 const queryString = require('query-string')
 const fs = require('fs')
 const path = require('path')
@@ -49,17 +51,19 @@ function getFilter(proxyEventEmitter) {
      */
     return function filter(pathname, req) {
         let doProxy = true
-        let parentDir = pathname.substr(0, pathname.lastIndexOf('/'))
-        var files = fetchFiles('./static' + parentDir)
-        if (files && files.length > 0) {
-            for (let i = 0; i < files.length; i++) {
-                const fileName = files[i]
-                let fileNameWithoutExtension = fileName.substr(6).replace(/\\/g, '/')
-                if (pathname.lastIndexOf('.') === -1) {
-                    fileNameWithoutExtension = fileNameWithoutExtension.substr(0, fileNameWithoutExtension.lastIndexOf('.'))
-                }
-                if (pathname === fileNameWithoutExtension) {
-                    doProxy = false
+        if (req.method === 'GET' || req.method === 'HEAD') {
+            let parentDir = pathname.substr(0, pathname.lastIndexOf('/'))
+            var files = fetchFiles('./static' + parentDir)
+            if (files && files.length > 0) {
+                for (let i = 0; i < files.length; i++) {
+                    const fileName = files[i]
+                    let fileNameWithoutExtension = fileName.substr(6).replace(/\\/g, '/')
+                    if (pathname.lastIndexOf('.') === -1) {
+                        fileNameWithoutExtension = fileNameWithoutExtension.substr(0, fileNameWithoutExtension.lastIndexOf('.'))
+                    }
+                    if (pathname === fileNameWithoutExtension) {
+                        doProxy = false
+                    }
                 }
             }
         }
