@@ -47,7 +47,7 @@ class ApiSchemaV extends Component {
             }
             if (schema.properties.resBody && typeof schema.properties.resBody === 'object') {
                 schema.properties.resBody = JSON.stringify(schema.properties.resBody)
-            }            
+            }
 
             // convert query, header schema to Array
             if (schema.properties.query && schema.properties.query.properties) {
@@ -252,7 +252,7 @@ class ApiSchemaV extends Component {
                                             <span className='sp-inline-form'/>
                                             <Checkbox label='Required' name={`properties.query.properties.${index}.value.required`}
                                                 toggle size='mini'
-                                                checked={item.value.required} 
+                                                checked={item.value.required}
                                                 onChange={this.handleChange} />
                                             <Button name={`properties.query.properties.${index}`} size='mini' onClick={this.delProperty}>Remove</Button>
                                         </li>)
@@ -288,7 +288,7 @@ class ApiSchemaV extends Component {
                                             <span className='sp-inline-form'/>
                                             <Checkbox label='Required' name={`properties.reqHeaders.properties.${index}.value.required`}
                                                 toggle size='mini'
-                                                checked={item.value.required} 
+                                                checked={item.value.required}
                                                 onChange={this.handleChange} />
                                             <Button name={`properties.reqHeaders.properties.${index}`} size='mini' onClick={this.delProperty}>Remove</Button>
                                         </li>)
@@ -328,7 +328,7 @@ class ApiSchemaV extends Component {
                                             <span className='sp-inline-form'/>
                                             <Checkbox label='Required' name={`properties.resHeaders.properties.${index}.value.required`}
                                                 toggle size='mini'
-                                                checked={item.value.required} 
+                                                checked={item.value.required}
                                                 onChange={this.handleChange} />
                                             <Button name={`properties.resHeaders.properties.${index}`} size='mini' onClick={this.delProperty}>Remove</Button>
                                         </li>)
