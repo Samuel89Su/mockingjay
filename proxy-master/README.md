@@ -5,3 +5,5 @@
 - 支持级联
 - 代理监控
 - 兼容 webpack-dev-server proxy, 可直接移植
+
+唯一配置文件 cfg.js
