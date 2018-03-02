@@ -221,6 +221,8 @@ class ApiSchemaV extends Component {
             return (<div>has no state</div>)
         }
 
+        const shorts = [{ key: 'type:string', value: '"type":"string"'}, { key: 'type:number', value: '"type":"number"' }, { key: 'regexp', value: '"regexp":' }, { key: 'required', value: '"required":'}]
+       
         return (
             <div className="div-schema">
                 <Form>
@@ -259,7 +261,7 @@ class ApiSchemaV extends Component {
                     }
                     </ul>
                     <Button name='properties.query.properties' size='mini' onClick={ this.addQueryOrHeader }>Add</Button>
-                    <RawSchemaEditor name='properties.query.properties' schema={apiSchema.properties.query.properties} handleChange={this.handleChange} />
+                    <RawSchemaEditor name='properties.query.properties' schema={apiSchema.properties.query.properties} handleChange={this.handleChange} shorts={shorts} />
 
                     <Header as='h4'>Headers</Header>
                     <text>使用正则表达式进行数据验证</text>
@@ -295,7 +297,7 @@ class ApiSchemaV extends Component {
                     }
                     </ul>
                     <Button name='properties.reqHeaders.properties' size='mini' onClick={ this.addQueryOrHeader }>Add</Button>
-                    <RawSchemaEditor name='properties.reqHeaders.properties' schema={apiSchema.properties.reqHeaders.properties} handleChange={this.handleChange} />
+                    <RawSchemaEditor name='properties.reqHeaders.properties' schema={apiSchema.properties.reqHeaders.properties} handleChange={this.handleChange} shorts={shorts} />
 
                     <Header as='h4'>Body Schema</Header>
                     <text>使用Json Schema进行数据验证</text><br/>
@@ -335,7 +337,7 @@ class ApiSchemaV extends Component {
                     }
                     </ul>
                     <Button name='properties.resHeaders.properties' size='mini' onClick={ this.addQueryOrHeader }>Add</Button>
-                    <RawSchemaEditor name='properties.resHeaders.properties' schema={apiSchema.properties.resHeaders.properties} handleChange={this.handleChange} />
+                    <RawSchemaEditor name='properties.resHeaders.properties' schema={apiSchema.properties.resHeaders.properties} handleChange={this.handleChange} shorts={shorts} />
 
                     <Header as='h4'>Body Schema</Header>
                     <text>使用Json Schema进行数据验证</text><br/>

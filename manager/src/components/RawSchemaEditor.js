@@ -78,11 +78,11 @@ class RawSchemaEditor extends Component {
     }
 
     buildQuickLabels() {
-        const stringSet = ['"type":"string"','"type":"number"','"regexp":','"required":']
+        const stringSet = this.props.shorts ? this.props.shorts : []
         return (<div>
             {
-                stringSet.map((value, index)  => {
-                    return <Label key={index} size='mini' value={value} onClick={this.quickInsert} >{value}</Label>
+                stringSet.map((short, index)  => {
+                    return <Label key={index} size='mini' value={short.value} onClick={this.quickInsert} >{short.key}</Label>
                 })
             }
         </div>)

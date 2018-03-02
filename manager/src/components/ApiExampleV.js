@@ -114,6 +114,8 @@ class ApiExampleV extends Component {
             return (<div>has no state</div>)
         }
 
+        const shorts = [{ key: 'key:value', value: '"":"",'}]
+
         return (
             <div id="div_apiExample">
                 <Form>
@@ -140,7 +142,7 @@ class ApiExampleV extends Component {
                     }
                     </ul>
                     <Button name='query' size='mini' onClick={ this.addQueryOrHeader }>Add</Button>
-                    <RawSchemaEditor name='query' schema={example.query} handleChange={this.handleChange} />
+                    <RawSchemaEditor name='query' schema={example.query} handleChange={this.handleChange} shorts={shorts} />
                     
                     <Header as='h4'>Headers</Header>
                     <ul>
@@ -191,7 +193,7 @@ class ApiExampleV extends Component {
                     }
                     </ul>
                     <Button name='resHeader' size='mini' onClick={ this.addQueryOrHeader }>Add</Button>
-                    <RawSchemaEditor name='query' schema={example.resHeader} handleChange={this.handleChange} />
+                    <RawSchemaEditor name='query' schema={example.resHeader} handleChange={this.handleChange} shorts={shorts} />
                     
                     <Header as='h4'>Body</Header>
                     <TextArea rows='5' name="resBody" value={example.resBody} onChange={this.handleChange} />
