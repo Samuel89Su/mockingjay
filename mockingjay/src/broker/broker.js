@@ -187,13 +187,14 @@ async function forwardReq(ctx, next) {
         let appDesc = CacheFacade.getApp(apiSketch.appName, 0)
         if (appDesc) {
             if (appDesc) {
-                if (appDesc.apiForwardTarget) {
+                let target = apiSketch.forwardTarget || appDesc.apiForwardTarget
+                if (target) {
                     if (appDesc.targets && appDesc.targets[appDesc.apiForwardTarget]) {
                         let targetBaseUrl = ''
                         for (let i = 0; i < appDesc.targets.length; i++) {
                             const target = appDesc.targets[i]
                             if (target.name === appDesc.apiForwardTarget) {
-                                targetBaseUrl = appDesc.targets[appDesc.apiForwardTarget]
+                                targetBaseUrl = appDesc.targets[target]
                             }
                         }
                         if (targetBaseUrl) {

@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import queryString from 'query-string'
 import { deepClone, updateByPath } from '../utils'
-import { Header, Button, Label,
-    Form, Input, TextArea, Checkbox, Dropdown } from 'semantic-ui-react'
+import { Header, Label, Form, Input, TextArea, Checkbox, Dropdown } from 'semantic-ui-react'
 import Btns from './BtnApplyDiscard'
 
 class ApiCfgV extends Component {
@@ -20,7 +18,7 @@ class ApiCfgV extends Component {
     componentWillReceiveProps(nextProps) {
         if (!nextProps.apiCfg) {
             this.props.history.goBack()
-        }        
+        }
         if (this.state.apiCfg.id === 0 && nextProps.apiCfg.id > 0) {
             this.props.history.push(`/api/details?appId=${this.state.query.appId}&appName=${this.state.query.appName}&id=${nextProps.apiCfg.id}`)
         } else {
@@ -36,6 +34,10 @@ class ApiCfgV extends Component {
         this.setState({ query: query })
         if (!this.props.register) {
             this.props.onMounted(search)
+        }
+
+        if (!this.props.appCfg || !this.props.appCfg.name) {
+            this.props.fetchApp(search)
         }
     }
 
@@ -64,6 +66,18 @@ class ApiCfgV extends Component {
             return (<div>has no state</div>)
         }
 
+        let targetUrl = ''
+        let targets = []
+        if (this.props.appCfg && this.props.appCfg.targets && this.props.appCfg.targets.length > 0) {
+            for (let i = 0; i < this.props.appCfg.targets.length; i++) {
+                const target = this.props.appCfg.targets[i];
+                targets.push({text: target.name, value: target.name})
+                if (apiCfg.forwardTarget === target.name) {
+                    targetUrl = target.value
+                }
+            }
+        }
+
         return (
             <div id="div_apiCfg">
                 <Form id="fm_apiCfg">
@@ -72,24 +86,30 @@ class ApiCfgV extends Component {
                     <TextArea name="description" rows='4' value={apiCfg.description} onChange={this.handleChange} placeholder='descripe this api' />
                     
                     <Label>Method: </Label>
-                    <Dropdown name='method' placeholder='Select a method' 
-                        selection inline options={[{text:'GET', value:'GET'}, {text:'POST', value:'POST'}]} 
-                        value={apiCfg.method} 
+                    <Dropdown name='method' placeholder='Select a method'
+                        selection inline options={[{text:'GET', value:'GET'}, {text:'POST', value:'POST'}]}
+                        value={apiCfg.method}
                         onChange={this.handleChange} />
                     <br/>
                     
                     <Input label='Path: ' name="path" value={apiCfg.path} onChange={this.handleChange} /><br/>
                     
-                    <Checkbox label='验证数据' name="validate" toggle checked={apiCfg.validate} onChange={this.handleChange} />
+                    <Checkbox label='验证数据' name="validate" toggle checked={apiCfg.validate} onChange={this.handleChange} /><br/>
                     
                     <Checkbox label="代理" name="forward" toggle checked={apiCfg.forward} onChange={this.handleChange} />
+                    <Dropdown name='forwardTarget' placeholder='Select a target, prior over app config'
+                        selection inline
+                        options={targets}
+                        value={apiCfg.forwardTarget}
+                        onChange={this.handleChange} />
+                    <Label>{targetUrl}</Label>
                     <br/>
                     
                     <Label>Logging: </Label>
-                    <Dropdown name='logReq' placeholder='Select a log level' 
-                        selection inline options={[{text:'Req', value:1}, 
-                            {text:'Res', value:2}]} 
-                        value={apiCfg.logReq} 
+                    <Dropdown name='logReq' placeholder='Select a log level'
+                        selection inline
+                        options={[{text:'Req', value:1}, {text:'Res', value:2}]}
+                        value={apiCfg.logReq}
                         onChange={this.handleChange} />
                 
                     <input type="hidden" />

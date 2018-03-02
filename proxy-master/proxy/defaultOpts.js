@@ -17,6 +17,8 @@ const userOpts = require('./opts')
 
 const opts = Object.assign({}, userOpts, defaultOpts)
 
+const targetHost = new URL(opts.target).host
+
 function onProxyReq(proxyReq, req, res) {
     // add custom header to request 
     // or log the req 
@@ -30,7 +32,9 @@ function getProxyResHandler(port, proxyEventEmitter) {
             let query = queryString.parse(search)
             if (query.fromurl) {
                 let redirectUrl = new URL(query.fromurl)
-                if (redirectUrl.host === 'teacher.235.mistong.com' || redirectUrl.host === 'my.235.mistong.com') {
+                let segs = targetHost.split('.').reverse()
+                let domain = segs.pop() + '.' + segs.pop()
+                if (redirectUrl.host.indexOf(domain) > -1) {
                     // console.log('origin redirect url: ' + location)
 
                     query.fromurl = query.fromurl.replace(redirectUrl.host, 'localhost:' + port)
