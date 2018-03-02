@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import queryString from 'query-string'
-// import '../styles/apiCfg.scss'
 import { deepClone, updateByPath } from '../utils'
 import { Header, Button, Label,
     Form, Input, TextArea, Checkbox, Dropdown } from 'semantic-ui-react'

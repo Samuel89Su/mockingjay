@@ -38,10 +38,11 @@
       background: #7a0505;
       color: white;
       margin: 5px 0 0 10px; }
-.sp-inline-form {
+.details-tab .sp-inline-form {
   margin: 0 0 0 80px; }
-#div_apiMcCfg .sp-inline-form {
-  margin: 0 0 0 80px; }
+
+.details-tab .input-key {
+  width: 80px !important; }
 #div_appCfg .sp-inline-form {
   margin: 0 0 0 80px; }
 /* Base Application Styles */
@@ -23201,4 +23202,4 @@ body.pushable > .pusher {
     -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1); } }
 
-/*# sourceMappingURL=style_be26b007.css.map*/
+/*# sourceMappingURL=style_b45e1411.css.map*/

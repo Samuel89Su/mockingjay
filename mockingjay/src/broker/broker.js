@@ -112,7 +112,7 @@ async function validateSchema(ctx, next) {
 
             // req schema validation
             if (apiSchema.properties.query) {
-                let target = parseKeyVals(ctx.query, apiSchema.properties.query)
+                let target = retrieveAndStringify(ctx.query, apiSchema.properties.query)
 
                 let validate = ajv.compile(apiSchema.properties.query)
                 if (validate(target)) {
@@ -121,7 +121,7 @@ async function validateSchema(ctx, next) {
                     errors = validate.errors
                 }
             } else if (apiSchema.properties.reqHeaders) {
-                let target = parseKeyVals(ctx.request.headers, apiSchema.properties.reqHeaders)
+                let target = retrieveAndStringify(ctx.request.headers, apiSchema.properties.reqHeaders)
 
                 let validate = ajv.compile(target)
                 if (validate(ctx.request.headers)) {
@@ -151,7 +151,7 @@ async function validateSchema(ctx, next) {
 
             // res schema validation
             if (apiSchema.properties.resHeaders) {
-                let target = parseKeyVals(ctx.headers, apiSchema.properties.resHeaders)
+                let target = retrieveAndStringify(ctx.headers, apiSchema.properties.resHeaders)
 
                 let validate = ajv.compile(apiSchema.properties.resHeaders)
                 if (validate(target)) {
@@ -253,7 +253,7 @@ function set404(ctx) {
     ctx.body = 'api not found'
 }
 
-function parseKeyVals(src, schema) {
+function retrieveAndStringify(src, schema) {
     let keys = []
     for (const key in schema.properties) {
         if (schema.properties.hasOwnProperty(key)) {
@@ -264,7 +264,11 @@ function parseKeyVals(src, schema) {
     keys.forEach(key => {
         if (src[key]) {
             try {
-                src[key] = JSON.parse(src[key])
+                let val = src[key]
+                if (val && typeof val !== 'string') {
+                    val = val.toString()
+                }
+                src[key] = val
             } catch (error) {
             }
         }

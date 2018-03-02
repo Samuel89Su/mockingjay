@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import '../styles/apiMcCfg.scss'
 import { deepClone, updateByPath, delByPath, getPropertyByPath } from '../utils'
 import { Header, Button, Input, Label, TextArea, Form, Dropdown, Checkbox } from 'semantic-ui-react'
 import Btns from './BtnApplyDiscard'
