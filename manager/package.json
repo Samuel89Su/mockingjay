@@ -6,6 +6,7 @@
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-react-transform": "^2.0.2",
+    "js-beautify": "^1.7.5",
     "semantic-ui": "^2.2.14",
     "semantic-ui-react": "^0.78.2"
   },

@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import { deepClone, updateByPath, delByPath, getPropertyByPath, parseRecursive, object2Array, array2Object } from '../utils'
-import { Header, Button, Input, TextArea, Form, Checkbox, Dropdown, Label } from 'semantic-ui-react'
+import { Header, Button, Input, TextArea, Form, Checkbox, Dropdown } from 'semantic-ui-react'
 import queryString from 'query-string'
 import Btns from './BtnApplyDiscard'
 import RawSchemaEditor from './RawSchemaEditor'
@@ -140,7 +140,7 @@ class ApiSchemaV extends Component {
 
     addQueryOrHeader (e, data) {
         let oPath = data.name
-        let value = { key: '', value: { type: ['string'], regexp: '' } }
+        let value = { key: '', value: { type: 'string', regexp: '' } }
         let schema = deepClone(this.state.schema)
         let arr = getPropertyByPath(schema, oPath)
         arr.push(value)
@@ -265,7 +265,7 @@ class ApiSchemaV extends Component {
                     <text>使用正则表达式进行数据验证</text>
                     <ul>
                     {
-                        (apiSchema.properties && apiSchema.properties.reqHeaders 
+                        (apiSchema.properties && apiSchema.properties.reqHeaders
                             && apiSchema.properties.reqHeaders.properties && apiSchema.properties.reqHeaders.properties instanceof Array) ?
                             apiSchema.properties.reqHeaders.properties.map((item, index) => {
                                 return (<li key={index}>
