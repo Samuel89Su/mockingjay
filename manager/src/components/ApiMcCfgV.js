@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { deepClone, updateByPath, delByPath, getPropertyByPath } from '../utils'
-import { Header, Button, Input, Label, TextArea, Form, Dropdown, Checkbox } from 'semantic-ui-react'
+import { deepClone, updateByPath } from '../utils'
+import { Header, Button, Input, TextArea, Form, Dropdown, Checkbox } from 'semantic-ui-react'
 import Btns from './BtnApplyDiscard'
 import queryString from 'query-string'
 
