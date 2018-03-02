@@ -59,7 +59,7 @@ function getFilter(root, proxyEventEmitter) {
                     }
                 } catch (error) {
                 }
-            } else {
+            } else if (cfg.fiddleAspRoute) {
                 let parentDir = pathname.substr(0, pathname.lastIndexOf('/'))
                 var files = fetchFiles(root + parentDir)
                 if (files && files.length > 0) {

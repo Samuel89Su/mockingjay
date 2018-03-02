@@ -5,23 +5,20 @@
  */
 const http = require('http')
 const connect = require('connect')
-const proxy = require('http-proxy-middleware')
-const { URL } = require('url')
 const { host, port } = require('./cfg')
 const serveStatic = require('serve-static')
-const ws = require('./ws')
-const proxyEventEmitter = require('./eventEmitter')
-const defaultProxy = require('./proxy/default')(proxyEventEmitter)
+const ws = require('./src/ws')
+const proxyEventEmitter = require('./src/eventEmitter')
+const defaultProxy = require('./src/proxy')(proxyEventEmitter)
 
 try {
 
   const app = connect()
-  
-  /**
-   * Add the proxy to connect
-   */
+
+  // 添加代理中间件
   app.use('/', defaultProxy)
 
+  // 添加添加静态资源服务
   const serve = serveStatic('static', { 'index': ['index.html'] })
   app.use(serve)
 

@@ -37,6 +37,6 @@ const base = {
 };
 
 module.exports = function buildConfig(env) {
-    let envConfig = require('./cfg/webpack.config.' + env + '.js');
+    let envConfig = require('./webpackCfg/webpack.config.' + env + '.js');
     return Merge(base, envConfig);
 };
