@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "start": "node index.js",
-    "nodemon": "nodemon index.js"
+    "start": "nodemon index.js",
+    "install": "node install.js",                           
+    "uninstall": "node uninstall.js"
   },
   "keywords": [
     "http",
@@ -20,9 +21,9 @@
     "opn": "^5.2.0",
     "query-string": "^5.1.0",
     "serve-static": "^1.13.2",
-    "ws": "^4.1.0"
+    "ws": "^4.1.0",
+    "nodemon": "^1.15.1"
   },
   "devDependencies": {
-    "nodemon": "^1.15.1"
   }
 }
