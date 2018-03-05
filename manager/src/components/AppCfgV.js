@@ -76,11 +76,13 @@ class AppCfgV extends Component {
         }
 
         let targerOpts = []
-        appCfg.targets.forEach(target => {
-            if (target && target.name) {
-                targerOpts.push({text:target.name, value: target.name })
-            }
-        })
+        if (appCfg.targets && appCfg.targets.length > 0) {
+            appCfg.targets.forEach(target => {
+                if (target && target.name) {
+                    targerOpts.push({text:target.name, value: target.name })
+                }
+            })
+        }
 
         return (
             <div id="div_appCfg">
@@ -104,7 +106,7 @@ class AppCfgV extends Component {
                     <br/>
                     <ul>
                         {
-                            appCfg.targets.map((target, index) => {
+                            (appCfg.targets && appCfg.targets.length > 0) ? appCfg.targets.map((target, index) => {
                                 if (target && target.name) {
                                     return (<li key={target.name}>
                                         <Input name={'targets.' + index + '.name'}
@@ -120,6 +122,7 @@ class AppCfgV extends Component {
                                     </li>)
                                 }
                             })
+                            : null
                         }
                     </ul>
                     
