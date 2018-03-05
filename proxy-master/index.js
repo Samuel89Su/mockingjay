@@ -5,7 +5,7 @@
  */
 const http = require('http')
 const connect = require('connect')
-const { host, port } = require('./cfg')
+const { host, port, staticRoot } = require('./cfg')
 const serveStatic = require('serve-static')
 const ws = require('./src/ws')
 const proxyEventEmitter = require('./src/eventEmitter')
@@ -19,7 +19,7 @@ try {
   app.use('/', defaultProxy)
 
   // 添加添加静态资源服务
-  const serve = serveStatic('static', { 'index': ['index.html'] })
+  const serve = serveStatic(staticRoot, { 'index': ['index.html'] })
   app.use(serve)
 
   http.createServer(app).listen(port, host)
