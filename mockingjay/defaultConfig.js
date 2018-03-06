@@ -5,6 +5,6 @@ const defaultConfig = {
     port: 3000
 }
 
-const mergedConfig = Object.assign({}, config, defaultConfig)
+const mergedConfig = Object.assign({}, defaultConfig, config)
 
 exports = module.exports = mergedConfig
