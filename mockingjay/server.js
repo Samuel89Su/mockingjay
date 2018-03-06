@@ -6,6 +6,7 @@ const router = require('./router')
 const logger = require('./src/common/logger')
 const preStart = require('./src/preStart')
 const rename = require('./test/common/CacheFacade.test')
+const config = require('./defaultConfig')
 
 preStart()
 
@@ -19,7 +20,7 @@ server.use(serve(__dirname + '/static'), {
 server.use(router.routes())
     .use(router.allowedMethods())
 
-server.listen(3000, '0.0.0.0', (err) => {
+server.listen(config.port, config.host, (err) => {
     if (err) {
         throw err
     }
