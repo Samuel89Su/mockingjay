@@ -24,6 +24,6 @@ server.listen(config.port, config.host, (err) => {
     if (err) {
         throw err
     }
-    logger.info('listening on 3000')
-    console.log('listening on 3000')
+    logger.info('listening on ' + config.port)
+    console.log('listening on ' + config.port)
 })
