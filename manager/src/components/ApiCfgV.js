@@ -12,7 +12,7 @@ class ApiCfgV extends Component {
         this.discard = this.discard.bind(this)
         this.handleChange = this.handleChange.bind(this)
 
-        this.state = { apiCfg: props.apiCfg }
+        this.state = { apiCfg: props.apiCfg, updateDisabled: true }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -42,6 +42,9 @@ class ApiCfgV extends Component {
     }
 
     handleChange(e, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let oPath = data.name
         let value = data.type === 'checkbox' ? data.checked : data.value
         let apiCfg = updateByPath(deepClone(this.state.apiCfg), oPath, value)
@@ -49,7 +52,7 @@ class ApiCfgV extends Component {
     }
 
     update(e) {
-      e.target.disabled = true
+      this.setState({updateDisabled: true})
       let apiCfg = this.state.apiCfg
       this.props.onUpdateClick(apiCfg)
     }
@@ -115,7 +118,7 @@ class ApiCfgV extends Component {
                     <input type="hidden" />
               </Form>
 
-              <Btns applyAction={this.update} hideDiscard={this.props.register} discardAction={this.discard} />
+              <Btns applyAction={this.update} applyDisabled={this.state.updateDisabled && Boolean(this.state.updateDisabled)} hideDiscard={this.props.register} discardAction={this.discard} />
             </div>
         )
     }

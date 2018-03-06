@@ -14,7 +14,7 @@ class AppCfgV extends Component {
         this.addTagert = this.addTagert.bind(this)
         this.discardTarget = this.discardTarget.bind(this)
 
-        this.state = { appCfg: props.appCfg }
+        this.state = { appCfg: props.appCfg, updateDisabled: true }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -35,12 +35,18 @@ class AppCfgV extends Component {
     }
 
     handleChange(e, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let oPath = data.name
         let appCfg = updateByPath(deepClone(this.state.appCfg), oPath, data.value)
         this.setState({ appCfg: appCfg })
     }
 
     addTagert() {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let appCfg = deepClone(this.state.appCfg)
         appCfg.targets.push({
             name: new Date().valueOf().toString(),
@@ -50,6 +56,9 @@ class AppCfgV extends Component {
     }
 
     discardTarget(e) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let appCfg = deepClone(this.state.appCfg)
         var index = parseInt(e.target.name)
         appCfg.targets.splice(index,1)
@@ -57,7 +66,7 @@ class AppCfgV extends Component {
     }
 
     update(e) {
-      e.target.disabled = true
+      this.setState({updateDisabled: true})
       let appCfg = this.state.appCfg
       this.props.onUpdateClick(appCfg)
       e.target.disabled = false
@@ -130,7 +139,7 @@ class AppCfgV extends Component {
                     <input type="hidden"/>
                 </Form>
 
-                <Btns applyAction={this.update} hideDiscard={this.props.register} discardAction={this.discard} />
+                <Btns applyAction={this.update} applyDisabled={this.state.updateDisabled && Boolean(this.state.updateDisabled)} hideDiscard={this.props.register} discardAction={this.discard} />
                 
             </div>
         )
