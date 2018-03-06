@@ -6,6 +6,7 @@ import { Header, Button, Input, TextArea, Form } from 'semantic-ui-react'
 import Btns from './BtnApplyDiscard'
 import queryString from 'query-string'
 import RawSchemaEditor from './RawSchemaEditor'
+const beautify = require('js-beautify').js
 
 class ApiExampleV extends Component {
     constructor(props) {
@@ -113,6 +114,25 @@ class ApiExampleV extends Component {
         if (!example || !example.hasOwnProperty('query')) {
             return (<div>has no state</div>)
         }
+        
+        if (example) {
+            if (example.reqBody) {
+                if(typeof example.reqBody === 'object') {
+                    example.reqBody = JSON.stringify(example.reqBody)
+                }
+                if (typeof example.reqBody === 'string') {
+                    example.reqBody = beautify(example.reqBody, { indent_size: 2, space_in_empty_paren: true })
+                }
+            }
+            if (example.resBody) {
+                if (typeof example.resBody === 'object') {
+                    example.resBody = JSON.stringify(example.resBody)
+                }
+                if (typeof example.reqBody === 'string') {
+                    example.resBody = beautify(example.resBody, { indent_size: 2, space_in_empty_paren: true })
+                }
+            }
+        }
 
         const shorts = [{ key: 'key:value', value: '"":"",'}]
 
@@ -169,7 +189,7 @@ class ApiExampleV extends Component {
                     <RawSchemaEditor name='query' schema={example.reqHeader} handleChange={this.handleChange} />
                     
                     <Header as='h4'>Body</Header>
-                    <TextArea rows='5' name="reqBody" value={example.reqBody} onChange={this.handleChange} />
+                    <TextArea rows='5' autoHeight name="reqBody" value={example.reqBody} onChange={this.handleChange} />
                     <Header as='h3'>Response</Header>
                     <Header as='h4'>Headers</Header>
                     <ul>
@@ -196,7 +216,7 @@ class ApiExampleV extends Component {
                     <RawSchemaEditor name='query' schema={example.resHeader} handleChange={this.handleChange} shorts={shorts} />
                     
                     <Header as='h4'>Body</Header>
-                    <TextArea rows='5' name="resBody" value={example.resBody} onChange={this.handleChange} />
+                    <TextArea rows='5' autoHeight name="resBody" value={example.resBody} onChange={this.handleChange} />
 
                     <input type="hidden"/>
                 </Form>
