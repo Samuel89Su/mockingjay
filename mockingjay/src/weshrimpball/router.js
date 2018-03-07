@@ -8,6 +8,6 @@ const router = new Router()
 
 router.use('/*', handleError)
 
-router.get('/signverify', verifyWeChatSign)
+router.get('/', verifyWeChatSign)
 
 exports = module.exports = router
