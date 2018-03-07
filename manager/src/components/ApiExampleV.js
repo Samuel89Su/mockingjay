@@ -19,7 +19,7 @@ class ApiExampleV extends Component {
         
         let example = deepClone(props.apiExample)
         example = this.preprocessExample(example)
-        this.state = { example: example }
+        this.state = { example: example, updateDisabled: true }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -56,6 +56,9 @@ class ApiExampleV extends Component {
     }
 
     handleChange (e, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let oPath = data.name
         let value = data.type === 'checkbox' ? data.checked : data.value
         let example = updateByPath(deepClone(this.state.example), oPath, value)
@@ -63,6 +66,9 @@ class ApiExampleV extends Component {
     }
 
     addQueryOrHeader (e, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let oPath = data.name
         let value = { key: '', value: '' }
         let example = deepClone(this.state.example)
@@ -72,6 +78,9 @@ class ApiExampleV extends Component {
     }
 
     delProperty (e, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let lastIndex = data.name.lastIndexOf('.')
         let path = data.name.substr(0, lastIndex)
         let index = parseInt(data.name.split('.').pop())
@@ -83,7 +92,7 @@ class ApiExampleV extends Component {
     }
 
     update (e) {
-        e.target.disabled = true
+        this.setState({updateDisabled: true})
         let example = this.state.example
 
         // convert query, header
@@ -221,7 +230,7 @@ class ApiExampleV extends Component {
                     <input type="hidden"/>
                 </Form>
 
-                <Btns applyAction={this.update} hideDiscard={true} />
+                <Btns applyAction={this.update} applyDisabled={this.state.updateDisabled && Boolean(this.state.updateDisabled)} hideDiscard={true} />
             </div>
         )
     }

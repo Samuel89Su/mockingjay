@@ -20,7 +20,7 @@ class ApiSchemaV extends Component {
         
         let schema = deepClone(props.apiSchema)
         let newSchema = this.preprocessSchema(schema)
-        this.state = { schema: newSchema }
+        this.state = { schema: newSchema, updateDisabled: true }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -98,6 +98,9 @@ class ApiSchemaV extends Component {
     }
 
     handleChange (e, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let oPath = data.name
         let value = data.type === 'checkbox' ? data.checked : data.value
         let schema = updateByPath(deepClone(this.state.schema), oPath, value)
@@ -105,6 +108,9 @@ class ApiSchemaV extends Component {
     }
 
     updateRequired (event, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let paths = data.name.split('.')
         let schema = deepClone(this.state.schema)
         let required = schema
@@ -129,6 +135,9 @@ class ApiSchemaV extends Component {
     }
 
     updatePropertyKey (e, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let oPath = data.name
         let property = getPropertyByPath(this.state.schema, oPath)
         let schema = delByPath(deepClone(this.state.schema), oPath)
@@ -139,6 +148,9 @@ class ApiSchemaV extends Component {
     }
 
     addQueryOrHeader (e, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let oPath = data.name
         let value = { key: '', value: { type: 'string', regexp: '' } }
         let schema = deepClone(this.state.schema)
@@ -148,6 +160,9 @@ class ApiSchemaV extends Component {
     }
 
     delProperty (e, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let lastIndex = data.name.lastIndexOf('.')
         let path = data.name.substr(0, lastIndex)
         let index = parseInt(data.name.split('.').pop())
@@ -168,7 +183,7 @@ class ApiSchemaV extends Component {
     }
 
     update (e) {
-        e.target.disabled = true
+        this.setState({updateDisabled: true})
         let schema = this.state.schema
 
         // convert query, header
@@ -346,7 +361,7 @@ class ApiSchemaV extends Component {
                     <input type="hidden"/>
                 </Form>
 
-                <Btns applyAction={this.update} hideDiscard={true} />
+                <Btns applyAction={this.update} applyDisabled={this.state.updateDisabled && Boolean(this.state.updateDisabled)} hideDiscard={true} />
             </div>
         )
     }

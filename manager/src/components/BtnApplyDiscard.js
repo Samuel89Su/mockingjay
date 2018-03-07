@@ -10,7 +10,7 @@ class Btns extends Component {
     render() {
         return (<div className="container-btn">
                     <div className="pane-btn">
-                        <Button className="btn-submit" size='massive' onClick={this.props.applyAction} >Update</Button>
+                        <Button className="btn-submit" size='massive' disabled={this.props.applyDisabled} onClick={this.props.applyAction} >Update</Button>
                         <br/>
                     </div>
                 </div>)

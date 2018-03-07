@@ -12,12 +12,11 @@ class ApiMcCfgV extends Component {
         this.discard = this.discard.bind(this)
         this.handleChange = this.handleChange.bind(this)
         
-        this.createValidator = this.createValidator.bind(this)
         this.createReactor = this.createReactor.bind(this)
         this.addKey = this.addKey.bind(this)
         this.discardKey = this.discardKey.bind(this)
 
-        this.state = { mockCfg: props.mockCfg }
+        this.state = { mockCfg: props.mockCfg, updateDisabled: true }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -34,6 +33,9 @@ class ApiMcCfgV extends Component {
     }
 
     handleChange(e, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let oPath = data.name
         let value = data.type === 'checkbox' ? data.checked : data.value
         let mockCfg = updateByPath(deepClone(this.state.mockCfg), oPath, value)
@@ -41,7 +43,7 @@ class ApiMcCfgV extends Component {
     }
 
     update(e) {
-      e.target.disabled = true
+      this.setState({updateDisabled: true})
       let mockCfg = this.state.mockCfg
       if (mockCfg.reqDescriptor) {
         let length = mockCfg.reqDescriptor.queries.length
@@ -76,17 +78,6 @@ class ApiMcCfgV extends Component {
         history.back()
     }
 
-    createValidator(namePrefix, validator) {
-        if (validator) {
-            return (<div>
-                        <Input readOnly="true" name={namePrefix + '.validator.type'} value={validator.type} onChange={this.handleChange} /><br/>
-                        <TextArea name={namePrefix + '.validator.value'} value={validator.value} onChange={this.handleChange} />
-                    </div>)
-        } else {
-            return <span></span>
-        }
-    }
-
     createReactor(namePrefix, reactor) {
         if (reactor) {
             return (<div>
@@ -100,6 +91,9 @@ class ApiMcCfgV extends Component {
     }
 
     addKey(type) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let mockCfg = this.state.mockCfg
         let dummy = {}
         let key = null
@@ -158,6 +152,9 @@ class ApiMcCfgV extends Component {
     }
 
     discardKey(type, key) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let mockCfg = this.state.mockCfg
         let dummy = {}
         switch (type) {
@@ -227,7 +224,7 @@ class ApiMcCfgV extends Component {
                     </div>
                 </Form>
 
-                <Btns applyAction={this.update} hideDiscard={false} discardAction={this.discard} />
+                <Btns applyAction={this.update} applyDisabled={this.state.updateDisabled && Boolean(this.state.updateDisabled)} hideDiscard={false} discardAction={this.discard} />
             </div>
         )
     }
