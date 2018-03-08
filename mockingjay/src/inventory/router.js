@@ -3,7 +3,7 @@
 const Router = require('koa-router')
 const appSteward = require('./appSteward')
 const apiSteward = require('./apiSteward')
-const handleError = require('./handleError')
+const handleError = require('../common/handleError')
 
 const router = new Router()
 
