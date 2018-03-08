@@ -10,10 +10,10 @@ async function receive (ctx, next) {
     if (contentType && (contentType === 'text/xml' || contentType === 'application/xml')) {
         await parseBody(ctx, parserOpts.common)
         let message = (await xml2js.parseStringAsync(ctx.request.body)).xml
-        message.FromUserName
-
-        ctx.response.body = `<xml><ToUserName><![CDATA[${message.FromUserName}]]></ToUserName><FromUserName><![CDATA[${message.ToUserName}]]></FromUserName><CreateTime>${new Date().getTime()}</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[你好]]></Content></xml>`
-        ctx.response.type = contentType
+        if (message.MsgType.indexOf('text') > -1) {
+            ctx.response.body = `<xml><ToUserName><![CDATA[${message.FromUserName}]]></ToUserName><FromUserName><![CDATA[${message.ToUserName}]]></FromUserName><CreateTime>${new Date().getTime()}</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[${message.Content}]]></Content></xml>`
+            ctx.response.type = contentType
+        }
     }
 }
 
