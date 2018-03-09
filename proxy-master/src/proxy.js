@@ -148,7 +148,7 @@ function getOpts(eventEmitter) {
         // process regExpRoutes
         if (!target) {
             let host = req.headers.host
-            let reqUrl = req.url
+            let reqUrl = (req.originalUrl || req.url)
             let reqPathname = new URL(host + reqUrl).pathname
             let hostAndPath = host + reqUrl
             if (regExpRoutes.length) {
