@@ -154,7 +154,20 @@ function getOpts(eventEmitter) {
             if (regExpRoutes.length) {
                 for (let i = 0; i < regExpRoutes.length; i++) {
                     const route = regExpRoutes[i];
-                    if (route.regExp.test(reqPathname)) {
+                    if (route.regExp instanceof Array) {                        
+                        let matched = false
+                        for (let j = 0; j < route.length; j++) {
+                            const soloRegExp = route[j];
+                            if (soloRegExp.constructor.name === 'RegExp' && soloRegExp.test(reqPathname)) {                        
+                                target = route.target + reqUrl
+                                matched = true
+                                break
+                            }
+                        }
+                        if (matched) {
+                            break
+                        }
+                    } else if (route.regExp.constructor.name === 'RegExp' && route.regExp.test(reqPathname)) {                        
                         target = route.target + reqUrl
                         break
                     }

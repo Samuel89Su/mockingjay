@@ -14,7 +14,7 @@ exports = module.exports = {
         },
         regExpRoutes: [
             {
-                regExp: /GetClassIndexEvaluationData$/i,
+                regExp: /GetClassIndexEvaluationData$/i,    // 单个正则，或是正则数组 [ /GetClassIndexEvaluationData$/i ]
                 target: 'http://localhost:57761',
             }
         ]
