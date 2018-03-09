@@ -1,21 +1,42 @@
 'use strict'
 
 const proxy = require('http-proxy-middleware')
-const { URL } = require('url')
+const {
+    URL
+} = require('url')
 const queryString = require('query-string')
 const fs = require('fs')
 const path = require('path')
 const EventEmitter = require('events')
 const cfg = require('../cfg')
+const configFactory = require('http-proxy-middleware/lib/config-factory')
+const contextMatcher = require('http-proxy-middleware/lib/context-matcher')
+const Router = require('./router')
 
 const opts = cfg.proxyOpts
+const context = cfg.proxyOpts.context
+delete cfg.proxyOpts.context
+
+// extract regexp routes
+const regExpRoutes = {}
+if (opts.router) {
+    for (const key in opts.router) {
+        if (opts.router.hasOwnProperty(key)) {
+            const routeTarget = opts.router[key];
+            if ((key).constructor.name === 'RegExp') {
+                regExpRoutes[key] = routeTarget
+                delete opts.router[key]
+            }
+        }
+    }
+}
+const config = configFactory.createConfig(context, cfg.proxyOpts)
 
 const targetHost = new URL(opts.target).host
 
-function onProxyReq(proxyReq, req, res) {
-}
+function onProxyReq(proxyReq, req, res) {}
 
-function getProxyResHandler(port, proxyEventEmitter) {
+function getProxyResHandler(proxyEventEmitter) {
     return function onProxyRes(proxyRes, req, res) {
         if (proxyRes.statusCode === 301 || proxyRes.statusCode === 302) {
             let location = proxyRes.headers.location
@@ -26,7 +47,7 @@ function getProxyResHandler(port, proxyEventEmitter) {
                 let segs = targetHost.split('.').reverse()
                 let domain = segs.pop() + '.' + segs.pop()
                 if (redirectUrl.host.indexOf(domain) > -1) {
-                    query.fromurl = query.fromurl.replace(redirectUrl.host, 'localhost:' + port)
+                    query.fromurl = query.fromurl.replace(redirectUrl.host, 'localhost:' + cfg.port)
                     proxyRes.headers.location = proxyRes.headers.location.replace(search, '?' + queryString.stringify(query))
                 }
             }
@@ -41,27 +62,27 @@ function getProxyResHandler(port, proxyEventEmitter) {
     }
 }
 
-function getFilter(root, proxyEventEmitter) {
+function getFilter(proxyEventEmitter) {
     /**
      * @param {String} pathname
      * @param {Object} req
      * @return {Boolean}
      */
     return function filter(pathname, req) {
-        let doProxy = true
+        let doProxy = false
+        // send local file
         if (req.method === 'GET' || req.method === 'HEAD') {
             if (pathname.lastIndexOf('.') > pathname.lastIndexOf('/')) {
-                let filePath = path.join(root, pathname)
+                let filePath = path.join(cfg.staticRoot, pathname)
                 try {
                     let stats = fs.statSync(filePath)
                     if (stats.isFile()) {
                         doProxy = false
                     }
-                } catch (error) {
-                }
+                } catch (error) {}
             } else if (cfg.fiddleAspRoute) {
                 let parentDir = pathname.substr(0, pathname.lastIndexOf('/'))
-                var files = fetchFiles(root + parentDir)
+                var files = fetchFiles(cfg.staticRoot + parentDir)
                 if (files && files.length > 0) {
                     for (let i = 0; i < files.length; i++) {
                         const fileName = files[i].replace(/\\/g, '/')
@@ -74,8 +95,11 @@ function getFilter(root, proxyEventEmitter) {
                         }
                     }
                 }
-            }            
+            }
         }
+
+        let originalPath = (req.originalUrl || req.url)
+        doProxy = contextMatcher.match(config.context, originalPath, req)
 
         // emit
         if (proxyEventEmitter) {
@@ -115,31 +139,50 @@ function fetchFiles(filePath, recursive) {
                 if (isDir && recursive) {
                     fileNames.push(fetchFiles(filedir)); //递归，如果是文件夹，就继续遍历该文件夹下面的文件
                 }
-            } catch (error) {
-            }
+            } catch (error) {}
         })
-    } catch (error) {
-    }
+    } catch (error) {}
 
     return fileNames
 }
 
 opts.onProxyReq = onProxyReq
 
-function getOpts(port, eventEmitter) {
-    opts.onProxyRes = getProxyResHandler(port, eventEmitter)
+function getOpts(eventEmitter) {
+    opts.onProxyRes = getProxyResHandler(cfg.port, eventEmitter)
+
+    // custom router
+    opts.router = function customRoute(req) {
+        let target = Router.getTarget(req, config.options)
+        // process regExpRoutes
+        if (!target) {
+            let host = req.headers.host
+            let path = req.url
+            let hostAndPath = host + path
+            for (const key in regExpRoutes) {
+                if (regExpRoutes.hasOwnProperty(key)) {
+                    const replaceStr = regExpRoutes[key];
+                    if (key.test(hostAndPath)) {
+                        target = hostAndPath.replace(key, replaceStr)
+                        break
+                    }
+                }
+            }
+        }
+    }
+
     return opts
 }
 
-function createProxyCfg(root, port, eventEmitter) {
+function createProxyCfg(eventEmitter) {
     return {
-        filter: getFilter(root, eventEmitter),
-        opts: getOpts(port, eventEmitter)
+        filter: getFilter(eventEmitter),
+        opts: getOpts(eventEmitter)
     }
 }
 
 exports = module.exports = function newProxy(eventEmitter) {
-    let proxyCfg = createProxyCfg(cfg.staticRoot, cfg.port, eventEmitter)
+    let proxyCfg = createProxyCfg(eventEmitter)
 
     return proxy(proxyCfg.filter, proxyCfg.opts)
 }
