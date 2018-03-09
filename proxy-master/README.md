@@ -13,6 +13,6 @@
 2.  context 代理判别
 3.  router 路由表配置
 4.  regExpRoutes 正则路由表配置
-
+5.  X-Requested-With: XMLHttpRequest 请求头匹配
 
 唯一配置文件 cfg.js

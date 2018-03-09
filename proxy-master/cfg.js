@@ -17,6 +17,7 @@ exports = module.exports = {
                 regExp: /GetClassIndexEvaluationData$/i,    // 单个正则，或是正则数组 [ /GetClassIndexEvaluationData$/i ]
                 target: 'http://localhost:57761',
             }
-        ]
+        ],
+        // xmlHttRequestTarget: 'http://localhost'
     }
 }

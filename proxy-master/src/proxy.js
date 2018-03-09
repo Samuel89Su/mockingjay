@@ -21,6 +21,9 @@ delete cfg.proxyOpts.context
 const regExpRoutes = opts.regExpRoutes || []
 delete opts.regExpRoutes
 
+const xmlHttRequestTarget = opts.xmlHttRequestTarget
+delete opts.xmlHttRequestTarget
+
 const config = configFactory.createConfig(context, cfg.proxyOpts)
 
 const targetHost = new URL(opts.target).host
@@ -29,17 +32,29 @@ function onProxyReq(proxyReq, req, res) {}
 
 function getProxyResHandler(proxyEventEmitter) {
     return function onProxyRes(proxyRes, req, res) {
+        // overwrite redirect response location
         if (proxyRes.statusCode === 301 || proxyRes.statusCode === 302) {
             let location = proxyRes.headers.location
-            let search = location.substr(location.indexOf('?'))
-            let query = queryString.parse(search)
-            if (query.fromurl) {
-                let redirectUrl = new URL(query.fromurl)
-                let segs = targetHost.split('.').reverse()
-                let domain = segs.pop() + '.' + segs.pop()
-                if (redirectUrl.host.indexOf(domain) > -1) {
-                    query.fromurl = query.fromurl.replace(redirectUrl.host, 'localhost:' + cfg.port)
-                    proxyRes.headers.location = proxyRes.headers.location.replace(search, '?' + queryString.stringify(query))
+            if (location) {
+                let hasSearch = location.indexOf('?')
+                if (hasSearch < -1) {
+                    let search = location.substr(hasSearch)
+                    let query = queryString.parse(search)
+                    for (const key in query) {
+                        if (query.hasOwnProperty(key) && key.toLowerCase() === 'fromurl') {
+                            const fromurl = query[key];
+                            if (fromurl) {
+                                let redirectUrl = new URL(fromurl)
+                                let segs = targetHost.split('.').reverse()
+                                let domain = segs.pop() + '.' + segs.pop()
+                                if (redirectUrl.host.indexOf(domain) > -1) {
+                                    query[key] = fromurl.replace(redirectUrl.host, 'localhost:' + cfg.port)
+                                    proxyRes.headers.location = proxyRes.headers.location.replace(search, '?' + queryString.stringify(query))
+                                }
+                            }
+                            break
+                        }
+                    }
                 }
             }
         }
@@ -60,8 +75,8 @@ function getFilter(proxyEventEmitter) {
      * @return {Boolean}
      */
     return function filter(pathname, req) {
-        let doProxy = false
-        // send local file
+        let doProxy = true
+        // by pass if local
         if (req.method === 'GET' || req.method === 'HEAD') {
             if (pathname.lastIndexOf('.') > pathname.lastIndexOf('/')) {
                 let filePath = path.join(cfg.staticRoot, pathname)
@@ -89,8 +104,12 @@ function getFilter(proxyEventEmitter) {
             }
         }
 
-        let originalPath = (req.originalUrl || req.url)
-        doProxy = contextMatcher.match(config.context, originalPath, req)
+        // filter by context
+        if (doProxy) {
+            doProxy = false
+            let originalPath = (req.originalUrl || req.url)
+            doProxy = contextMatcher.match(config.context, originalPath, req)
+        }
 
         // emit
         if (proxyEventEmitter) {
@@ -144,21 +163,20 @@ function getOpts(eventEmitter) {
 
     // custom router
     opts.router = function customRoute(req) {
+        // get target from route table
         let target = Router.getTarget(req, config.options)
-        // process regExpRoutes
+        // process regExpRoutes, try build new target if matched
         if (!target) {
-            let host = req.headers.host
             let reqUrl = (req.originalUrl || req.url)
-            let reqPathname = new URL(host + reqUrl).pathname
-            let hostAndPath = host + reqUrl
+            let reqPathname = new URL(req.headers.host + reqUrl).pathname
             if (regExpRoutes.length) {
                 for (let i = 0; i < regExpRoutes.length; i++) {
                     const route = regExpRoutes[i];
-                    if (route.regExp instanceof Array) {                        
+                    if (route.regExp instanceof Array) {
                         let matched = false
                         for (let j = 0; j < route.length; j++) {
                             const soloRegExp = route[j];
-                            if (soloRegExp.constructor.name === 'RegExp' && soloRegExp.test(reqPathname)) {                        
+                            if (soloRegExp.constructor.name === 'RegExp' && soloRegExp.test(reqPathname)) {
                                 target = route.target + reqUrl
                                 matched = true
                                 break
@@ -167,11 +185,16 @@ function getOpts(eventEmitter) {
                         if (matched) {
                             break
                         }
-                    } else if (route.regExp.constructor.name === 'RegExp' && route.regExp.test(reqPathname)) {                        
+                    } else if (route.regExp.constructor.name === 'RegExp' && route.regExp.test(reqPathname)) {
                         target = route.target + reqUrl
                         break
                     }
                 }
+            }
+
+            // XMLHttpRequest rule process
+            if (!target && req.headers['X-Requested-With'] === 'XMLHttpRequest' && xmlHttRequestTarget) {
+                target = xmlHttRequestTarget + reqUrl
             }
         }
 
