@@ -11,25 +11,16 @@ const EventEmitter = require('events')
 const cfg = require('../cfg')
 const configFactory = require('http-proxy-middleware/lib/config-factory')
 const contextMatcher = require('http-proxy-middleware/lib/context-matcher')
-const Router = require('./router')
+const Router = require('http-proxy-middleware/lib/router')
 
 const opts = cfg.proxyOpts
 const context = cfg.proxyOpts.context
 delete cfg.proxyOpts.context
 
 // extract regexp routes
-const regExpRoutes = {}
-if (opts.router) {
-    for (const key in opts.router) {
-        if (opts.router.hasOwnProperty(key)) {
-            const routeTarget = opts.router[key];
-            if ((key).constructor.name === 'RegExp') {
-                regExpRoutes[key] = routeTarget
-                delete opts.router[key]
-            }
-        }
-    }
-}
+const regExpRoutes = opts.regExpRoutes || []
+delete opts.regExpRoutes
+
 const config = configFactory.createConfig(context, cfg.proxyOpts)
 
 const targetHost = new URL(opts.target).host
@@ -149,7 +140,7 @@ function fetchFiles(filePath, recursive) {
 opts.onProxyReq = onProxyReq
 
 function getOpts(eventEmitter) {
-    opts.onProxyRes = getProxyResHandler(cfg.port, eventEmitter)
+    opts.onProxyRes = getProxyResHandler(eventEmitter)
 
     // custom router
     opts.router = function customRoute(req) {
@@ -157,18 +148,21 @@ function getOpts(eventEmitter) {
         // process regExpRoutes
         if (!target) {
             let host = req.headers.host
-            let path = req.url
-            let hostAndPath = host + path
-            for (const key in regExpRoutes) {
-                if (regExpRoutes.hasOwnProperty(key)) {
-                    const replaceStr = regExpRoutes[key];
-                    if (key.test(hostAndPath)) {
-                        target = hostAndPath.replace(key, replaceStr)
+            let reqUrl = req.url
+            let reqPathname = new URL(host + reqUrl).pathname
+            let hostAndPath = host + reqUrl
+            if (regExpRoutes.length) {
+                for (let i = 0; i < regExpRoutes.length; i++) {
+                    const route = regExpRoutes[i];
+                    if (route.regExp.test(reqPathname)) {
+                        target = route.target + reqUrl
                         break
                     }
                 }
             }
         }
+
+        return target
     }
 
     return opts
