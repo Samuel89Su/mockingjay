@@ -37,11 +37,11 @@ function getProxyResHandler(proxyEventEmitter) {
             let location = proxyRes.headers.location
             if (location) {
                 let hasSearch = location.indexOf('?')
-                if (hasSearch < -1) {
+                if (hasSearch > -1) {
                     let search = location.substr(hasSearch)
                     let query = queryString.parse(search)
                     for (const key in query) {
-                        if (query.hasOwnProperty(key) && key.toLowerCase() === 'fromurl') {
+                        if (key.toLowerCase() === 'fromurl') {
                             const fromurl = query[key];
                             if (fromurl) {
                                 let redirectUrl = new URL(fromurl)
