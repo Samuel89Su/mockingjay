@@ -12,12 +12,13 @@ exports = module.exports = {
         router: {
             '/Teacher/PsychologyEvaluation/GetSchoolIndexEvaluationData': 'http://localhost:57761'
         },
+        // test path with regexp, forward to the target if matched
         regExpRoutes: [
             {
                 regExp: /GetClassIndexEvaluationData$/i,    // 单个正则，或是正则数组 [ /GetClassIndexEvaluationData$/i ]
                 target: 'http://localhost:57761',
             }
         ],
-        // xmlHttRequestTarget: 'http://localhost'
+        // xmlHttRequestTarget: 'http://localhost'      // for all request that x-request-with header is 'XMLHttpRequest'
     }
 }
