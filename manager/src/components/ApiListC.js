@@ -2,18 +2,27 @@
 
 import { connect } from 'react-redux'
 import queryString from 'query-string'
-import ApiListV from './ApiListV'
+import Loadable from 'react-loadable'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
-import ApiCfgC from './ApiCfgC'
-import ApiSchemaC from './ApiSchemaC'
-import ApiMcCfgC from './ApiMcCfgC'
-import ApiRegisterC from './ApiRegisterC'
-import ApiDetailsTab from './ApiDetailsTab'
+import ApiListV from './ApiListV'
+// import ApiRegisterC from './ApiRegisterC'
+// import ApiDetailsTab from './ApiDetailsTab'
+import Loading from './Loading'
+
+const ApiRegister = Loadable({
+  loader: () => import('./ApiRegisterC'),
+  loading: Loading
+})
+
+const ApiDetailsTab = Loadable({
+  loader: () => import('./ApiDetailsTab'),
+  loading: Loading
+})
 
 // routes
 const ApiRoutes = [
-    { path: '/api/register', component: ApiRegisterC },
+    { path: '/api/register', component: ApiRegister },
     { path: '/api/details', component: ApiDetailsTab }
 ]
 
