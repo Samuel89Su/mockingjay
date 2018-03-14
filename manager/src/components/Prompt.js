@@ -1,3 +1,5 @@
+'use strict'
+
 import React, { Component } from 'react'
 import { Modal, Button, Input } from 'semantic-ui-react'
 

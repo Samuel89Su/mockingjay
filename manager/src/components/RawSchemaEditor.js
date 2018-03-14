@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { object2Array, array2Object } from '../utils'
 import { Header, Button, TextArea, Form, Modal, Label } from 'semantic-ui-react'
-const beautify = require('js-beautify').js
+import beautify from 'js-beautify/js'
 
 class RawSchemaEditor extends Component {
     constructor(props) {

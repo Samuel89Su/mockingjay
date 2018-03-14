@@ -1,5 +1,7 @@
+'use strict'
+
 import { connect } from 'react-redux'
-const queryString = require('query-string')
+import queryString from 'query-string'
 import AppListV from './AppListV'
 import { ApiListC, ApiRoutes } from './ApiListC'
 import InventoryAPI from '../middlewares/InventoryAPI'

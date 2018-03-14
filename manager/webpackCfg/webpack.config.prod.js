@@ -9,7 +9,8 @@ const CopyPlugin = require('copy-webpack-plugin')
 module.exports = {
     output: {
         filename: 'asserts/bundle_[hash].js',
-        publicPath: '/'
+        publicPath: './',
+        chunkFilename: 'asserts/[name]_[hash].js'
 	},
     module: {
         rules: [

@@ -1,5 +1,7 @@
+'use strict'
+
 import { connect } from 'react-redux'
-const queryString = require('query-string')
+import queryString from 'query-string'
 import ApiListV from './ApiListV'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
