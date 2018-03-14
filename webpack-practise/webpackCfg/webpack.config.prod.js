@@ -8,7 +8,7 @@ module.exports = {
     output: {
         filename: 'asserts/bundle_[hash].js',
         publicPath: './',
-        chunkFilename: 'asserts/[name].bundle.js'
+        chunkFilename: 'asserts/[name]_[hash].js'
 	},
     plugins: [
         new CleanPlugin(['index.html', 'asserts/*.*'], {
