@@ -1,16 +1,16 @@
-'use strict';
+'use strict'
 
-const Webpack = require('webpack');
-const Path = require('path');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanPlugin = require('clean-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
+const Webpack = require('webpack')
+const Path = require('path')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const CleanPlugin = require('clean-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
     output: {
         filename: 'asserts/bundle_[hash].js',
-        publicPath: '/'
+        publicPath: './',
+        chunkFilename: 'asserts/[name]_[hash].js'
 	},
     module: {
         rules: [
@@ -33,11 +33,6 @@ module.exports = {
         new Webpack.optimize.OccurrenceOrderPlugin(),
         new Webpack.optimize.UglifyJsPlugin(),
         new ExtractTextPlugin('asserts/style_[contenthash:8].css'),
-        new HtmlWebpackPlugin({
-            template: 'public/index.html',
-            inject: true,
-            filename: 'index.html'
-        }),
         new Webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: JSON.stringify('production')
@@ -46,4 +41,4 @@ module.exports = {
         new Webpack.NoEmitOnErrorsPlugin()
     ],
     devtool: 'source-map'
-};
+}

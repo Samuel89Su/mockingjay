@@ -1,18 +1,38 @@
+'use strict'
+
 import { connect } from 'react-redux'
-const queryString = require('query-string')
-import AppListV from './AppListV'
-import { ApiListC, ApiRoutes } from './ApiListC'
+import queryString from 'query-string'
+import Loadable from 'react-loadable'
 import InventoryAPI from '../middlewares/InventoryAPI'
 import { fetchRemote } from '../middlewares/remoteFetch'
-import AppCfgC from './AppCfgC'
-import AppRegisterC from './AppRegisterC'
+import { ApiRoutes } from './ApiListC'
+import AppListV from './AppListV'
+// import { ApiListC } from './ApiListC'
+// import AppCfgC from './AppCfgC'
+// import AppRegisterC from './AppRegisterC'
+import Loading from './Loading'
+
+const AppRegister = Loadable({
+  loader: () => import('./AppRegisterC'),
+  loading: Loading
+})
+
+const AppCfg = Loadable({
+  loader: () => import('./AppCfgC'),
+  loading: Loading
+})
+
+const ApiList = Loadable({
+  loader: () => import('./ApiListC').ApiListC,
+  loading: Loading
+})
 
 // routes
 const AppRoutes = [
   ...ApiRoutes,
-  { path: '/app/register', component: AppRegisterC },
-  { path: '/app/details', component: AppCfgC },
-  { path: '/app/apilist', component: ApiListC }
+  { path: '/app/register', component: AppRegister },
+  { path: '/app/details', component: AppCfg },
+  { path: '/app/apilist', component: ApiList }
 ]
 
 // actions

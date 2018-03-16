@@ -1,3 +1,5 @@
+'use strict'
+
 import React, { Component } from 'react'
 import '../styles/appCfg.scss'
 import { deepClone, updateByPath } from '../utils'

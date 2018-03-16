@@ -6,7 +6,7 @@ import { Header, Button, Input, TextArea, Form } from 'semantic-ui-react'
 import Btns from './BtnApplyDiscard'
 import queryString from 'query-string'
 import RawSchemaEditor from './RawSchemaEditor'
-const beautify = require('js-beautify').js
+import beautify from 'js-beautify/js'
 
 class ApiExampleV extends Component {
     constructor(props) {

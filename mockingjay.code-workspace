@@ -11,6 +11,12 @@
 		},
 		{
 			"path": "manager"
+		},
+		{
+			"path": "webpack-practise"
+		},
+		{
+			"path": "codesplitting"
 		}
 	],
 	"settings": {}

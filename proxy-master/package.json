@@ -5,9 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "start": "nodemon index.js",
-    "install": "node install.js",                           
-    "uninstall": "node uninstall.js"
+    "start": "nodemon index.js"
   },
   "keywords": [
     "http",

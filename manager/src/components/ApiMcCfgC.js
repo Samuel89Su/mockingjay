@@ -1,3 +1,5 @@
+'use strict'
+
 import { connect } from 'react-redux'
 import ApiMcCfgV from './ApiMcCfgV'
 import { fetchRemote } from '../middlewares/remoteFetch'
