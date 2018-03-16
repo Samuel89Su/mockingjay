@@ -1,18 +1,16 @@
 'use strict'
 
 const Webpack = require('webpack')
-const Path = require('path')
-const CleanPlugin = require('clean-webpack-plugin')
 
 module.exports = {
     output: {
-        filename: 'asserts/bundle_[hash].js',
-        publicPath: './',
-        chunkFilename: 'asserts/[name]_[hash].js'
-	},
+      publicPath: './',
+      filename: 'asserts/bundle_[hash].js',
+      chunkFilename: 'asserts/[name]_[hash].js'
+    },
     plugins: [
         new CleanPlugin(['index.html', 'asserts/*.*'], {
-            root: Path.resolve(__dirname, '../dist/')
+          root: Path.resolve(__dirname, '../dist/')
         }),
         new Webpack.DefinePlugin({
             'process.env': {

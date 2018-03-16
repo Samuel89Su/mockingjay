@@ -3,11 +3,12 @@
 const Path = require('path')
 const Merge = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CleanPlugin = require('clean-webpack-plugin')
 
 const base = {
   entry: './src/index.js',
   output: {
-    path: Path.resolve(__dirname, 'dist')
+    path: Path.resolve(__dirname, 'dist'),
   },
   module: {
     rules: [{
@@ -23,7 +24,6 @@ const base = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'code splitting',
       template: 'public/index.html',
       inject: true,
       filename: 'index.html'

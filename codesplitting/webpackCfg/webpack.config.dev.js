@@ -7,6 +7,16 @@ module.exports = {
     filename: 'bundle.js',
     chunkFilename: '[name].js'
   },
+  module: {
+    rules: [{
+      test: /\.(css|scss)$/,
+      use: [{
+        loader: 'style-loader'
+      }, {
+        loader: 'css-loader'
+      }]
+    }]
+  },
   plugins: [
     new Webpack.HotModuleReplacementPlugin(),
     new Webpack.DefinePlugin({

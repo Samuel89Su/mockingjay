@@ -1,5 +1,5 @@
-import React from 'react';
+import React from 'react'
 
 export default function Example() {
-  return <p>Loaded!</p>;
+  return <p>Loaded!</p>
 }

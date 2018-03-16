@@ -36,7 +36,7 @@ const base = {
       template: 'public/index.html',
       inject: true,
       filename: 'index.html'
-    }),
+    })
   ]
 }
 
