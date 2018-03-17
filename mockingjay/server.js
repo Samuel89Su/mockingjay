@@ -16,7 +16,7 @@ server.env = process.env.NODE_ENV !== 'production' ? 'dev' : 'production'
 
 server.use(compress({
     filter: function(ctx) {
-        return /((text\/css)|(application\/js))/i.test(ctx.type)
+        return /((text\/css)|(application\/javascript))/i.test(ctx.type)
     },
     threshold: 20 * 1024,
     flush: require('zlib').Z_SYNC_FLUSH
