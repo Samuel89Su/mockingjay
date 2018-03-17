@@ -22,9 +22,9 @@ server.use(compress({
     flush: require('zlib').Z_SYNC_FLUSH
 }))
 
-server.use(serve(__dirname + '/static'), {
+server.use(serve(__dirname + '/static', {
     maxage: 12 * 60 * 60 * 1000
-})
+}))
 
 server.use(router.routes())
     .use(router.allowedMethods())
