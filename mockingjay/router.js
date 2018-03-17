@@ -18,9 +18,14 @@ router.use('/weshrimpball', weShrimpballRouter.routes(), weShrimpballRouter.allo
 
 const regexp = /.(js|css)$/i
 const htmlRegexp = /.(html|htm)$/i
-router.get(/^\/(app|api|weshrimpball)/i, async (ctx, next) => {
+router.get(/^\/(index|app|api|weshrimpball)/i, async (ctx, next) => {
+    if (/^\/(index).(htm|html)/i.test(ctx.path)) {
+        ctx.set('location', '/')
+        ctx.status = 302
+        return
+    }
     // filter resource file
-    if (regexp.test(ctx.path) && !htmlRegexp.test(ctx.path)) {
+    else if (regexp.test(ctx.path) && !htmlRegexp.test(ctx.path)) {
         await next()
     } else {
         await send(ctx, 'index.html', { root: __dirname + '/static' })
