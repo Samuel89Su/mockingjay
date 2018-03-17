@@ -5,8 +5,7 @@ const Webpack = require('webpack')
 module.exports = {
   output: {
     filename: 'bundle.js',
-    // publicPath: './',
-    chunkFilename: '[name]_[hash].js'
+    chunkFilename: '[name].js'
   },
   module: {
     rules: [{

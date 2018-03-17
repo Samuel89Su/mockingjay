@@ -3,7 +3,6 @@
 const Path = require('path')
 const Merge = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CleanPlugin = require('clean-webpack-plugin')
 
 const base = {
   entry: './src/index.js',

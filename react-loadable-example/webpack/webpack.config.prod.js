@@ -1,6 +1,8 @@
 'use strict'
 
+const Path = require('path')
 const Webpack = require('webpack')
+const CleanPlugin = require('clean-webpack-plugin')
 
 module.exports = {
     output: {

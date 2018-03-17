@@ -5,24 +5,29 @@ import queryString from 'query-string'
 import Loadable from 'react-loadable'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
-import ApiListV from './ApiListV'
-// import ApiRegisterC from './ApiRegisterC'
-// import ApiDetailsTab from './ApiDetailsTab'
+// import ApiListV from './ApiListV'
+import ApiRegisterC from './ApiRegisterC'
+import ApiDetailsTab from './ApiDetailsTab'
 import Loading from './Loading'
 
-const ApiRegister = Loadable({
-  loader: () => import('./ApiRegisterC'),
-  loading: Loading
-})
+// const ApiRegisterC = Loadable({
+//   loader: () => import('./ApiRegisterC'),
+//   loading: Loading
+// })
 
-const ApiDetailsTab = Loadable({
-  loader: () => import('./ApiDetailsTab'),
+// const ApiDetailsTab = Loadable({
+//   loader: () => import('./ApiDetailsTab'),
+//   loading: Loading
+// })
+
+const ApiListV = Loadable({
+  loader: () => import('./ApiListV'),
   loading: Loading
 })
 
 // routes
 const ApiRoutes = [
-    { path: '/api/register', component: ApiRegister },
+    { path: '/api/register', component: ApiRegisterC },
     { path: '/api/details', component: ApiDetailsTab }
 ]
 

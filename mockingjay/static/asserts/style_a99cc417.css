@@ -1,50 +1,8 @@
-@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin);/* app list begin */
-#app-list table {
-  width: 100%;
-  text-align: left; }
-
-#app-list .div-search {
-  display: inline; }
-  #app-list .div-search .search {
-    float: right; }
-
-/* app list end */
-/* api list begin */
-#api-list table {
-  width: 100%;
-  text-align: left; }
-
-#api-list .div-search {
-  display: inline; }
-  #api-list .div-search .search {
-    float: right; }
-
-/* api list end */
-.container-btn {
-  position: fixed;
-  height: 100%;
-  width: 100%; }
-  .container-btn .pane-btn {
-    position: fixed;
-    right: 125px;
-    bottom: 40px;
-    width: 150px;
-    height: 120px; }
-    .container-btn .pane-btn .btn-submit {
-      background: blue;
-      color: white;
-      margin: 5px 0 0 10px; }
-    .container-btn .pane-btn .btn-discard {
-      background: #7a0505;
-      color: white;
-      margin: 5px 0 0 10px; }
-.details-tab .sp-inline-form {
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin);.details-tab .sp-inline-form {
   margin: 0 0 0 80px; }
 
 .details-tab .input-key {
   width: 80px !important; }
-#div_appCfg .sp-inline-form {
-  margin: 0 0 0 80px; }
 /* Base Application Styles */
 html {
   width: 100%;
@@ -23201,5 +23159,3 @@ body.pushable > .pusher {
   100% {
     -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1); } }
-
-/*# sourceMappingURL=style_f7883a76.css.map*/
