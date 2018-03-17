@@ -24,6 +24,8 @@
   "author": "SamuelSu",
   "license": "MIT",
   "dependencies": {
+    "bytes": "3.0.0",
+    "compressible": "~2.0.13",
     "ajv": "^5.5.2",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
