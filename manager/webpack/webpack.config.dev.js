@@ -34,10 +34,11 @@ module.exports = {
     contentBase: './src',
     inline: true,
     hot: true,
+    host: '0.0.0.0',
     port: 8100,
     historyApiFallback: true,
     proxy: [{
-      context: ['/inventory'],
+      context: ['/inventory', '/video'],
       target: 'http://127.0.0.1:3000'
     }]
   }
