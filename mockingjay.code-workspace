@@ -20,6 +20,12 @@
 		},
 		{
 			"path": "react-loadable-example"
+		},
+		{
+			"path": "react-router-redux"
+		},
+		{
+			"path": "examples"
 		}
 	],
 	"settings": {}
