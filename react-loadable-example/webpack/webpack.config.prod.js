@@ -6,7 +6,6 @@ const CleanPlugin = require('clean-webpack-plugin')
 
 module.exports = {
     output: {
-      publicPath: './',
       filename: 'asserts/bundle_[hash].js',
       chunkFilename: 'asserts/[name]_[hash].js'
     },

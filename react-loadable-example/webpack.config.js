@@ -8,6 +8,7 @@ const base = {
   entry: './src/index.js',
   output: {
     path: Path.resolve(__dirname, 'dist'),
+    publicPath: '/'
   },
   module: {
     rules: [{
