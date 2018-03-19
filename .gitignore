@@ -68,3 +68,4 @@ typings/
 /fakeserver/static/asserts
 /fakeserver/static/index.html
 /manager/dist
+/mockingjay/config.js
