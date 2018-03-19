@@ -6,6 +6,7 @@
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-react-transform": "^2.0.2",
+    "js-beautify": "^1.7.5",
     "semantic-ui": "^2.2.14",
     "semantic-ui-react": "^0.78.2"
   },
@@ -24,6 +25,7 @@
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^1.1.6",
     "html-webpack-plugin": "^2.30.1",
+    "http-proxy-middleware": "^0.17.4",
     "mocha": "^5.0.0",
     "node-sass": "^4.5.3",
     "normalize.css": "^7.0.0",

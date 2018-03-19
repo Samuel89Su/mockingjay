@@ -28,6 +28,9 @@ class CacheKeyCombinator {
      * @returns {String} cache key
      */
     buildAppCfgKey (appName, id) {
+        if (Number.isInteger(id) || !Number.isNaN(parseInt(id))) {
+            id = id.toString().padStart(4, '0')
+        }
         return `${this.appInventoryPrefix}:${id}_${appName.toLowerCase()}`
     }
 
@@ -39,6 +42,9 @@ class CacheKeyCombinator {
      * @returns {String} cache key
      */
     buildApiDescKey (appName, apiId, apiPath) {
+        if (Number.isInteger(apiId) || !Number.isNaN(parseInt(apiId))) {
+            apiId = apiId.toString().padStart(5, '0')
+        }        
         return `${this.buildApiKeyPrefix(appName, false)}${apiId}_${apiPath.toLowerCase()}`
     }
 
@@ -49,6 +55,9 @@ class CacheKeyCombinator {
      * @returns {String} cache key
      */
     buildApiSchemaKey (appName, apiId) {
+        if (Number.isInteger(apiId) || !Number.isNaN(parseInt(apiId))) {
+            apiId = apiId.toString().padStart(5, '0')
+        }
         return `${this.buildApiKeyPrefix(appName, false)}${apiId}_${this.schemaPostfix}`
     }
 
@@ -77,6 +86,9 @@ class CacheKeyCombinator {
      * @returns {String} cache key
      */
     buildApiExampleKey (appName, apiId) {
+        if (Number.isInteger(apiId) || !Number.isNaN(parseInt(apiId))) {
+            apiId = apiId.toString().padStart(5, '0')
+        }
         return `${this.buildApiKeyPrefix(appName, false)}${apiId}_${this.examplePostfix}`
     }
 
@@ -91,13 +103,13 @@ class CacheKeyCombinator {
     }
 
     /**
-     * ':[0-9]{1,5}_'
+     * ':\d{1,5}_'
      * @param {String} key cache key
      * @returns {Number} id
      */
     extractId (key) {
-        let idPart = key.match(':[0-9]{1,5}_')[0]
-        let idRaw = idPart.match('[0-9]{1,5}')[0]
+        let idPart = key.match(':\d{1,5}_')[0]
+        let idRaw = idPart.match('\d{1,5}')[0]
         return parseInt(idRaw)
     }
 }

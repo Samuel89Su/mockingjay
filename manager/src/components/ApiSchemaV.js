@@ -1,11 +1,11 @@
 'use strict'
 
 import React, { Component } from 'react'
-import '../styles/apiSchema.scss'
 import { deepClone, updateByPath, delByPath, getPropertyByPath, parseRecursive, object2Array, array2Object } from '../utils'
-import { Header, Button, Input, TextArea, Form, Checkbox } from 'semantic-ui-react'
-import Btns from './BtnApplyDiscard'
+import { Header, Button, Input, TextArea, Form, Checkbox, Dropdown } from 'semantic-ui-react'
 import queryString from 'query-string'
+import Btns from './BtnApplyDiscard'
+import RawSchemaEditor from './RawSchemaEditor'
 
 class ApiSchemaV extends Component {
     constructor(props) {
@@ -19,15 +19,15 @@ class ApiSchemaV extends Component {
         this.preprocessSchema = this.preprocessSchema.bind(this)
         
         let schema = deepClone(props.apiSchema)
-        schema = this.preprocessSchema(schema)
-        this.state = { schema: schema }
+        let newSchema = this.preprocessSchema(schema)
+        this.state = { schema: newSchema, updateDisabled: true }
     }
 
     componentWillReceiveProps(nextProps) {
         let schema = deepClone(nextProps.apiSchema)
         schema = parseRecursive(schema)
-        schema = this.preprocessSchema(schema)
-        this.setState({schema: schema})
+        let newSchema = this.preprocessSchema(schema)
+        this.setState({schema: newSchema})
     }
 
     componentWillMount() {
@@ -47,7 +47,7 @@ class ApiSchemaV extends Component {
             }
             if (schema.properties.resBody && typeof schema.properties.resBody === 'object') {
                 schema.properties.resBody = JSON.stringify(schema.properties.resBody)
-            }            
+            }
 
             // convert query, header schema to Array
             if (schema.properties.query && schema.properties.query.properties) {
@@ -98,6 +98,9 @@ class ApiSchemaV extends Component {
     }
 
     handleChange (e, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let oPath = data.name
         let value = data.type === 'checkbox' ? data.checked : data.value
         let schema = updateByPath(deepClone(this.state.schema), oPath, value)
@@ -105,6 +108,9 @@ class ApiSchemaV extends Component {
     }
 
     updateRequired (event, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let paths = data.name.split('.')
         let schema = deepClone(this.state.schema)
         let required = schema
@@ -129,6 +135,9 @@ class ApiSchemaV extends Component {
     }
 
     updatePropertyKey (e, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let oPath = data.name
         let property = getPropertyByPath(this.state.schema, oPath)
         let schema = delByPath(deepClone(this.state.schema), oPath)
@@ -139,8 +148,11 @@ class ApiSchemaV extends Component {
     }
 
     addQueryOrHeader (e, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let oPath = data.name
-        let value = { key: '', value: { type: ['string', 'number'], regexp: '' } }
+        let value = { key: '', value: { type: 'string', regexp: '' } }
         let schema = deepClone(this.state.schema)
         let arr = getPropertyByPath(schema, oPath)
         arr.push(value)
@@ -148,6 +160,9 @@ class ApiSchemaV extends Component {
     }
 
     delProperty (e, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let lastIndex = data.name.lastIndexOf('.')
         let path = data.name.substr(0, lastIndex)
         let index = parseInt(data.name.split('.').pop())
@@ -168,7 +183,7 @@ class ApiSchemaV extends Component {
     }
 
     update (e) {
-        e.target.disabled = true
+        this.setState({updateDisabled: true})
         let schema = this.state.schema
 
         // convert query, header
@@ -221,12 +236,14 @@ class ApiSchemaV extends Component {
             return (<div>has no state</div>)
         }
 
+        const shorts = [{ key: 'type:string', value: '"type":"string"'}, { key: 'type:number', value: '"type":"number"' }, { key: 'regexp', value: '"regexp":' }, { key: 'required', value: '"required":'}]
+       
         return (
-            <div id="div_apiSchema">
+            <div className="div-schema">
                 <Form>
                     <Header as='h3'>Request</Header>
                     <Header as='h4'>Query</Header>
-                    <Button name='properties.query.properties' onClick={ this.addQueryOrHeader }>Add</Button>
+                    <text>使用正则表达式进行数据验证</text>
                     <ul>
                     {
                         (apiSchema.properties && apiSchema.properties.query
@@ -234,56 +251,75 @@ class ApiSchemaV extends Component {
                             apiSchema.properties.query.properties.map((item, index) => {
                                 return (<li key={index}>
                                             <Input name={`properties.query.properties.${index}.key`}
-                                                label='Key:'
+                                                label='Key:' size='mini'
                                                 value={item.key}
                                                 onChange={this.handleChange} />
+                                            <Dropdown name={`properties.query.properties.${index}.value.type`}
+                                                placeholder='pick a type'
+                                                selection inline size='mini'
+                                                options={[{text:'string',value:'string'},{text:'number',value:'number'}]}
+                                                value={item.value.type}
+                                                onChange={this.handleChange} />
                                             <Input name={`properties.query.properties.${index}.value.regexp`}
-                                                label='Pattern:'
+                                                label='RegExp:' size='mini'
                                                 value={item.value.regexp}
                                                 onChange={this.handleChange} />
                                             <span className='sp-inline-form'/>
-                                            <Checkbox label='Required' name={`properties.query.properties.${index}.value.required`} toggle 
-                                                checked={item.value.required} 
+                                            <Checkbox label='Required' name={`properties.query.properties.${index}.value.required`}
+                                                toggle size='mini'
+                                                checked={item.value.required}
                                                 onChange={this.handleChange} />
-                                            <Button name={`properties.query.properties.${index}`} onClick={this.delProperty}>Discard</Button>
+                                            <Button name={`properties.query.properties.${index}`} size='mini' onClick={this.delProperty}>Remove</Button>
                                         </li>)
                             })
                         : <div />
                     }
                     </ul>
-                    
+                    <Button name='properties.query.properties' size='mini' onClick={ this.addQueryOrHeader }>Add</Button>
+                    <RawSchemaEditor name='properties.query.properties' schema={apiSchema.properties.query.properties} handleChange={this.handleChange} shorts={shorts} />
+
                     <Header as='h4'>Headers</Header>
-                    <Button name='properties.reqHeaders.properties' onClick={ this.addQueryOrHeader }>Add</Button>
+                    <text>使用正则表达式进行数据验证</text>
                     <ul>
                     {
-                        (apiSchema.properties && apiSchema.properties.reqHeaders 
+                        (apiSchema.properties && apiSchema.properties.reqHeaders
                             && apiSchema.properties.reqHeaders.properties && apiSchema.properties.reqHeaders.properties instanceof Array) ?
                             apiSchema.properties.reqHeaders.properties.map((item, index) => {
                                 return (<li key={index}>
                                             <Input name={`properties.reqHeaders.properties.${index}.key`}
-                                                label='Key:'
+                                                label='Key:' size='mini'
                                                 value={item.key}
                                                 onChange={this.handleChange} />
+                                            <Dropdown name={`properties.reqHeaders.properties.${index}.value.type`}
+                                                placeholder='pick a type'
+                                                selection inline size='mini'
+                                                options={[{text:'string',value:'string'},{text:'number',value:'number'}]}
+                                                value={item.value.type}
+                                                onChange={this.handleChange} />
                                             <Input name={`properties.reqHeaders.properties.${index}.value.regexp`}
-                                                label='Pattern:'
+                                                label='RegExp:' size='mini'
                                                 value={item.value.regexp}
                                                 onChange={this.handleChange} />
                                             <span className='sp-inline-form'/>
-                                            <Checkbox label='Required' name={`properties.reqHeaders.properties.${index}.value.required`} toggle 
-                                                checked={item.value.required} 
+                                            <Checkbox label='Required' name={`properties.reqHeaders.properties.${index}.value.required`}
+                                                toggle size='mini'
+                                                checked={item.value.required}
                                                 onChange={this.handleChange} />
-                                            <Button name={`properties.reqHeaders.properties.${index}`} onClick={this.delProperty}>Discard</Button>
+                                            <Button name={`properties.reqHeaders.properties.${index}`} size='mini' onClick={this.delProperty}>Remove</Button>
                                         </li>)
                             })
                             : <div />
                     }
                     </ul>
-                    
-                    <Header as='h4'>Body</Header>
+                    <Button name='properties.reqHeaders.properties' size='mini' onClick={ this.addQueryOrHeader }>Add</Button>
+                    <RawSchemaEditor name='properties.reqHeaders.properties' schema={apiSchema.properties.reqHeaders.properties} handleChange={this.handleChange} shorts={shorts} />
+
+                    <Header as='h4'>Body Schema</Header>
+                    <text>使用Json Schema进行数据验证</text><br/>
                     <TextArea rows='5' name="properties.reqBody" value={apiSchema.properties.reqBody} onChange={this.handleChange} />
                     <Header as='h3'>Response</Header>
                     <Header as='h4'>Headers</Header>
-                    <Button name='properties.resHeaders.properties' onClick={ this.addQueryOrHeader }>Add</Button>
+                    <text>使用正则表达式进行数据验证</text>
                     <ul>
                     {
                         (apiSchema.properties && apiSchema.properties.resHeaders
@@ -291,31 +327,41 @@ class ApiSchemaV extends Component {
                             apiSchema.properties.resHeaders.properties.map((item, index) => {
                                 return (<li key={index}>
                                             <Input name={`properties.resHeaders.properties.${index}.key`}
-                                                label='Key:'
+                                                label='Key:' size='mini'
                                                 value={item.key}
                                                 onChange={this.handleChange} />
+                                            <Dropdown name={`properties.resHeaders.properties.${index}.value.type`}
+                                                placeholder='pick a type'
+                                                selection inline size='mini'
+                                                options={[{text:'string',value:'string'},{text:'number',value:'number'}]}
+                                                value={item.value.type}
+                                                onChange={this.handleChange} />
                                             <Input name={`properties.resHeaders.properties.${index}.value.regexp`}
-                                                label='Pattern:'
+                                                label='RegExp:' size='mini'
                                                 value={item.value.regexp}
                                                 onChange={this.handleChange} />
                                             <span className='sp-inline-form'/>
-                                            <Checkbox label='Required' name={`properties.resHeaders.properties.${index}.value.required`} toggle 
-                                                checked={item.value.required} 
+                                            <Checkbox label='Required' name={`properties.resHeaders.properties.${index}.value.required`}
+                                                toggle size='mini'
+                                                checked={item.value.required}
                                                 onChange={this.handleChange} />
-                                            <Button name={`properties.resHeaders.properties.${index}`} onClick={this.delProperty}>Discard</Button>
+                                            <Button name={`properties.resHeaders.properties.${index}`} size='mini' onClick={this.delProperty}>Remove</Button>
                                         </li>)
                             })
                             : <div />
                     }
                     </ul>
-                    
-                    <Header as='h4'>Body</Header>
+                    <Button name='properties.resHeaders.properties' size='mini' onClick={ this.addQueryOrHeader }>Add</Button>
+                    <RawSchemaEditor name='properties.resHeaders.properties' schema={apiSchema.properties.resHeaders.properties} handleChange={this.handleChange} shorts={shorts} />
+
+                    <Header as='h4'>Body Schema</Header>
+                    <text>使用Json Schema进行数据验证</text><br/>
                     <TextArea rows='5' name="properties.resBody" value={apiSchema.properties.resBody} onChange={this.handleChange} />
 
                     <input type="hidden"/>
                 </Form>
 
-                <Btns applyAction={this.update} hideDiscard={true} />
+                <Btns applyAction={this.update} applyDisabled={this.state.updateDisabled && Boolean(this.state.updateDisabled)} hideDiscard={true} />
             </div>
         )
     }

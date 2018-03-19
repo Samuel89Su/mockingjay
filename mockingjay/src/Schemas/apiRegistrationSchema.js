@@ -44,6 +44,11 @@ const schema = {
             "minimum": 0,
             "maximum": 16,
             "default": 0
+        },
+        "forwardTarget": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 20
         }
     },
     "required": [

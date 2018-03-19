@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import '../styles/apiMcCfg.scss'
-import { deepClone, updateByPath, delByPath, getPropertyByPath } from '../utils'
-import { Header, Button, Input, Label, TextArea, Form, Dropdown, Checkbox } from 'semantic-ui-react'
+import { deepClone, updateByPath } from '../utils'
+import { Header, Button, Input, TextArea, Form, Dropdown, Checkbox } from 'semantic-ui-react'
 import Btns from './BtnApplyDiscard'
 import queryString from 'query-string'
 
@@ -14,12 +12,11 @@ class ApiMcCfgV extends Component {
         this.discard = this.discard.bind(this)
         this.handleChange = this.handleChange.bind(this)
         
-        this.createValidator = this.createValidator.bind(this)
         this.createReactor = this.createReactor.bind(this)
         this.addKey = this.addKey.bind(this)
         this.discardKey = this.discardKey.bind(this)
 
-        this.state = { mockCfg: props.mockCfg }
+        this.state = { mockCfg: props.mockCfg, updateDisabled: true }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -36,6 +33,9 @@ class ApiMcCfgV extends Component {
     }
 
     handleChange(e, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let oPath = data.name
         let value = data.type === 'checkbox' ? data.checked : data.value
         let mockCfg = updateByPath(deepClone(this.state.mockCfg), oPath, value)
@@ -43,7 +43,7 @@ class ApiMcCfgV extends Component {
     }
 
     update(e) {
-      e.target.disabled = true
+      this.setState({updateDisabled: true})
       let mockCfg = this.state.mockCfg
       if (mockCfg.reqDescriptor) {
         let length = mockCfg.reqDescriptor.queries.length
@@ -78,17 +78,6 @@ class ApiMcCfgV extends Component {
         history.back()
     }
 
-    createValidator(namePrefix, validator) {
-        if (validator) {
-            return (<div>
-                        <Input readOnly="true" name={namePrefix + '.validator.type'} value={validator.type} onChange={this.handleChange} /><br/>
-                        <TextArea name={namePrefix + '.validator.value'} value={validator.value} onChange={this.handleChange} />
-                    </div>)
-        } else {
-            return <span></span>
-        }
-    }
-
     createReactor(namePrefix, reactor) {
         if (reactor) {
             return (<div>
@@ -102,6 +91,9 @@ class ApiMcCfgV extends Component {
     }
 
     addKey(type) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let mockCfg = this.state.mockCfg
         let dummy = {}
         let key = null
@@ -160,6 +152,9 @@ class ApiMcCfgV extends Component {
     }
 
     discardKey(type, key) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let mockCfg = this.state.mockCfg
         let dummy = {}
         switch (type) {
@@ -197,10 +192,11 @@ class ApiMcCfgV extends Component {
         return (
             <div id="div_apiMcCfg">
                 <Form>
-                    <Checkbox label='Mock' name='mock' toggle
+                    <Checkbox label='启用Mock' name='mock' toggle
                         checked={mockCfg.mock}
                         onChange={this.handleChange} />
-
+                    <br/>
+                    <text>支持两种Mock规则，fixed: 固定，custom： 编写自定义 js 脚本为变量retVal(已定义)赋值，可使用 request 变量中的 query、header、body </text>
                     <div id="dv_mockCfg">
                         <Header as='h3'>Response</Header>
                         <Header as='h4'>Headers</Header>
@@ -213,8 +209,8 @@ class ApiMcCfgV extends Component {
                                     <Input label='Key: ' name={'resDescriptor.headers.' + index + '.key'} value={header.key} onChange={this.handleChange} />
                                     <Checkbox label='Optional' toggle className='sp-inline-form'
                                         name={'resDescriptor.headers.' + index + '.optional'} checked={header.optional} onChange={this.handleChange} />
-                                    <Button onClick={() => this.discardKey('resHeader', header.key)}>Discard</Button>
-                                    <Header as='h5'>Reactor</Header>
+                                    <Button onClick={() => this.discardKey('resHeader', header.key)}>Remove</Button>
+                                    <Header as='h5'>Rule</Header>
                                     { this.createReactor('resDescriptor.headers.' + index, header.reactor) }
                                 </li>)
                             })
@@ -228,7 +224,7 @@ class ApiMcCfgV extends Component {
                     </div>
                 </Form>
 
-                <Btns applyAction={this.update} hideDiscard={false} discardAction={this.discard} />
+                <Btns applyAction={this.update} applyDisabled={this.state.updateDisabled && Boolean(this.state.updateDisabled)} hideDiscard={false} discardAction={this.discard} />
             </div>
         )
     }

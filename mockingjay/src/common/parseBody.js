@@ -27,6 +27,8 @@ const formTypes = [
 // default text types
 const textTypes = [
     'text/plain',
+    'text/xml',
+    'application/xml'
 ];
 
 function formatOptions(opts, type) {

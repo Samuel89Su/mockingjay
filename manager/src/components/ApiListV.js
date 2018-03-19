@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import queryString from 'query-string'
 import '../styles/apiList.scss'
-import { Table, Header, Button, Pagination } from 'semantic-ui-react'
+import { Table, Header, Button, Pagination, Search } from 'semantic-ui-react'
 
 class ApiListV extends Component {
     constructor(props) {
@@ -10,6 +10,7 @@ class ApiListV extends Component {
 
         this.register = this.register.bind(this)
         this.handlePaginationChange = this.handlePaginationChange.bind(this)
+        this.search = this.search.bind(this)
 
         this.state = { activePage: 1 }
     }    
@@ -24,8 +25,12 @@ class ApiListV extends Component {
         this.props.fetchData(query)
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({isSearching: false})
+    }
+
     register(event, data) {
-        this.props.history.push('/api/register')
+        this.props.history.push('/api/register' + this.props.location.search)
     }
 
     handlePaginationChange(e, data) {
@@ -37,6 +42,12 @@ class ApiListV extends Component {
         this.props.fetchData(query)
     }
 
+    search(e, data) {
+        this.setState({isSearching: true, partialName: data.value})
+
+        this.props.fetchData({ ...this.state.query, partialName: data.value })
+    }
+
     render() {
         let pagedApis = this.props.pagedApis
         let list = this.props.pagedApis.records
@@ -44,16 +55,26 @@ class ApiListV extends Component {
             return (<div>has no state</div>)
         }
 
+        let { isSearching, partialName } = this.state
+
         let detailsQuery = Object.assign({}, this.state.query)
         delete detailsQuery.pageNum
         let detailsSearch = '?' + queryString.stringify(detailsQuery)
 
         return (
             <div id='api-list'>
-                <Header as='h2'>Apis</Header>
+                <Header as='h2'>API</Header>
                 <div>
-                    <Button onClick={()=>{this.props.history.push('/')}} >Back to Apps</Button>
-                    <Button onClick={this.register} >Register</Button>
+                    <Button onClick={()=>{this.props.history.push('/')}} >返回应用列表</Button>
+                    <Button onClick={this.register} >添加</Button>
+                    <div className='div-search'>
+                        <Search loading={isSearching}
+                            open={false}
+                            onSearchChange={this.search}
+                            value={partialName}
+                            className='search'
+                            placeholder='路径模糊搜索' />
+                    </div>
                 </div>
 
                 <div>
@@ -61,13 +82,13 @@ class ApiListV extends Component {
                         <Table.Header fullWidth>
                             <Table.Row>
                                 <Table.HeaderCell>ID</Table.HeaderCell>
-                                <Table.HeaderCell>Name</Table.HeaderCell>
-                                <Table.HeaderCell>Method</Table.HeaderCell>
-                                <Table.HeaderCell>Validate</Table.HeaderCell>
-                                <Table.HeaderCell>Forward</Table.HeaderCell>
-                                <Table.HeaderCell>Path</Table.HeaderCell>
-                                <Table.HeaderCell>Desc</Table.HeaderCell>
-                                <Table.HeaderCell>Details</Table.HeaderCell>
+                                <Table.HeaderCell>名称</Table.HeaderCell>
+                                <Table.HeaderCell>方法</Table.HeaderCell>
+                                <Table.HeaderCell>验证数据</Table.HeaderCell>
+                                <Table.HeaderCell>代理</Table.HeaderCell>
+                                <Table.HeaderCell>路径</Table.HeaderCell>
+                                <Table.HeaderCell>描述</Table.HeaderCell>
+                                <Table.HeaderCell>详情</Table.HeaderCell>
                             </Table.Row>
                         </Table.Header>
                         <Table.Body>

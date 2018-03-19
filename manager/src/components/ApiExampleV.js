@@ -1,11 +1,12 @@
 'use strict'
 
 import React, { Component } from 'react'
-import '../styles/apiSchema.scss'
 import { deepClone, updateByPath, getPropertyByPath, parseRecursive, object2Array, array2Object } from '../utils'
 import { Header, Button, Input, TextArea, Form } from 'semantic-ui-react'
 import Btns from './BtnApplyDiscard'
 import queryString from 'query-string'
+import RawSchemaEditor from './RawSchemaEditor'
+const beautify = require('js-beautify').js
 
 class ApiExampleV extends Component {
     constructor(props) {
@@ -18,7 +19,7 @@ class ApiExampleV extends Component {
         
         let example = deepClone(props.apiExample)
         example = this.preprocessExample(example)
-        this.state = { example: example }
+        this.state = { example: example, updateDisabled: true }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -55,6 +56,9 @@ class ApiExampleV extends Component {
     }
 
     handleChange (e, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let oPath = data.name
         let value = data.type === 'checkbox' ? data.checked : data.value
         let example = updateByPath(deepClone(this.state.example), oPath, value)
@@ -62,6 +66,9 @@ class ApiExampleV extends Component {
     }
 
     addQueryOrHeader (e, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let oPath = data.name
         let value = { key: '', value: '' }
         let example = deepClone(this.state.example)
@@ -71,6 +78,9 @@ class ApiExampleV extends Component {
     }
 
     delProperty (e, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let lastIndex = data.name.lastIndexOf('.')
         let path = data.name.substr(0, lastIndex)
         let index = parseInt(data.name.split('.').pop())
@@ -82,7 +92,7 @@ class ApiExampleV extends Component {
     }
 
     update (e) {
-        e.target.disabled = true
+        this.setState({updateDisabled: true})
         let example = this.state.example
 
         // convert query, header
@@ -113,36 +123,57 @@ class ApiExampleV extends Component {
         if (!example || !example.hasOwnProperty('query')) {
             return (<div>has no state</div>)
         }
+        
+        if (example) {
+            if (example.reqBody) {
+                if(typeof example.reqBody === 'object') {
+                    example.reqBody = JSON.stringify(example.reqBody)
+                }
+                if (typeof example.reqBody === 'string') {
+                    example.reqBody = beautify(example.reqBody, { indent_size: 2, space_in_empty_paren: true })
+                }
+            }
+            if (example.resBody) {
+                if (typeof example.resBody === 'object') {
+                    example.resBody = JSON.stringify(example.resBody)
+                }
+                if (typeof example.reqBody === 'string') {
+                    example.resBody = beautify(example.resBody, { indent_size: 2, space_in_empty_paren: true })
+                }
+            }
+        }
+
+        const shorts = [{ key: 'key:value', value: '"":"",'}]
 
         return (
             <div id="div_apiExample">
                 <Form>
                     <Header as='h3'>Request</Header>
                     <Header as='h4'>Query</Header>
-                    <Button name='query' onClick={ this.addQueryOrHeader }>Add</Button>
                     <ul>
                     {
                         (example && example.query && example.query instanceof Array) ?
                             example.query.map((item, index) => {
                                 return (<li key={index}>
                                             <Input name={`query.${index}.key`}
-                                                label='Key:'
+                                                label='Key:' size='mini'
                                                 value={item.key}
                                                 onChange={this.handleChange} />
                                             <Input name={`query.${index}.value`}
-                                                label='Value:'
+                                                label='Value:' size='mini'
                                                 value={item.value}
                                                 onChange={this.handleChange} />
                                             <span className='sp-inline-form'/>
-                                            <Button name={`query.${index}`} onClick={this.delProperty}>Discard</Button>
+                                            <Button name={`query.${index}`} onClick={this.delProperty}>Remove</Button>
                                         </li>)
                             })
                         : <div />
                     }
                     </ul>
+                    <Button name='query' size='mini' onClick={ this.addQueryOrHeader }>Add</Button>
+                    <RawSchemaEditor name='query' schema={example.query} handleChange={this.handleChange} shorts={shorts} />
                     
                     <Header as='h4'>Headers</Header>
-                    <Button name='reqHeader' onClick={ this.addQueryOrHeader }>Add</Button>
                     <ul>
                     {
                         (example && example.reqHeader && example.reqHeader instanceof Array) ?
@@ -157,18 +188,19 @@ class ApiExampleV extends Component {
                                                 value={item.value}
                                                 onChange={this.handleChange} />
                                             <span className='sp-inline-form'/>
-                                            <Button name={`reqHeader.${index}`} onClick={this.delProperty}>Discard</Button>
+                                            <Button name={`reqHeader.${index}`} onClick={this.delProperty}>Remove</Button>
                                         </li>)
                             })
                             : <div />
                     }
                     </ul>
+                    <Button name='reqHeader' size='mini' onClick={ this.addQueryOrHeader }>Add</Button>
+                    <RawSchemaEditor name='query' schema={example.reqHeader} handleChange={this.handleChange} />
                     
                     <Header as='h4'>Body</Header>
-                    <TextArea rows='5' name="reqBody" value={example.reqBody} onChange={this.handleChange} />
+                    <TextArea rows='5' autoHeight name="reqBody" value={example.reqBody} onChange={this.handleChange} />
                     <Header as='h3'>Response</Header>
                     <Header as='h4'>Headers</Header>
-                    <Button name='resHeader' onClick={ this.addQueryOrHeader }>Add</Button>
                     <ul>
                     {
                         (example && example.resHeader && example.resHeader instanceof Array) ?
@@ -183,20 +215,22 @@ class ApiExampleV extends Component {
                                                 value={item.value}
                                                 onChange={this.handleChange} />
                                             <span className='sp-inline-form'/>
-                                            <Button name={`resHeader.${index}`} onClick={this.delProperty}>Discard</Button>
+                                            <Button name={`resHeader.${index}`} onClick={this.delProperty}>Remove</Button>
                                         </li>)
                             })
                             : <div />
                     }
                     </ul>
+                    <Button name='resHeader' size='mini' onClick={ this.addQueryOrHeader }>Add</Button>
+                    <RawSchemaEditor name='query' schema={example.resHeader} handleChange={this.handleChange} shorts={shorts} />
                     
                     <Header as='h4'>Body</Header>
-                    <TextArea rows='5' name="resBody" value={example.resBody} onChange={this.handleChange} />
+                    <TextArea rows='5' autoHeight name="resBody" value={example.resBody} onChange={this.handleChange} />
 
                     <input type="hidden"/>
                 </Form>
 
-                <Btns applyAction={this.update} hideDiscard={true} />
+                <Btns applyAction={this.update} applyDisabled={this.state.updateDisabled && Boolean(this.state.updateDisabled)} hideDiscard={true} />
             </div>
         )
     }

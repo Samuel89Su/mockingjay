@@ -14,7 +14,7 @@ class AppCfgV extends Component {
         this.addTagert = this.addTagert.bind(this)
         this.discardTarget = this.discardTarget.bind(this)
 
-        this.state = { appCfg: props.appCfg }
+        this.state = { appCfg: props.appCfg, updateDisabled: true }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -30,18 +30,23 @@ class AppCfgV extends Component {
             let search = (this.props.location && this.props.location.search)
                             ? this.props.location.search
                             : window.location.search
-            this.setState({ search: search })
             this.props.onMounted(search)
         }
     }
 
     handleChange(e, data) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let oPath = data.name
         let appCfg = updateByPath(deepClone(this.state.appCfg), oPath, data.value)
         this.setState({ appCfg: appCfg })
     }
 
     addTagert() {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let appCfg = deepClone(this.state.appCfg)
         appCfg.targets.push({
             name: new Date().valueOf().toString(),
@@ -51,6 +56,9 @@ class AppCfgV extends Component {
     }
 
     discardTarget(e) {
+        if (this.state.updateDisabled) {
+          this.setState({updateDisabled: false})
+        }
         let appCfg = deepClone(this.state.appCfg)
         var index = parseInt(e.target.name)
         appCfg.targets.splice(index,1)
@@ -58,7 +66,7 @@ class AppCfgV extends Component {
     }
 
     update(e) {
-      e.target.disabled = true
+      this.setState({updateDisabled: true})
       let appCfg = this.state.appCfg
       this.props.onUpdateClick(appCfg)
       e.target.disabled = false
@@ -77,25 +85,27 @@ class AppCfgV extends Component {
         }
 
         let targerOpts = []
-        appCfg.targets.forEach(target => {
-            if (target && target.name) {
-                targerOpts.push({text:target.name, value: target.name })
-            }
-        })
+        if (appCfg.targets && appCfg.targets.length > 0) {
+            appCfg.targets.forEach(target => {
+                if (target && target.name) {
+                    targerOpts.push({text:target.name, value: target.name })
+                }
+            })
+        }
 
         return (
             <div id="div_appCfg">
                 <Header as='h2'>App details</Header>
                 <div>
-                    <Button onClick={()=>this.props.history.push('/')} >Back to list</Button>
+                    <Button onClick={()=>this.props.history.push('/')} >返回应用列表</Button>
                 </div>
                 <Form id="fm_appCfg">
-                    <Input name='name' label='Name:' value={appCfg.name} disabled={!this.props.register} onChange={this.handleChange} />
-                    <Header as='h4'>Description</Header>
+                    <Input name='name' label='名称:' value={appCfg.name} disabled={!this.props.register} onChange={this.handleChange} />
+                    <Header as='h4'>描述</Header>
                     <TextArea name='desc' rows='5' value={appCfg.desc} onChange={this.handleChange} placeholder='descripe this application' />
-                    <Header as='h4'>Targets</Header>
-                    <Button onClick={this.addTagert}>Add</Button><br/>
-                    <Label size='large'>Forward: </Label>
+                    <Header as='h4'>代理</Header>
+                    <Button onClick={this.addTagert}>添加</Button><br/>
+                    <Label size='large'>代理到: </Label>
                     <Dropdown name='apiForwardTarget' placeholder='Select a target'
                         selection inline
                         options={targerOpts}
@@ -105,22 +115,23 @@ class AppCfgV extends Component {
                     <br/>
                     <ul>
                         {
-                            appCfg.targets.map((target, index) => {
+                            (appCfg.targets && appCfg.targets.length > 0) ? appCfg.targets.map((target, index) => {
                                 if (target && target.name) {
                                     return (<li key={target.name}>
                                         <Input name={'targets.' + index + '.name'}
-                                            label='Name:'
+                                            label='名称:'
                                             value={target.name}
                                             onChange={this.handleChange}/>
                                         <Input name={'targets.' + index + '.value'}
-                                            label='Value:'
+                                            label='BaseUrl:'
                                             value={target.value}
                                             onChange={this.handleChange} />
                                         <span className='sp-inline-form'/>
-                                        <Button name={index} onClick={this.discardTarget}>Discard</Button>
+                                        <Button name={index} onClick={this.discardTarget}>删除</Button>
                                     </li>)
                                 }
                             })
+                            : null
                         }
                     </ul>
                     
@@ -128,7 +139,7 @@ class AppCfgV extends Component {
                     <input type="hidden"/>
                 </Form>
 
-                <Btns applyAction={this.update} hideDiscard={this.props.register} discardAction={this.discard} />
+                <Btns applyAction={this.update} applyDisabled={this.state.updateDisabled && Boolean(this.state.updateDisabled)} hideDiscard={this.props.register} discardAction={this.discard} />
                 
             </div>
         )

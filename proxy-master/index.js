@@ -1,37 +1,28 @@
+'use strict'
+
 /**
  * Module dependencies.
  */
 const http = require('http')
 const connect = require('connect')
-const proxy = require('http-proxy-middleware')
-const fs = require('fs')
+const { host, port, staticRoot } = require('./cfg')
 const serveStatic = require('serve-static')
-const defaultOpts = require('./defaultOpts')
-const rawUserOpts = fs.readFileSync('./opts.json')
+const ws = require('./src/ws')
+const proxyEventEmitter = require('./src/eventEmitter')
+const defaultProxy = require('./src/proxy')(proxyEventEmitter)
 
 try {
-  const userOpts = JSON.parse(rawUserOpts)
-  const context = userOpts.context
-  delete userOpts.context
-  const opts = Object.assign({}, userOpts, defaultOpts)
-  
-  /**
-   * Configure proxy middleware
-   */
-  const userProxy = proxy(context, opts)
-
-  const serve = serveStatic('static', {'index': ['index.html']})
 
   const app = connect()
 
-  app.use(serve);
+  // 添加代理中间件
+  app.use('/', defaultProxy)
 
-  /**
-   * Add the proxy to connect
-   */
-  app.use('/', userProxy)
+  // 添加添加静态资源服务
+  const serve = serveStatic(staticRoot, { 'index': ['index.html'] })
+  app.use(serve)
 
-  http.createServer(app).listen(3200, '0.0.0.0')
+  http.createServer(app).listen(port, host)
 
 } catch (error) {
   console.log(error)

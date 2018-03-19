@@ -6,6 +6,7 @@ import ApiMcCfgC from './ApiMcCfgC'
 import queryString from 'query-string'
 import { Button } from 'semantic-ui-react'
 import ApiExampleC from './ApiExampleC'
+import '../styles/details-tab.scss'
 
 class ApiDetailsTab extends Component {
     constructor(props) {
@@ -22,16 +23,16 @@ class ApiDetailsTab extends Component {
 
     render() {
         return (
-            <div>
+            <div className='details-tab'>
                 <div>
-                    <Button onClick={()=>this.props.history.push(`/app/apilist?appId=${this.state.query.appId}&appName=${this.state.query.appName}`)} >Back to list</Button>
+                    <Button onClick={()=>this.props.history.push(`/app/apilist?appId=${this.state.query.appId}&appName=${this.state.query.appName}`)} >返回接口列表</Button>
                 </div>
                 <Tab menu={{ color: 'olive', inverted: true, attached: false, tabular: false }} 
                     panes={[
-                        { menuItem: 'Details', render: () => <Tab.Pane attached={false}><ApiCfgC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> },
-                        { menuItem: 'Schema', render: () => <Tab.Pane attached={false}><ApiSchemaC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> },
-                        { menuItem: 'Mock', render: () => <Tab.Pane attached={false}><ApiMcCfgC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> },
-                        { menuItem: 'Example', render: () => <Tab.Pane attached={false}><ApiExampleC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> }
+                        { menuItem: '详情', render: () => <Tab.Pane attached={false}><ApiCfgC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> },
+                        { menuItem: '数据定义', render: () => <Tab.Pane attached={false}><ApiSchemaC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> },
+                        { menuItem: 'Mock 规则', render: () => <Tab.Pane attached={false}><ApiMcCfgC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> },
+                        { menuItem: '示例', render: () => <Tab.Pane attached={false}><ApiExampleC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> }
                 ]} />
             </div>)
     }

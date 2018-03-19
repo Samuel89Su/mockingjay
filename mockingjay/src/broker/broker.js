@@ -102,76 +102,69 @@ async function generalValidate(ctx, next) {
     await next()
 }
 
+const validateMediaTypes = ['application/json', 'text/html', 'text/plain', 'text/xml']
 async function validateSchema(ctx, next) {
     let apiSketch = ctx.apiSketch
     if (apiSketch.validate) {
         let apiSchema = await CacheFacade.getApiSchema(apiSketch.appName, apiSketch.id)
         if (apiSchema) {
-            let valid = false
-            let errors = null
-
             // req schema validation
             if (apiSchema.properties.query) {
-                let target = parseKeyVals(ctx.query, apiSchema.properties.query)
+                let target = retrieveAndStringify(ctx.query, apiSchema.properties.query)
 
                 let validate = ajv.compile(apiSchema.properties.query)
-                if (validate(target)) {
-                    valid = true
-                } else {
-                    errors = validate.errors
+                if (!validate(target)) {
+                    set400(ctx, validate.errors)
+                    return
                 }
-            } else if (apiSchema.properties.reqHeaders) {
-                let target = parseKeyVals(ctx.request.headers, apiSchema.properties.reqHeaders)
+            }
+            if (apiSchema.properties.reqHeaders) {
+                let target = retrieveAndStringify(ctx.request.headers, apiSchema.properties.reqHeaders)
 
                 let validate = ajv.compile(target)
-                if (validate(ctx.request.headers)) {
-                    valid = true
-                } else {
-                    errors = validate.errors
-                }
-            } else if (apiSchema.properties.reqBody) {
-                await parseBody(ctx, parserOpts.common)
-                let validate = ajv.compile(apiSchema.properties.reqBody)
-                if (validate(ctx.request.body)) {
-                    valid = true
-                } else {
-                    errors = validate.errors
+                if (!validate(ctx.request.headers)) {
+                    set400(ctx, validate.errors)
+                    return
                 }
             }
-
-            if (!valid) {
-                ctx.status = 400
-                ctx.body = errors
-                return
+            // only validate specific ContentType
+            if (ctx.header['content-type']) {
+                let needValidate = false
+                for (let i = 0; i < validateMediaTypes.length; i++) {
+                    const mediaType = validateMediaTypes[i];
+                    if (mediaType === ctx.header['content-type']) {
+                        needValidate = true
+                        break
+                    }
+                }
+                if (needValidate && apiSchema.properties.reqBody) {
+                    await parseBody(ctx, parserOpts.common)
+                    let validate = ajv.compile(apiSchema.properties.reqBody)
+                    if (!validate(ctx.request.body)) {
+                        set400(ctx, validate.errors)
+                        return
+                    }
+                }
             }
-
-            valid = false
 
             await next()
 
             // res schema validation
             if (apiSchema.properties.resHeaders) {
-                let target = parseKeyVals(ctx.headers, apiSchema.properties.resHeaders)
+                let target = retrieveAndStringify(ctx.headers, apiSchema.properties.resHeaders)
 
                 let validate = ajv.compile(apiSchema.properties.resHeaders)
-                if (validate(target)) {
-                    valid = true
-                } else {
-                    errors = validate.errors
+                if (!validate(target)) {
+                    set400(ctx, validate.errors)
+                    return
                 }
-            } else if (apiSchema.properties.resBody) {
+            } 
+            if (apiSchema.properties.resBody) {
                 let validate = ajv.compile(apiSchema.properties.resBody)
-                if (validate(ctx.body)) {
-                    valid = true
-                } else {
-                    errors = validate.errors
+                if (!validate(ctx.body)) {
+                    set400(ctx, validate.errors)
+                    return
                 }
-            }
-
-            if (!valid) {
-                ctx.status = 400
-                ctx.body = errors
-                return
             }
         } else {
             await next()
@@ -187,13 +180,14 @@ async function forwardReq(ctx, next) {
         let appDesc = CacheFacade.getApp(apiSketch.appName, 0)
         if (appDesc) {
             if (appDesc) {
-                if (appDesc.apiForwardTarget) {
+                let target = apiSketch.forwardTarget || appDesc.apiForwardTarget
+                if (target) {
                     if (appDesc.targets && appDesc.targets[appDesc.apiForwardTarget]) {
                         let targetBaseUrl = ''
                         for (let i = 0; i < appDesc.targets.length; i++) {
                             const target = appDesc.targets[i]
                             if (target.name === appDesc.apiForwardTarget) {
-                                targetBaseUrl = appDesc.targets[appDesc.apiForwardTarget]
+                                targetBaseUrl = appDesc.targets[target]
                             }
                         }
                         if (targetBaseUrl) {
@@ -253,7 +247,12 @@ function set404(ctx) {
     ctx.body = 'api not found'
 }
 
-function parseKeyVals(src, schema) {
+function set400(ctx, err) {    
+    ctx.status = 400
+    ctx.body = err
+}
+
+function retrieveAndStringify(src, schema) {
     let keys = []
     for (const key in schema.properties) {
         if (schema.properties.hasOwnProperty(key)) {
@@ -264,7 +263,11 @@ function parseKeyVals(src, schema) {
     keys.forEach(key => {
         if (src[key]) {
             try {
-                src[key] = JSON.parse(src[key])
+                let val = src[key]
+                if (val && typeof val !== 'string') {
+                    val = val.toString()
+                }
+                src[key] = val
             } catch (error) {
             }
         }

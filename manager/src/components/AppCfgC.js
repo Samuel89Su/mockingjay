@@ -52,8 +52,8 @@ const mapStateToProps = state => {
 // map dispatch to props
 const mapDispatchToProps = dispatch => {
   return {
-    onMounted: appId => {
-      fetchRemoteAppCfg(appId, dispatch)
+    onMounted: query => {
+      fetchRemoteAppCfg(query, dispatch)
     },
     onUpdateClick: appCfg => {
       updateRemoteAppCfg(appCfg, dispatch)

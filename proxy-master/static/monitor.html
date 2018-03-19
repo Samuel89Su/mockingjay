@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ProxyMonitor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="socket.js"></script>
+</head>
+<body>
+    <h1>
+        Proxy Monitor
+    </h1>
+    <p>
+        open console to see proxy log.
+    </p>
+    <script>
+        var ws = new WebSocket('ws://localhost:3201');
+    
+        ws.onopen = function () {
+            ws.send('connected')
+        }
+    
+        ws.onmessage = function (ev) {
+            console.log(JSON.parse(ev.data));
+        }
+    </script>
+</body>
+</html>
