@@ -32,7 +32,7 @@ class ApiListV extends Component {
     }
 
     register(event, data) {
-        this.props.history.push('/api/register')
+        this.props.history.push('/api/register' + this.props.location.search)
     }
 
     handlePaginationChange(e, data) {
