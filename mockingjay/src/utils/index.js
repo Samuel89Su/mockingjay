@@ -14,7 +14,7 @@ function clone(req) {
     if (req.body) {
         slave.body = req.body;
     }
-    
+
     return slave;
 }
 
@@ -25,28 +25,28 @@ function clone(req) {
  * @param {Function} preProcessor process before compare
  * @returns {Function} 
  */
-function getComparer (propName, desc, preProcessor) {
+function getComparer(propName, desc, preProcessor) {
     if (!desc) {
         desc = false
     }
 
     if (!propName) {
         if (!desc) {
-            return function sort (a, b) {
+            return function sort(a, b) {
                 return compare(a, b, preProcessor)
             }
         } else {
-            return function sort (a, b) {
+            return function sort(a, b) {
                 return compare(b, a, preProcessor)
             }
         }
     } else {
         if (!desc) {
-            return function sort (a, b) {
+            return function sort(a, b) {
                 return compare(a[propName], b[propName], preProcessor)
             }
         } else {
-            return function sort (a, b) {
+            return function sort(a, b) {
                 return compare(b[propName], a[propName], preProcessor)
             }
         }
@@ -118,10 +118,12 @@ function rake(json, schema) {
         for (const key in json) {
             if (json.hasOwnProperty(key)) {
                 const prop = json[key];
-                if (!schema.properties.hasOwnProperty(key)) {
-                    delete json[key]
-                } else {
-                    json[key] = rake(prop, schema.properties[key])
+                if (schema.properties) {
+                    if (!schema.properties.hasOwnProperty(key)) {
+                        delete json[key]
+                    } else {
+                        json[key] = rake(prop, schema.properties[key])
+                    }
                 }
             }
         }
@@ -130,4 +132,9 @@ function rake(json, schema) {
     return json
 }
 
-exports = module.exports = { clone, getComparer, parse, rake };
+exports = module.exports = {
+    clone,
+    getComparer,
+    parse,
+    rake
+};
