@@ -288,6 +288,31 @@ class Steward {
             return await next()
         }
 
+        if (!apiData.schema.properties) {
+            apiData.schema.properties = {}
+        }
+        if (!apiData.schema.properties.reqHeaders) {
+            apiData.schema.properties.reqHeaders = {}
+        }
+        if (!apiData.schema.properties.reqHeaders.properties) {
+            apiData.schema.properties.reqHeaders.properties = {}
+            apiData.schema.properties.reqHeaders.properties['content-type'] = { type: 'string', regexp: 'application/json' }
+        }
+        if (!apiData.schema.properties.reqHeaders.properties.hasOwnProperty('content-type')) {
+            apiData.schema.properties.reqHeaders.properties['content-type'] = { type: 'string', regexp: 'application/json' }
+        }
+
+        if (!apiData.schema.properties.resHeaders) {
+            apiData.schema.properties.resHeaders = {}
+        }
+        if (!apiData.schema.properties.resHeaders.properties) {
+            apiData.schema.properties.resHeaders.properties = {}
+            apiData.schema.properties.resHeaders.properties['content-type'] = { type: 'string', regexp: 'application/json' }
+        }
+        if (!apiData.schema.properties.resHeaders.properties.hasOwnProperty('content-type')) {
+            apiData.schema.properties.resHeaders.properties['content-type'] = { type: 'string', regexp: 'application/json' }
+        }
+
         let ok = await CacheFacade.setApiSchema(appDesc.name, apiData.id, apiData.schema)
         if (ok) {
             if (apiData.schema.properties) {

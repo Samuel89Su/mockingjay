@@ -78,11 +78,11 @@ class ApiSchemaV extends Component {
             }
             if (!schema.properties.reqHeaders.properties.hasOwnProperty('content-type')) {
                 schema.properties.reqHeaders.properties['content-type'] = {type: 'string', regexp: 'application/json'}
+                this.setState({updateDisabled: false})
             }
             if (schema.properties.reqHeaders.required.indexOf('content-type') === -1) {
                 schema.properties.reqHeaders.required.push('content-type')
             }
-
                 schema.properties.reqHeaders.properties = object2Array(schema.properties.reqHeaders.properties)
                 if (schema.properties.reqHeaders.required && schema.properties.reqHeaders.required.length > 0) {
                     if (schema.properties.reqHeaders.properties && schema.properties.reqHeaders.properties.length > 0) {
@@ -103,6 +103,7 @@ class ApiSchemaV extends Component {
                 }
                 if (!schema.properties.resHeaders.properties.hasOwnProperty('content-type')) {
                     schema.properties.resHeaders.properties['content-type'] = {type: 'string', regexp: 'application/json'}
+                    this.setState({updateDisabled: false})
                 }
                 if (schema.properties.resHeaders.required.indexOf('content-type') === -1) {
                     schema.properties.resHeaders.required.push('content-type')
