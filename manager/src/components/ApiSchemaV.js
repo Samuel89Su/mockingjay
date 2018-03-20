@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import { deepClone, updateByPath, delByPath, getPropertyByPath, parseRecursive, object2Array, array2Object } from '../utils'
-import { Header, Button, Input, TextArea, Form, Checkbox, Dropdown } from 'semantic-ui-react'
+import { Header, Button, Input, TextArea, Form, Checkbox, Dropdown, Label } from 'semantic-ui-react'
 import queryString from 'query-string'
 import Btns from './BtnApplyDiscard'
 import RawSchemaEditor from './RawSchemaEditor'
@@ -19,6 +19,7 @@ class ApiSchemaV extends Component {
         this.preprocessSchema = this.preprocessSchema.bind(this)
         
         let schema = deepClone(props.apiSchema)
+        schema = parseRecursive(schema)
         let newSchema = this.preprocessSchema(schema)
         this.state = { schema: newSchema, updateDisabled: true }
     }
@@ -49,6 +50,11 @@ class ApiSchemaV extends Component {
                 schema.properties.resBody = JSON.stringify(schema.properties.resBody)
             }
 
+            if (!schema.properties.query) {
+                schema.properties.query ={}
+            } else if (!schema.properties.query.properties) {
+                schema.properties.query.properties = {}
+            }
             // convert query, header schema to Array
             if (schema.properties.query && schema.properties.query.properties) {
                 schema.properties.query.properties = object2Array(schema.properties.query.properties)
@@ -64,7 +70,19 @@ class ApiSchemaV extends Component {
                     }
                 }
             }
-            if (schema.properties.reqHeaders && schema.properties.reqHeaders.properties) {
+
+            if (!schema.properties.reqHeaders) {
+                schema.properties.reqHeaders ={}
+            } else if (!schema.properties.reqHeaders.properties) {
+                schema.properties.reqHeaders.properties = {}
+            }
+            if (!schema.properties.reqHeaders.properties.hasOwnProperty('content-type')) {
+                schema.properties.reqHeaders.properties['content-type'] = {type: 'string', regexp: 'application/json'}
+            }
+            if (schema.properties.reqHeaders.required.indexOf('content-type') === -1) {
+                schema.properties.reqHeaders.required.push('content-type')
+            }
+
                 schema.properties.reqHeaders.properties = object2Array(schema.properties.reqHeaders.properties)
                 if (schema.properties.reqHeaders.required && schema.properties.reqHeaders.required.length > 0) {
                     if (schema.properties.reqHeaders.properties && schema.properties.reqHeaders.properties.length > 0) {
@@ -77,8 +95,18 @@ class ApiSchemaV extends Component {
                         });
                     }
                 }
-            }
-            if (schema.properties.resHeaders && schema.properties.resHeaders.properties) {
+
+                if (!schema.properties.resHeaders) {
+                    schema.properties.resHeaders ={}
+                } else if (!schema.properties.resHeaders.properties) {
+                    schema.properties.resHeaders.properties = {}
+                }
+                if (!schema.properties.resHeaders.properties.hasOwnProperty('content-type')) {
+                    schema.properties.resHeaders.properties['content-type'] = {type: 'string', regexp: 'application/json'}
+                }
+                if (schema.properties.resHeaders.required.indexOf('content-type') === -1) {
+                    schema.properties.resHeaders.required.push('content-type')
+                }
                 schema.properties.resHeaders.properties = object2Array(schema.properties.resHeaders.properties)
                 if (schema.properties.resHeaders.required && schema.properties.resHeaders.required.length > 0) {
                     if (schema.properties.resHeaders.properties && schema.properties.resHeaders.properties.length > 0) {
@@ -91,7 +119,6 @@ class ApiSchemaV extends Component {
                         });
                     }
                 }
-            }
         }
 
         return schema
@@ -238,6 +265,28 @@ class ApiSchemaV extends Component {
 
         const shorts = [{ key: 'type:string', value: '"type":"string"'}, { key: 'type:number', value: '"type":"number"' }, { key: 'regexp', value: '"regexp":' }, { key: 'required', value: '"required":'}]
        
+        let reqContentTypeIndex = -1
+        try {
+            let dummy = apiSchema.properties.reqHeaders.properties
+            for (let i = 0; i < dummy.length; i++) {
+                const header = dummy[i];
+                if (header.key === 'content-type') {
+                    reqContentTypeIndex = i
+                }
+            }
+        } catch (error) {}
+        
+        let resContentTypeIndex = -1
+        try {
+            let dummy = apiSchema.properties.resHeaders.properties
+            for (let i = 0; i < dummy.length; i++) {
+                const header = dummy[i];
+                if (header.key === 'content-type') {
+                    resContentTypeIndex = i
+                }
+            }
+        } catch (error) {}
+
         return (
             <div className="div-schema">
                 <Form>
@@ -246,19 +295,11 @@ class ApiSchemaV extends Component {
                     <text>使用正则表达式进行数据验证</text>
                     <ul>
                     {
-                        (apiSchema.properties && apiSchema.properties.query
-                            && apiSchema.properties.query.properties && apiSchema.properties.query.properties instanceof Array) ?
                             apiSchema.properties.query.properties.map((item, index) => {
                                 return (<li key={index}>
                                             <Input name={`properties.query.properties.${index}.key`}
                                                 label='Key:' size='mini'
                                                 value={item.key}
-                                                onChange={this.handleChange} />
-                                            <Dropdown name={`properties.query.properties.${index}.value.type`}
-                                                placeholder='pick a type'
-                                                selection inline size='mini'
-                                                options={[{text:'string',value:'string'},{text:'number',value:'number'}]}
-                                                value={item.value.type}
                                                 onChange={this.handleChange} />
                                             <Input name={`properties.query.properties.${index}.value.regexp`}
                                                 label='RegExp:' size='mini'
@@ -272,7 +313,6 @@ class ApiSchemaV extends Component {
                                             <Button name={`properties.query.properties.${index}`} size='mini' onClick={this.delProperty}>Remove</Button>
                                         </li>)
                             })
-                        : <div />
                     }
                     </ul>
                     <Button name='properties.query.properties' size='mini' onClick={ this.addQueryOrHeader }>Add</Button>
@@ -281,34 +321,37 @@ class ApiSchemaV extends Component {
                     <Header as='h4'>Headers</Header>
                     <text>使用正则表达式进行数据验证</text>
                     <ul>
+                        
                     {
-                        (apiSchema.properties && apiSchema.properties.reqHeaders
-                            && apiSchema.properties.reqHeaders.properties && apiSchema.properties.reqHeaders.properties instanceof Array) ?
-                            apiSchema.properties.reqHeaders.properties.map((item, index) => {
-                                return (<li key={index}>
-                                            <Input name={`properties.reqHeaders.properties.${index}.key`}
-                                                label='Key:' size='mini'
-                                                value={item.key}
-                                                onChange={this.handleChange} />
-                                            <Dropdown name={`properties.reqHeaders.properties.${index}.value.type`}
-                                                placeholder='pick a type'
-                                                selection inline size='mini'
-                                                options={[{text:'string',value:'string'},{text:'number',value:'number'}]}
-                                                value={item.value.type}
-                                                onChange={this.handleChange} />
-                                            <Input name={`properties.reqHeaders.properties.${index}.value.regexp`}
-                                                label='RegExp:' size='mini'
-                                                value={item.value.regexp}
-                                                onChange={this.handleChange} />
-                                            <span className='sp-inline-form'/>
-                                            <Checkbox label='Required' name={`properties.reqHeaders.properties.${index}.value.required`}
-                                                toggle size='mini'
-                                                checked={item.value.required}
-                                                onChange={this.handleChange} />
-                                            <Button name={`properties.reqHeaders.properties.${index}`} size='mini' onClick={this.delProperty}>Remove</Button>
-                                        </li>)
+                        apiSchema.properties.reqHeaders.properties.map((item, index) => {
+                                if (index !== reqContentTypeIndex) {
+                                    return (<li key={index}>
+                                        <Input name={`properties.reqHeaders.properties.${index}.key`}
+                                            label='Key:' size='mini'
+                                            value={item.key}
+                                            onChange={this.handleChange} />
+                                        <Input name={`properties.reqHeaders.properties.${index}.value.regexp`}
+                                            label='RegExp:' size='mini'
+                                            value={item.value.regexp}
+                                            onChange={this.handleChange} />
+                                        <span className='sp-inline-form'/>
+                                        <Checkbox label='Required' name={`properties.reqHeaders.properties.${index}.value.required`}
+                                            toggle size='mini'
+                                            checked={item.value.required}
+                                            onChange={this.handleChange} />
+                                        <Button name={`properties.reqHeaders.properties.${index}`} size='mini' onClick={this.delProperty}>Remove</Button>
+                                    </li>)
+                                } else {
+                                    return (<li key='contentType'>
+                                    <Label size='large'>Content-Type: </Label>
+                                    <Dropdown name={`properties.reqHeaders.properties.${index}.value.regexp`}
+                                        placeholder='pick a type'
+                                        selection inline size='mini'
+                                        options={[{text:'form-urlencoded',value:'application/x-www-form-urlencoded'},{text:'json',value:'application/json'},{text:'text',value:'text/plain'}]}
+                                        value={item.value.regexp} onChange={this.handleChange}/>
+                                </li>)
+                                }
                             })
-                            : <div />
                     }
                     </ul>
                     <Button name='properties.reqHeaders.properties' size='mini' onClick={ this.addQueryOrHeader }>Add</Button>
@@ -322,33 +365,35 @@ class ApiSchemaV extends Component {
                     <text>使用正则表达式进行数据验证</text>
                     <ul>
                     {
-                        (apiSchema.properties && apiSchema.properties.resHeaders
-                            && apiSchema.properties.resHeaders.properties && apiSchema.properties.resHeaders.properties instanceof Array) ?
                             apiSchema.properties.resHeaders.properties.map((item, index) => {
-                                return (<li key={index}>
-                                            <Input name={`properties.resHeaders.properties.${index}.key`}
-                                                label='Key:' size='mini'
-                                                value={item.key}
-                                                onChange={this.handleChange} />
-                                            <Dropdown name={`properties.resHeaders.properties.${index}.value.type`}
-                                                placeholder='pick a type'
-                                                selection inline size='mini'
-                                                options={[{text:'string',value:'string'},{text:'number',value:'number'}]}
-                                                value={item.value.type}
-                                                onChange={this.handleChange} />
-                                            <Input name={`properties.resHeaders.properties.${index}.value.regexp`}
-                                                label='RegExp:' size='mini'
-                                                value={item.value.regexp}
-                                                onChange={this.handleChange} />
-                                            <span className='sp-inline-form'/>
-                                            <Checkbox label='Required' name={`properties.resHeaders.properties.${index}.value.required`}
-                                                toggle size='mini'
-                                                checked={item.value.required}
-                                                onChange={this.handleChange} />
-                                            <Button name={`properties.resHeaders.properties.${index}`} size='mini' onClick={this.delProperty}>Remove</Button>
-                                        </li>)
+                                if (index !== resContentTypeIndex) {
+                                    return (<li key={index}>
+                                        <Input name={`properties.resHeaders.properties.${index}.key`}
+                                            label='Key:' size='mini'
+                                            value={item.key}
+                                            onChange={this.handleChange} />
+                                        <Input name={`properties.resHeaders.properties.${index}.value.regexp`}
+                                            label='RegExp:' size='mini'
+                                            value={item.value.regexp}
+                                            onChange={this.handleChange} />
+                                        <span className='sp-inline-form'/>
+                                        <Checkbox label='Required' name={`properties.resHeaders.properties.${index}.value.required`}
+                                            toggle size='mini'
+                                            checked={item.value.required}
+                                            onChange={this.handleChange} />
+                                        <Button name={`properties.resHeaders.properties.${index}`} size='mini' onClick={this.delProperty}>Remove</Button>
+                                    </li>)
+                                } else {
+                                    return (<li key='contentType'>
+                                    <Label size='large'>Content-Type: </Label>
+                                    <Dropdown name={`properties.resHeaders.properties.${index}.value.regexp`}
+                                        placeholder='pick a type'
+                                        selection inline size='mini'
+                                        options={[{text:'form-urlencoded',value:'application/x-www-form-urlencoded'},{text:'json',value:'application/json'},{text:'text',value:'text/plain'}]}
+                                        value={item.value.regexp} onChange={this.handleChange}/>
+                                </li>)
+                                }
                             })
-                            : <div />
                     }
                     </ul>
                     <Button name='properties.resHeaders.properties' size='mini' onClick={ this.addQueryOrHeader }>Add</Button>
