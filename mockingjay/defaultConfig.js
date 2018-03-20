@@ -6,8 +6,13 @@ const defaultConfig = {
 }
 
 let config = {}
-if (fs.statSync('./config.js').isFile()) {
-    config = require('./config')
+try {
+    let stat = fs.statSync('./config.js')
+    if (stat && stat.isFile()) {
+        config = require('./config')
+    }
+} catch (error) {
+    
 }
 
 const mergedConfig = Object.assign({}, defaultConfig, config)
