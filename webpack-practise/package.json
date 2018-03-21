@@ -1,0 +1,31 @@
+{
+  "name": "webpack-practise",
+  "version": "1.0.0",
+  "description": "webpack practise",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "dev": "webpack-dev-server --open --config ./webpack.config.js --env=dev",
+    "build": "webpack --env=prod"
+  },
+  "keywords": [
+    "practise",
+    "webpack"
+  ],
+  "author": "Samuel Su",
+  "license": "MIT",
+  "devDependencies": {
+    "clean-webpack-plugin": "^0.1.16",
+    "html-webpack-plugin": "^2.30.1",
+    "react": "^15.6.2",
+    "react-dom": "^15.6.2",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "webpack": "^3.11.0",
+    "webpack-dev-server": "^2.11.1",
+    "webpack-merge": "^4.1.1"
+  },
+  "dependencies": {
+    "react-loadable": "^5.3.1"
+  }
+}

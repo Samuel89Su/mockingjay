@@ -1,8 +1,17 @@
+'use strict'
+
 import { connect } from 'react-redux'
-import ApiSchemaV  from './ApiSchemaV'
+import queryString from 'query-string'
+import Loadable from 'react-loadable'
+// import ApiSchemaV  from './ApiSchemaV'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
-import queryString from 'query-string'
+import Loading from './Loading'
+
+const ApiSchemaV = Loadable({
+  loader: () => import('./ApiSchemaV'),
+  loading: Loading
+})
 
 // actions
 const updateApiSchema = apiSchema => {

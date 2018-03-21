@@ -7,18 +7,27 @@ const logger = require('./src/common/logger')
 const preStart = require('./src/preStart')
 const rename = require('./test/common/CacheFacade.test')
 const config = require('./defaultConfig')
+const compress = require('./src/Middlewares/Compression')
 
 preStart()
 
 const server = new Koa()
 server.env = process.env.NODE_ENV !== 'production' ? 'dev' : 'production'
 
-server.use(serve(__dirname + '/static'), {
-    maxage: 12 * 60 * 60 * 1000
-})
+server.use(compress({
+    filter: function(ctx) {
+        return /((text\/css)|(application\/javascript))/i.test(ctx.type)
+    },
+    threshold: 20 * 1024,
+    flush: require('zlib').Z_SYNC_FLUSH
+}))
 
 server.use(router.routes())
     .use(router.allowedMethods())
+
+server.use(serve(__dirname + '/static', {
+    maxage: 12 * 60 * 60 * 1000
+}))
 
 server.listen(config.port, config.host, (err) => {
     if (err) {

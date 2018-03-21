@@ -11,6 +11,18 @@
 		},
 		{
 			"path": "manager"
+		},
+		{
+			"path": "webpack-practise"
+		},
+		{
+			"path": "codesplitting"
+		},
+		{
+			"path": "react-loadable-example"
+		},
+		{
+			"path": "examples"
 		}
 	],
 	"settings": {}

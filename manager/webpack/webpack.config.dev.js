@@ -4,8 +4,8 @@ const Webpack = require('webpack')
 
 module.exports = {
   output: {
-    filename: 'bundle.js'
-    // publicPath: 'http://localhost:8100'
+    filename: 'bundle.js',
+    chunkFilename: '[name].js'
   },
   module: {
     rules: [{
@@ -34,10 +34,11 @@ module.exports = {
     contentBase: './src',
     inline: true,
     hot: true,
+    host: '127.0.0.1',
     port: 8100,
     historyApiFallback: true,
     proxy: [{
-      context: ['/inventory'],
+      context: ['/inventory', '/video'],
       target: 'http://127.0.0.1:3000'
     }]
   }

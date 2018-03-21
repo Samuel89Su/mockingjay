@@ -1,3 +1,5 @@
+'use strict'
+
 import React, { Component } from 'react'
 import { Tab } from 'semantic-ui-react'
 import ApiCfgC from './ApiCfgC'

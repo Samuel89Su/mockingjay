@@ -28,4 +28,4 @@ try {
   console.log(error)
 }
 
-console.log('Proxy Server: listening on port 3200')
+console.log('Proxy Server: listening on port ' + port)

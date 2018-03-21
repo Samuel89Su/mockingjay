@@ -1,3 +1,5 @@
+'use strict'
+
 import React, { Component } from 'react'
 import { deepClone, updateByPath } from '../utils'
 import { Header, Button, Input, TextArea, Form, Dropdown, Checkbox } from 'semantic-ui-react'

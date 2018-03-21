@@ -25,14 +25,14 @@ function getPropertyByPath (obj, path) {
   let pathSegs = path.split('.')
   let dummy = obj
   for (let i = 0; i < pathSegs.length; i++) {
-    let path = pathSegs[i];
+    let pathSeg = pathSegs[i];
     if (dummy instanceof Array) {
-      let index = parseInt(path)
+      let index = parseInt(pathSeg)
       dummy = dummy[index]
     } else if (i === pathSegs.length - 1) {
-      dummy = dummy[path]
+      dummy = dummy[pathSeg]
     } else {
-      dummy = dummy[path]
+      dummy = dummy[pathSeg]
     }
   }
 
@@ -50,9 +50,9 @@ function updateByPath (obj, path, value) {
   let pathSegs = path.split('.')
   let dummy = obj
   for (let i = 0; i < pathSegs.length; i++) {
-    let path = pathSegs[i];
+    let pathSeg = pathSegs[i];
     if (dummy instanceof Array) {
-      let index = parseInt(path)
+      let index = parseInt(pathSeg)
       dummy = dummy[index]
     } else if (i === pathSegs.length - 1) {
       if (value === 'true') {
@@ -60,9 +60,9 @@ function updateByPath (obj, path, value) {
       } else if (value === 'false') {
         value = false
       }
-      dummy[path] = value
+      dummy[pathSeg] = value
     } else {
-      dummy = dummy[path]
+      dummy = dummy[pathSeg]
     }
   }
 
@@ -79,14 +79,14 @@ function delByPath (obj, path) {
   let pathSegs = path.split('.')
   let dummy = obj
   for (let i = 0; i < pathSegs.length; i++) {
-    let path = pathSegs[i];
+    let pathSeg = pathSegs[i];
     if (dummy instanceof Array) {
-      let index = parseInt(path)
+      let index = parseInt(pathSeg)
       dummy = dummy[index]
     } else if (i === pathSegs.length - 1) {
-      delete dummy[path]
+      delete dummy[pathSeg]
     } else {
-      dummy = dummy[path]
+      dummy = dummy[pathSeg]
     }
   }
 

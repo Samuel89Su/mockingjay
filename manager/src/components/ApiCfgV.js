@@ -1,3 +1,5 @@
+'use strict'
+
 import React, { Component } from 'react'
 import queryString from 'query-string'
 import { deepClone, updateByPath } from '../utils'
