@@ -15,12 +15,12 @@ try {
 
   const app = connect()
 
-  // 添加代理中间件
-  app.use('/', defaultProxy)
-
   // 添加添加静态资源服务
   const serve = serveStatic(staticRoot, { 'index': ['index.html'] })
   app.use(serve)
+
+  // 添加代理中间件
+  app.use('/', defaultProxy)
 
   http.createServer(app).listen(port, host)
 

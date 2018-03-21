@@ -15,14 +15,19 @@
         open console to see proxy log.
     </p>
     <script>
-        var ws = new WebSocket('ws://localhost:5001');
+        var wsPort = parseInt(location.port) + 1;
+        var ws = new WebSocket('ws://localhost:' + wsPort);
     
         ws.onopen = function () {
             ws.send('connected')
         }
     
         ws.onmessage = function (ev) {
-            console.log(JSON.parse(ev.data));
+            var data = JSON.parse(ev.data);
+            if (data && typeof data === 'object' && !(data instanceof Array) && data.hasOwnProperty('status') && data['status'] !== 200) {
+                console.error(data);
+            }
+            console.log(data);
         }
     </script>
 </body>

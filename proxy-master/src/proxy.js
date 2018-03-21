@@ -61,8 +61,8 @@ function getProxyResHandler(proxyEventEmitter) {
 
         if (proxyEventEmitter) {
             proxyEventEmitter.emit('proxyEvent', JSON.stringify({
-                reqUrl: req.url,
-                statusCode: proxyRes.statusCode
+                originalUrl: req.url,
+                status: proxyRes.statusCode
             }))
         }
     }
@@ -114,7 +114,7 @@ function getFilter(proxyEventEmitter) {
         // emit
         if (proxyEventEmitter) {
             proxyEventEmitter.emit('proxyEvent', JSON.stringify({
-                pathName: pathname,
+                originalUrl: req.originalUrl,
                 proxy: doProxy
             }))
         }
@@ -158,8 +158,8 @@ function fetchFiles(filePath, recursive) {
 
 opts.onProxyReq = onProxyReq
 
-function getOpts(eventEmitter) {
-    opts.onProxyRes = getProxyResHandler(eventEmitter)
+function getOpts(proxyEventEmitter) {
+    opts.onProxyRes = getProxyResHandler(proxyEventEmitter)
 
     // custom router
     opts.router = function customRoute(req) {
@@ -200,6 +200,14 @@ function getOpts(eventEmitter) {
             if (!target) {
                 target = config.options.target + reqUrl
             }
+        }
+
+        // emit
+        if (proxyEventEmitter) {
+            proxyEventEmitter.emit('proxyEvent', JSON.stringify({
+                originalUrl: req.originalUrl,
+                target: target
+            }))
         }
 
         return target
