@@ -34,7 +34,7 @@ const schema = {
                     "value": {
                         "type": "string",
                         "minLength": 7,
-                        "maxLength": 30
+                        "maxLength": 100
                     }
                 }
             }

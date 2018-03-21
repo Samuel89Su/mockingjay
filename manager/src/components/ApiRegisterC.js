@@ -20,6 +20,13 @@ const updateApiCfg = apiCfg => {
   }
 }
 
+const updateAppCfg = appCfg => {
+  return {
+      type: 'UPDATE_APPCFG',
+      appCfg
+  }
+}
+
 // dispatchers
 function fetchRemoteApiCfg(urlSearch, dispatch) {
   let fetchOpts = Object.assign({}, InventoryAPI.apiGet)
@@ -28,6 +35,15 @@ function fetchRemoteApiCfg(urlSearch, dispatch) {
     .then(
       apiCfg => dispatch(updateApiCfg(apiCfg)),
       error => (error) => {})
+}
+
+function fetchRemoteAppCfg(urlSearch, dispatch) {
+  let fetchOpts = Object.assign({}, InventoryAPI.appGet)
+  fetchOpts.url += urlSearch
+  return fetchRemote(fetchOpts)
+  .then(
+    appCfg => dispatch(updateAppCfg(appCfg)),
+    error => (error) => {})
 }
 
 function updateRemoteApiCfg(apiCfg, dispatch) {
@@ -61,7 +77,8 @@ const mapStateToProps = state => {
     path: '/',
     method: 'POST',
     appId: 1,
-    forward:  false
+    forward:  false,
+    validate: false
   }
   if (state.apiCfg && state.apiCfg.id && state.apiCfg.id > 0) {
     apiCfg = state.apiCfg
@@ -77,6 +94,9 @@ const mapDispatchToProps = dispatch => {
   return {
     onMounted: apiKey => {
       fetchRemoteApiCfg(apiKey, dispatch)
+    },
+    fetchApp: query => {
+      fetchRemoteAppCfg(query, dispatch)
     },
     onUpdateClick: apiCfg => {
       updateRemoteApiCfg(apiCfg, dispatch)
