@@ -17,7 +17,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Run Server",
+            "name": "Mockingjay",
             "program": "${workspaceFolder}\\server.js"
         },
         // {

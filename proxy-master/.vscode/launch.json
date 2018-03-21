@@ -7,7 +7,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Master-Server",
+            "name": "Proxy",
             "program": "${workspaceFolder}\\index.js"
         }
     ]

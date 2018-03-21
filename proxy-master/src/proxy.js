@@ -168,7 +168,7 @@ function getOpts(eventEmitter) {
         // process regExpRoutes, try build new target if matched
         if (!target) {
             let reqUrl = (req.originalUrl || req.url)
-            let reqPathname = new URL(req.headers.host + reqUrl).pathname
+            let reqPathname = new URL('http://' + req.headers.host + reqUrl).pathname
             if (regExpRoutes.length) {
                 for (let i = 0; i < regExpRoutes.length; i++) {
                     const route = regExpRoutes[i];
@@ -195,6 +195,10 @@ function getOpts(eventEmitter) {
             // XMLHttpRequest rule process
             if (!target && req.headers['X-Requested-With'] === 'XMLHttpRequest' && xmlHttRequestTarget) {
                 target = xmlHttRequestTarget + reqUrl
+            }
+
+            if (!target) {
+                target = config.options.target + reqUrl
             }
         }
 

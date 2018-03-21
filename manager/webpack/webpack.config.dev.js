@@ -38,8 +38,8 @@ module.exports = {
     port: 8100,
     historyApiFallback: true,
     proxy: [{
-      context: ['/inventory', '/video'],
-      target: 'http://127.0.0.1:3000'
+      context: ['/inventory'],
+      target: 'http://127.0.0.1:5000'
     }]
   }
 }

@@ -6,11 +6,10 @@ exports = module.exports = {
     staticRoot: './static',         // 本地静态资源路径
     fiddleAspRoute: true,           // 模拟 asp.net MVC 路由，举个栗子，/home/test 将优先路由到 {staticRoot}/home/test.html，若文件不存在则使用代理
     proxyOpts: {                    // 代理配置， 参见 http-proxy-middleware
-        context: ['/'],
+        context: ['/inventory'],
         changeOrigin: true,
-        target: 'http://teacher.235.mistong.com',
+        target: 'http://139.196.103.143',
         router: {
-            '/Teacher/PsychologyEvaluation/GetSchoolIndexEvaluationData': 'http://localhost:57761'
         },
         // test path with regexp, forward to the target if matched
         regExpRoutes: [
