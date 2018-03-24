@@ -5,6 +5,7 @@
  */
 const http = require('http')
 const connect = require('connect')
+const path = require('path')
 const { host, port, staticRoot } = require('./cfg')
 const serveStatic = require('serve-static')
 const ws = require('./src/ws')
@@ -16,7 +17,8 @@ try {
   const app = connect()
 
   // 添加添加静态资源服务
-  const serve = serveStatic(staticRoot, { 'index': ['index.html'] })
+  const staticRootDir = path.resolve(staticRoot)
+  const serve = serveStatic(staticRootDir, { 'index': ['index.html'] })
   app.use(serve)
 
   // 添加代理中间件
