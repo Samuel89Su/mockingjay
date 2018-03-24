@@ -5,6 +5,7 @@ import { deepClone, updateByPath } from '../utils'
 import { Header, Button, Input, TextArea, Form, Dropdown, Checkbox } from 'semantic-ui-react'
 import Btns from './BtnApplyDiscard'
 import queryString from 'query-string'
+import beautify from 'js-beautify/js'
 
 class ApiMcCfgV extends Component {
     constructor(props) {
@@ -82,6 +83,10 @@ class ApiMcCfgV extends Component {
 
     createReactor(namePrefix, reactor) {
         if (reactor) {
+            if (typeof reactor.value !== 'string' && typeof reactor.value === 'object') {
+                reactor.value = JSON.stringify(reactor.value)
+            }
+            reactor.value = beautify(reactor.value, { indent_size: 2, space_in_empty_paren: true })
             return (<div>
                         <Dropdown name={namePrefix + '.reactor.type'} value={reactor.type} onChange={this.handleChange}
                             options={[{text: 'Fixed', value: 'fixed'}, {text:'Custom', value:'custom'}]} />
