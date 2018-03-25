@@ -6,7 +6,7 @@
 const http = require('http')
 const connect = require('connect')
 const path = require('path')
-const { host, port, staticRoot } = require('./cfg')
+const { host, port, staticRoot } = require('./defaultConfig')
 const serveStatic = require('serve-static')
 const ws = require('./src/ws')
 const proxyEventEmitter = require('./src/eventEmitter')
