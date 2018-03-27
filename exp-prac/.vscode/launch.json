@@ -7,14 +7,8 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Mockingjay",
-            "program": "${workspaceFolder}/server.js"
-        },
-        // {
-        //     "type": "node",
-        //     "request": "launch",
-        //     "name": "Run Test",
-        //     "program": "${workspaceFolder}\\src\\utils\\jsonRaker.js"
-        // }
+            "name": "express-prac",
+            "program": "${workspaceFolder}/bin/www"
+        }
     ]
 }

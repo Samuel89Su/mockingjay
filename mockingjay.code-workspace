@@ -29,6 +29,9 @@
 		},
 		{
 			"path": "thrift.server"
+		},
+		{
+			"path": "exp-prac"
 		}
 	],
 	"settings": {}
