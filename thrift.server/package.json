@@ -5,5 +5,15 @@
   "main": "server.js",
   "author": "Samuel Su",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "forever": "^0.15.3",
+    "thrift": "^0.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.2"
+  }
 }
