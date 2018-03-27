@@ -7,7 +7,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "nodemon": "nodemon server.js"
   },
   "dependencies": {
     "forever": "^0.15.3",
