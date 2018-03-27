@@ -1,0 +1,9 @@
+{
+  "name": "thrift.client",
+  "description": "thrift client test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Samuel Su",
+  "license": "MIT",
+  "private": true
+}

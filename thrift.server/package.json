@@ -1,0 +1,9 @@
+{
+  "name": "thrift.server",
+  "version": "1.0.0",
+  "description": "thrift server test",
+  "main": "server.js",
+  "author": "Samuel Su",
+  "license": "MIT",
+  "private": true
+}

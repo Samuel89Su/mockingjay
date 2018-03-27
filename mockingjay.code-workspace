@@ -23,6 +23,12 @@
 		},
 		{
 			"path": "examples"
+		},
+		{
+			"path": "thrift.client"
+		},
+		{
+			"path": "thrift.server"
 		}
 	],
 	"settings": {}
