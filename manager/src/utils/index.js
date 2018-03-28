@@ -51,16 +51,24 @@ function updateByPath (obj, path, value) {
   let dummy = obj
   for (let i = 0; i < pathSegs.length; i++) {
     let pathSeg = pathSegs[i];
-    if (dummy instanceof Array) {
-      let index = parseInt(pathSeg)
-      dummy = dummy[index]
-    } else if (i === pathSegs.length - 1) {
+    if (i === pathSegs.length - 1) {
       if (value === 'true') {
         value = true
       } else if (value === 'false') {
         value = false
       }
-      dummy[pathSeg] = value
+      if (dummy instanceof Array) {
+        let index = parseInt(pathSeg)
+        dummy[index] = value
+      } else {
+        dummy[pathSeg] = value
+      }
+    } else if (dummy instanceof Array) {
+      let index = parseInt(pathSeg)
+      if (index > dummy.length - 1) {
+        dummy.push(dummy[0] instanceof Array?[]:(typeof dummy[0] === 'object'? {}:''))
+      }
+      dummy = dummy[index]
     } else {
       dummy = dummy[pathSeg]
     }

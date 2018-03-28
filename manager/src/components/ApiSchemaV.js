@@ -76,13 +76,13 @@ class ApiSchemaV extends Component {
             } else if (!schema.properties.reqHeaders.properties) {
                 schema.properties.reqHeaders.properties = {}
             }
-            if (!schema.properties.reqHeaders.properties.hasOwnProperty('content-type')) {
-                schema.properties.reqHeaders.properties['content-type'] = {type: 'string', regexp: 'application/json'}
-                this.setState({updateDisabled: false})
-            }
-            if (schema.properties.reqHeaders.required.indexOf('content-type') === -1) {
-                schema.properties.reqHeaders.required.push('content-type')
-            }
+            // if (!schema.properties.reqHeaders.properties.hasOwnProperty('content-type')) {
+            //     schema.properties.reqHeaders.properties['content-type'] = {type: 'string', regexp: 'application/json'}
+            //     this.setState({updateDisabled: false})
+            // }
+            // if (schema.properties.reqHeaders.required.indexOf('content-type') === -1) {
+            //     schema.properties.reqHeaders.required.push('content-type')
+            // }
                 schema.properties.reqHeaders.properties = object2Array(schema.properties.reqHeaders.properties)
                 if (schema.properties.reqHeaders.required && schema.properties.reqHeaders.required.length > 0) {
                     if (schema.properties.reqHeaders.properties && schema.properties.reqHeaders.properties.length > 0) {
@@ -101,13 +101,13 @@ class ApiSchemaV extends Component {
                 } else if (!schema.properties.resHeaders.properties) {
                     schema.properties.resHeaders.properties = {}
                 }
-                if (!schema.properties.resHeaders.properties.hasOwnProperty('content-type')) {
-                    schema.properties.resHeaders.properties['content-type'] = {type: 'string', regexp: 'application/json'}
-                    this.setState({updateDisabled: false})
-                }
-                if (schema.properties.resHeaders.required.indexOf('content-type') === -1) {
-                    schema.properties.resHeaders.required.push('content-type')
-                }
+                // if (!schema.properties.resHeaders.properties.hasOwnProperty('content-type')) {
+                //     schema.properties.resHeaders.properties['content-type'] = {type: 'string', regexp: 'application/json'}
+                //     this.setState({updateDisabled: false})
+                // }
+                // if (schema.properties.resHeaders.required.indexOf('content-type') === -1) {
+                //     schema.properties.resHeaders.required.push('content-type')
+                // }
                 schema.properties.resHeaders.properties = object2Array(schema.properties.resHeaders.properties)
                 if (schema.properties.resHeaders.required && schema.properties.resHeaders.required.length > 0) {
                     if (schema.properties.resHeaders.properties && schema.properties.resHeaders.properties.length > 0) {
@@ -273,7 +273,12 @@ class ApiSchemaV extends Component {
                 const header = dummy[i];
                 if (header.key === 'content-type') {
                     reqContentTypeIndex = i
+                    break
                 }
+            }
+            if (reqContentTypeIndex === -1) {
+                dummy.push({key: 'content-type', value: {type:'string',regexp:''}})
+                reqContentTypeIndex = dummy.length - 1
             }
         } catch (error) {}
         
@@ -284,7 +289,12 @@ class ApiSchemaV extends Component {
                 const header = dummy[i];
                 if (header.key === 'content-type') {
                     resContentTypeIndex = i
+                    break
                 }
+            }
+            if (resContentTypeIndex === -1) {
+                dummy.push({key: 'content-type', value: {type:'string',regexp:''}})
+                resContentTypeIndex = dummy.length - 1
             }
         } catch (error) {}
 
@@ -348,7 +358,7 @@ class ApiSchemaV extends Component {
                                     <Dropdown name={`properties.reqHeaders.properties.${index}.value.regexp`}
                                         placeholder='pick a type'
                                         selection inline size='mini'
-                                        options={[{text:'form-urlencoded',value:'application/x-www-form-urlencoded'},{text:'json',value:'application/json'},{text:'text',value:'text/plain'}]}
+                                        options={[{text:'',value:''},{text:'form-urlencoded',value:'application/x-www-form-urlencoded'},{text:'json',value:'application/json'},{text:'text',value:'text/plain'}]}
                                         value={item.value.regexp} onChange={this.handleChange}/>
                                 </li>)
                                 }
@@ -390,7 +400,7 @@ class ApiSchemaV extends Component {
                                     <Dropdown name={`properties.resHeaders.properties.${index}.value.regexp`}
                                         placeholder='pick a type'
                                         selection inline size='mini'
-                                        options={[{text:'form-urlencoded',value:'application/x-www-form-urlencoded'},{text:'json',value:'application/json'},{text:'text',value:'text/plain'}]}
+                                        options={[{text:'',value:''},{text:'form-urlencoded',value:'application/x-www-form-urlencoded'},{text:'json',value:'application/json'},{text:'text',value:'text/plain'}]}
                                         value={item.value.regexp} onChange={this.handleChange}/>
                                 </li>)
                                 }

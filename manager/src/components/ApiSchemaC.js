@@ -81,9 +81,7 @@ const mapStateToProps = state => {
                             'required': []
                         },
                         'reqBody': {
-                            'type': 'string',
-                            'minLength': 2,
-                            'maxLength': 10
+                            'type': 'string'
                         },
                         'resHeaders': {
                             'type': 'object',

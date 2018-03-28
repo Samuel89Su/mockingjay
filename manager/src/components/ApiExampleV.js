@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import { deepClone, updateByPath, getPropertyByPath, parseRecursive, object2Array, array2Object } from '../utils'
-import { Header, Button, Input, TextArea, Form } from 'semantic-ui-react'
+import { Header, Button, Input, TextArea, Form, Dropdown, Label } from 'semantic-ui-react'
 import Btns from './BtnApplyDiscard'
 import queryString from 'query-string'
 import RawSchemaEditor from './RawSchemaEditor'
@@ -123,6 +123,36 @@ class ApiExampleV extends Component {
         if (!example || !example.hasOwnProperty('query')) {
             return (<div>has no state</div>)
         }
+
+        let reqContentTypeIndex = -1
+        try {
+            let dummy = example.reqHeader
+            for (let i = 0; i < dummy.length; i++) {
+                const header = dummy[i];
+                if (header.key === 'content-type') {
+                    reqContentTypeIndex = i
+                }
+            }
+            if (reqContentTypeIndex === -1) {
+                example.reqHeader.push({key:'content-type',value:''})
+                reqContentTypeIndex = example.reqHeader.length - 1
+            }
+        } catch (error) {}
+        
+        let resContentTypeIndex = -1
+        try {
+            let dummy = example.resHeader
+            for (let i = 0; i < dummy.length; i++) {
+                const header = dummy[i];
+                if (header.key === 'content-type') {
+                    resContentTypeIndex = i
+                }
+            }
+            if (resContentTypeIndex === -1) {
+                example.resHeader.push({key:'content-type',value:''})
+                resContentTypeIndex = example.resHeader.length - 1
+            }
+        } catch (error) {}
         
         if (example) {
             if (example.reqBody) {
@@ -178,18 +208,29 @@ class ApiExampleV extends Component {
                     {
                         (example && example.reqHeader && example.reqHeader instanceof Array) ?
                             example.reqHeader.map((item, index) => {
-                                return (<li key={index}>
-                                            <Input name={`reqHeader.${index}.key`}
-                                                label='Key:'
-                                                value={item.key}
-                                                onChange={this.handleChange} />
-                                            <Input name={`reqHeader.${index}.value`}
-                                                label='Value:'
-                                                value={item.value}
-                                                onChange={this.handleChange} />
-                                            <span className='sp-inline-form'/>
-                                            <Button name={`reqHeader.${index}`} onClick={this.delProperty}>Remove</Button>
-                                        </li>)
+                                if (index !== reqContentTypeIndex) {
+                                    return (<li key={index}>
+                                        <Input name={`reqHeader.${index}.key`}
+                                            label='Key:'
+                                            value={item.key}
+                                            onChange={this.handleChange} />
+                                        <Input name={`reqHeader.${index}.value`}
+                                            label='Value:'
+                                            value={item.value}
+                                            onChange={this.handleChange} />
+                                        <span className='sp-inline-form'/>
+                                        <Button name={`reqHeader.${index}`} onClick={this.delProperty}>Remove</Button>
+                                    </li>)
+                                } else {
+                                    return (<li key='contentType'>
+                                    <Label size='large'>Content-Type: </Label>
+                                    <Dropdown name={`reqHeader.${index}.value`}
+                                        placeholder='pick a type'
+                                        selection inline size='mini'
+                                        options={[{text:'',value:''},{text:'form-urlencoded',value:'application/x-www-form-urlencoded'},{text:'json',value:'application/json'},{text:'text',value:'text/plain'}]}
+                                        value={item.value} onChange={this.handleChange}/>
+                                    </li>)
+                                }
                             })
                             : <div />
                     }
@@ -205,18 +246,29 @@ class ApiExampleV extends Component {
                     {
                         (example && example.resHeader && example.resHeader instanceof Array) ?
                             example.resHeader.map((item, index) => {
-                                return (<li key={index}>
-                                            <Input name={`resHeader.${index}.key`}
-                                                label='Key:'
-                                                value={item.key}
-                                                onChange={this.handleChange} />
-                                            <Input name={`resHeader.${index}.value`}
-                                                label='Value:'
-                                                value={item.value}
-                                                onChange={this.handleChange} />
-                                            <span className='sp-inline-form'/>
-                                            <Button name={`resHeader.${index}`} onClick={this.delProperty}>Remove</Button>
-                                        </li>)
+                                if (index !== resContentTypeIndex) {
+                                    return (<li key={index}>
+                                        <Input name={`resHeader.${index}.key`}
+                                            label='Key:'
+                                            value={item.key}
+                                            onChange={this.handleChange} />
+                                        <Input name={`resHeader.${index}.value`}
+                                            label='Value:'
+                                            value={item.value}
+                                            onChange={this.handleChange} />
+                                        <span className='sp-inline-form'/>
+                                        <Button name={`resHeader.${index}`} onClick={this.delProperty}>Remove</Button>
+                                    </li>)
+                                } else {
+                                    return (<li key='contentType'>
+                                    <Label size='large'>Content-Type: </Label>
+                                    <Dropdown name={`resHeader.${index}.value`}
+                                        placeholder='pick a type'
+                                        selection inline size='mini'
+                                        options={[{text:'',value:''},{text:'form-urlencoded',value:'application/x-www-form-urlencoded'},{text:'json',value:'application/json'},{text:'text',value:'text/plain'}]}
+                                        value={item.value} onChange={this.handleChange}/>
+                                </li>)
+                                }
                             })
                             : <div />
                     }
