@@ -30,7 +30,7 @@ const targetHost = new URL(opts.target).host
 
 function onProxyReq(proxyReq, req, res) {}
 
-function getProxyResHandler(proxyEventEmitter) {
+function getProxyResHandler(port, proxyEventEmitter) {
     return function onProxyRes(proxyRes, req, res) {
         // overwrite redirect response location
         if (proxyRes.statusCode === 301 || proxyRes.statusCode === 302) {
@@ -48,7 +48,7 @@ function getProxyResHandler(proxyEventEmitter) {
                                 let segs = targetHost.split('.').reverse()
                                 let domain = segs.pop() + '.' + segs.pop()
                                 if (redirectUrl.host.indexOf(domain) > -1) {
-                                    query[key] = fromurl.replace(redirectUrl.host, 'localhost:' + cfg.port)
+                                    query[key] = fromurl.replace(redirectUrl.host, 'localhost:' + port)
                                     proxyRes.headers.location = proxyRes.headers.location.replace(search, '?' + queryString.stringify(query))
                                 }
                             }
@@ -158,8 +158,8 @@ function fetchFiles(filePath, recursive) {
 
 opts.onProxyReq = onProxyReq
 
-function getOpts(proxyEventEmitter) {
-    opts.onProxyRes = getProxyResHandler(proxyEventEmitter)
+function getOpts(port, proxyEventEmitter) {
+    opts.onProxyRes = getProxyResHandler(port, proxyEventEmitter)
 
     // custom router
     opts.router = function customRoute(req) {
@@ -196,10 +196,6 @@ function getOpts(proxyEventEmitter) {
             if (!target && req.headers['X-Requested-With'] === 'XMLHttpRequest' && xmlHttRequestTarget) {
                 target = xmlHttRequestTarget + reqUrl
             }
-
-            if (!target) {
-                target = config.options.target + reqUrl
-            }
         }
 
         // emit
@@ -216,15 +212,16 @@ function getOpts(proxyEventEmitter) {
     return opts
 }
 
-function createProxyCfg(eventEmitter) {
+function createProxyCfg(port, eventEmitter) {
     return {
         filter: getFilter(eventEmitter),
-        opts: getOpts(eventEmitter)
+        opts: getOpts(port, eventEmitter)
     }
 }
 
-exports = module.exports = function newProxy(eventEmitter) {
-    let proxyCfg = createProxyCfg(eventEmitter)
+exports = module.exports = function newProxy(port) {
+    let eventEmitter = require('./eventEmitter')
+    let proxyCfg = createProxyCfg(port, eventEmitter)
 
     return proxy(proxyCfg.filter, proxyCfg.opts)
 }

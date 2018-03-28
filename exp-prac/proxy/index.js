@@ -194,10 +194,6 @@ function getOpts(port, proxyEventEmitter) {
             if (!target && req.headers['X-Requested-With'] === 'XMLHttpRequest' && xmlHttRequestTarget) {
                 target = xmlHttRequestTarget + reqUrl
             }
-
-            if (!target) {
-                target = config.options.target + reqUrl
-            }
         }
 
         // emit

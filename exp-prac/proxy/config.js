@@ -6,8 +6,9 @@ const defaultConfig = {
         context: ['/'],
         changeOrigin: true,
         target: 'http://teacher.233.mistong.com',
-        // router: {
-        // },
+        router: {
+            '/Teacher/PsychologyEvaluation/GetSchoolIndexEvaluationData': 'http://teacher.235.mistong.com'
+        },
         // test path with regexp, forward to the target if matched
         // regExpRoutes: [
         //     {

@@ -9,8 +9,7 @@ const path = require('path')
 const { host, port, staticRoot } = require('./defaultConfig')
 const serveStatic = require('serve-static')
 const ws = require('./src/ws')
-const proxyEventEmitter = require('./src/eventEmitter')
-const defaultProxy = require('./src/proxy')(proxyEventEmitter)
+const defaultProxy = require('./src/proxy')(port)
 
 try {
 
