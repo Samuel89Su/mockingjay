@@ -6,6 +6,8 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const { port } = require('./config')
+const ws = require('./websocket')
 
 var app = express();
 
@@ -23,7 +25,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 // 添加代理中间件
-const proxy = require('./proxy')(8800)
+const proxy = require('./proxy')(port)
 app.use('/*', proxy, function (req, res) { 
   req.end()
 })
