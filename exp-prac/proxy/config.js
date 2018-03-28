@@ -5,6 +5,7 @@ const defaultConfig = {
     proxyOpts: {                    // 代理配置， 参见 http-proxy-middleware
         context: ['/'],
         changeOrigin: true,
+        ws: true,                         // proxy websockets
         target: 'http://teacher.233.mistong.com',
         router: {
             '/Teacher/PsychologyEvaluation/GetSchoolIndexEvaluationData': 'http://teacher.235.mistong.com'
@@ -16,7 +17,10 @@ const defaultConfig = {
         //         target: 'http://localhost:57761',
         //     }
         // ],
-        // xmlHttRequestTarget: 'http://localhost'      // for all request that x-request-with header is 'XMLHttpRequest'
+        // xmlHttRequestTarget: 'http://localhost'      // for all request that x-request-with header is 'XMLHttpRequest',
+        pathRewrite: {
+            '^/api/old-path' : '/mock/eteacher/api/new-path',     // rewrite path
+        }
     }
 }
 
