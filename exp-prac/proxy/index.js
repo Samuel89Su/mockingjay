@@ -221,8 +221,9 @@ function createProxyCfg(port, eventEmitter) {
     }
 }
 
-exports = module.exports = function newProxy(eventEmitter) {
-    let proxyCfg = createProxyCfg(eventEmitter)
+exports = module.exports = function newProxy(port) {
+    let eventEmitter = require('./eventEmitter')
+    let proxyCfg = createProxyCfg(port, eventEmitter)
 
     return proxy(proxyCfg.filter, proxyCfg.opts)
 }

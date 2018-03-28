@@ -10,7 +10,7 @@ var usersRouter = require('./routes/users');
 var app = express();
 
 // 添加代理中间件
-const proxy = require('./proxy')(808)
+const proxy = require('./proxy')(8800)
 app.use('/*', proxy, function (req, res) { 
   return
 })
