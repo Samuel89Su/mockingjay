@@ -164,7 +164,7 @@ function getOpts(port, proxyEventEmitter) {
     // custom router
     opts.router = function customRoute(req) {
         // get target from route table
-        let target = Router.getTarget(req, { router: cfg.proxyOpts.router })
+        let target = Router.getTarget(req, config)
         // process regExpRoutes, try build new target if matched
         if (!target) {
             let reqUrl = (req.originalUrl || req.url)

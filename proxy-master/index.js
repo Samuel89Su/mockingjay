@@ -4,26 +4,33 @@
  * Module dependencies.
  */
 const http = require('http')
-const connect = require('connect')
+const express = require('express')
 const path = require('path')
-const { host, port, staticRoot } = require('./defaultConfig')
+const {
+  host,
+  port,
+  staticRoot
+} = require('./defaultConfig')
 const serveStatic = require('serve-static')
 const ws = require('./src/ws')
 const defaultProxy = require('./src/proxy')(port)
+const router = require('./router')
 
 try {
 
-  const app = connect()
+  const app = express()
 
   // 添加添加静态资源服务
   const staticRootDir = path.resolve(staticRoot)
-  const serve = serveStatic(staticRootDir, { 'index': ['index.html'] })
+  const serve = serveStatic(staticRootDir, {
+    'index': ['index.html']
+  })
   app.use(serve)
+
+  app.use('/control', router)
 
   // 添加代理中间件
   app.use('/', defaultProxy)
-
-  app.use('/control', connect.bodyParser())
 
   http.createServer(app).listen(port, host)
 

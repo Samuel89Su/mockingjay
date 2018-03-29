@@ -17,15 +17,14 @@
   "author": "Samuel Su",
   "license": "MIT",
   "dependencies": {
-    "connect": "^3.6.5",
+    "express": "^4.16.3",
     "forever": "^0.15.3",
     "http-proxy-middleware": "^0.17.4",
+    "nodemon": "^1.15.1",
     "opn": "^5.2.0",
     "query-string": "^5.1.0",
     "serve-static": "^1.13.2",
-    "ws": "^4.1.0",
-    "nodemon": "^1.15.1"
+    "ws": "^4.1.0"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
