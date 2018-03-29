@@ -35,6 +35,9 @@
 		},
 		{
 			"path": "broker-console"
+		},
+		{
+			"path": "http-proxy-middleware"
 		}
 	],
 	"settings": {}

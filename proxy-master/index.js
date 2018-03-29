@@ -13,7 +13,7 @@ const {
 } = require('./defaultConfig')
 const serveStatic = require('serve-static')
 const ws = require('./src/ws')
-const defaultProxy = require('./src/proxy')(port)
+const defaultProxy = require('./src/proxy')()
 const router = require('./router')
 
 try {

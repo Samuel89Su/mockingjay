@@ -1,5 +1,5 @@
 const proxyEventEmitter = require('./eventEmitter')
-const { port } = require('../cfg')
+const { port } = require('../defaultConfig')
 
 var WebSocketServer = require('ws').Server,
     wss = new WebSocketServer({
