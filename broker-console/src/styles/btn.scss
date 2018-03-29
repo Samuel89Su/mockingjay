@@ -1,0 +1,25 @@
+.container-btn {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+
+  .pane-btn {
+    position: fixed;
+    right: 125px;
+    bottom: 40px;
+    width: 150px;
+    height: 120px;
+
+    .btn-submit {
+      background: blue;
+      color: white;
+      margin: 5px 0 0 10px;
+    }
+    
+    .btn-discard {
+      background: rgb(122, 5, 5);
+      color: white;
+      margin: 5px 0 0 10px;
+    }
+  }
+}
