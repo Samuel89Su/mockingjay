@@ -108,7 +108,7 @@ function getFilter(proxyEventEmitter) {
         if (doProxy) {
             doProxy = false
             let originalPath = (req.originalUrl || req.url)
-            doProxy = contextMatcher.match(config.context, originalPath, req)
+            doProxy = contextMatcher.match(context, originalPath, req)
         }
 
         // emit
@@ -164,7 +164,7 @@ function getOpts(port, proxyEventEmitter) {
     // custom router
     opts.router = function customRoute(req) {
         // get target from route table
-        let target = Router.getTarget(req, config.options)
+        let target = Router.getTarget(req, { router: cfg.proxyOpts.router })
         // process regExpRoutes, try build new target if matched
         if (!target) {
             let reqUrl = (req.originalUrl || req.url)

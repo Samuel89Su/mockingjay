@@ -34,6 +34,10 @@ try {
     
 }
 
-const mergedConfig = Object.assign({}, defaultConfig, config)
+var mergedConfig = Object.assign({}, defaultConfig, config)
+
+function changeTarget (req, res, next) {
+    
+}
 
 exports = module.exports = mergedConfig

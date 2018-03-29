@@ -23,6 +23,8 @@ try {
   // 添加代理中间件
   app.use('/', defaultProxy)
 
+  app.use('/control', connect.bodyParser())
+
   http.createServer(app).listen(port, host)
 
 } catch (error) {
