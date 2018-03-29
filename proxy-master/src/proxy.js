@@ -1,6 +1,6 @@
 'use strict'
 
-const proxy = require('../lib')
+const Proxy = require('../lib/index').Proxy
 const {
     URL
 } = require('url')
@@ -9,9 +9,6 @@ const fs = require('fs')
 const path = require('path')
 const EventEmitter = require('events')
 const cfg = require('../defaultConfig')
-const configFactory = require('../lib/config-factory')
-const contextMatcher = require('../lib/context-matcher')
-const Router = require('../lib/router')
 const eventEmitter = require('./eventEmitter')
 
 const targetHost = new URL(cfg.target).host
@@ -65,5 +62,5 @@ function getOpts() {
 }
 
 exports = module.exports = function createProxy() {
-    return proxy(cfg.context, getOpts())
+    return Proxy(cfg.context, getOpts())
 }

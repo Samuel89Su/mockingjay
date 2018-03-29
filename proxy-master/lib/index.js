@@ -11,66 +11,65 @@ var Router = require('./router')
 var logger = require('./logger').getInstance()
 var getArrow = require('./logger').getArrow
 
-module.exports = HttpProxyMiddleware
+class ProxyContainer {
+  constructor(arg) {
+    this.Proxy = this.HttpProxyMiddleware.bind(this)
+    this.middleware = this.middleware.bind(this)
+    this.catchUpgradeRequest = this.catchUpgradeRequest.bind(this)
+    this.handleUpgrade = this.handleUpgrade.bind(this)
+    this.shouldProxy = this.shouldProxy.bind(this)
+    this.prepareProxyRequest = this.prepareProxyRequest.bind(this)
+    this.__applyRouter = this.__applyRouter.bind(this)
+    this.__applyPathRewrite = this.__applyPathRewrite.bind(this)
+    this.logError = this.logError.bind(this)
+    this.fetchFiles = this.fetchFiles.bind(this)
+    this.changeContext = this.changeContext.bind(this)
 
-function HttpProxyMiddleware(context, opts) {
-  // https://github.com/chimurai/http-proxy-middleware/issues/57
-  var wsUpgradeDebounced = _.debounce(handleUpgrade)
-  var wsInitialized = false
-  var config = configFactory.createConfig(context, opts)
-  var proxyOptions = config.options
+    this.context = null
+    this.opts = null
+    this.proxyOptions = null
+    this.pathRewriter = null
+    this.proxy = null
+    this.wsUpgradeDebounced = null
+    this.wsInitialized = null
+  }
 
-  // create proxy
-  var proxy = httpProxy.createProxyServer({})
-  logger.info('[HPM] Proxy created:', config.context, ' -> ', proxyOptions.target)
 
-  var pathRewriter = PathRewriter.create(proxyOptions.pathRewrite) // returns undefined when "pathRewrite" is not provided
 
-  // attach handler to http-proxy events
-  handlers.init(proxy, proxyOptions)
-
-  // log errors for debug purpose
-  proxy.on('error', logError)
-
-  // https://github.com/chimurai/http-proxy-middleware/issues/19
-  // expose function to upgrade externally
-  middleware.upgrade = wsUpgradeDebounced
-
-  return middleware
-
-  function middleware(req, res, next) {
-    if (shouldProxy(config.context, req)) {
-      var activeProxyOptions = prepareProxyRequest(req)
-      proxy.web(req, res, activeProxyOptions)
+  middleware(req, res, next) {
+    if (this.shouldProxy(this.context, req)) {
+      var activeProxyOptions = this.prepareProxyRequest(req)
+      this.proxy.web(req, res, activeProxyOptions)
     } else {
       next()
     }
 
-    if (proxyOptions.ws === true) {
+    if (this.proxyOptions.ws === true) {
       // use initial request to access the server object to subscribe to http upgrade event
-      catchUpgradeRequest(req.connection.server)
+      this.catchUpgradeRequest(req.connection.server)
     }
   }
 
-  function catchUpgradeRequest(server) {
+  catchUpgradeRequest(server) {
     // subscribe once; don't subscribe on every request...
     // https://github.com/chimurai/http-proxy-middleware/issues/113
-    if (!wsInitialized) {
-      server.on('upgrade', wsUpgradeDebounced)
-      wsInitialized = true
+    if (!this.wsInitialized) {
+      server.on('upgrade', this.this.wsUpgradeDebounced)
+      this.wsInitialized = true
     }
   }
 
-  function handleUpgrade(req, socket, head) {
+  handleUpgrade(req, socket, head) {
     // set to initialized when used externally
-    wsInitialized = true
+    this.wsInitialized = true
 
-    if (shouldProxy(config.context, req)) {
-      var activeProxyOptions = prepareProxyRequest(req)
-      proxy.ws(req, socket, head, activeProxyOptions)
+    if (this.shouldProxy(this.context, req)) {
+      var activeProxyOptions = this.prepareProxyRequest(req)
+      this.proxy.ws(req, socket, head, activeProxyOptions)
       logger.info('[HPM] Upgrading to WebSocket')
     }
   }
+
 
   /**
    * Determine whether request should be proxied.
@@ -80,13 +79,13 @@ function HttpProxyMiddleware(context, opts) {
    * @param  {Object} req     [description]
    * @return {Boolean}
    */
-  function shouldProxy(context, req) {
+  shouldProxy(context, req) {
     var reqPath = (req.originalUrl || req.url)
     let pathname = reqPath && url.parse(reqPath).pathname
     let doProxy = true
     if (req.method === 'GET' || req.method === 'HEAD') {
       if (pathname.lastIndexOf('.') > pathname.lastIndexOf('/')) {
-        let filePath = Path.resolve(__dirname, '../', opts.staticRoot, './' + pathname)
+        let filePath = Path.resolve(__dirname, '../', this.opts.staticRoot, './' + pathname)
         try {
           let stats = fs.statSync(filePath)
           if (stats.isFile()) {
@@ -95,9 +94,9 @@ function HttpProxyMiddleware(context, opts) {
         } catch (error) {}
       }
 
-      if (pathname.lastIndexOf('.') < pathname.lastIndexOf('/') && doProxy && opts.fiddleAspRoute) {
+      if (pathname.lastIndexOf('.') < pathname.lastIndexOf('/') && doProxy && this.opts.fiddleAspRoute) {
         let parentDir = pathname.substr(0, pathname.lastIndexOf('/'))
-        let filePath = Path.resolve(__dirname, '../', opts.staticRoot, '.' + parentDir)
+        let filePath = Path.resolve(__dirname, '../', this.opts.staticRoot, '.' + parentDir)
         var files = fetchFiles(filePath)
         if (files && files.length > 0) {
           for (let i = 0; i < files.length; i++) {
@@ -121,6 +120,8 @@ function HttpProxyMiddleware(context, opts) {
     return contextMatcher.match(context, reqPath, req)
   }
 
+
+
   /**
    * Apply option.router and option.pathRewrite
    * Order matters:
@@ -129,24 +130,24 @@ function HttpProxyMiddleware(context, opts) {
    * @param {Object} req
    * @return {Object} proxy options
    */
-  function prepareProxyRequest(req) {
+  prepareProxyRequest(req) {
     // https://github.com/chimurai/http-proxy-middleware/issues/17
     // https://github.com/chimurai/http-proxy-middleware/issues/94
     req.url = (req.originalUrl || req.url)
 
     // store uri before it gets rewritten for logging
     var originalPath = req.url
-    var newProxyOptions = _.assign({}, proxyOptions)
+    var newProxyOptions = _.assign({}, this.proxyOptions)
 
     // Apply in order:
     // 1. option.router
     // 2. option.pathRewrite
-    __applyRouter(req, newProxyOptions)
-    __applyPathRewrite(req, pathRewriter)
+    this.__applyRouter(req, newProxyOptions)
+    this.__applyPathRewrite(req, this.pathRewriter)
 
     // debug logging for both http(s) and websockets
-    if (proxyOptions.logLevel === 'debug') {
-      var arrow = getArrow(originalPath, req.url, proxyOptions.target, newProxyOptions.target)
+    if (this.proxyOptions.logLevel === 'debug') {
+      var arrow = getArrow(originalPath, req.url, this.proxyOptions.target, newProxyOptions.target)
       logger.debug('[HPM] %s %s %s %s', req.method, originalPath, arrow, newProxyOptions.target)
     }
 
@@ -154,7 +155,7 @@ function HttpProxyMiddleware(context, opts) {
   }
 
   // Modify option.target when router present.
-  function __applyRouter(req, options) {
+  __applyRouter(req, options) {
     var newTarget
 
     if (options.router) {
@@ -168,7 +169,7 @@ function HttpProxyMiddleware(context, opts) {
   }
 
   // rewrite path
-  function __applyPathRewrite(req, pathRewriter) {
+  __applyPathRewrite(req, pathRewriter) {
     if (pathRewriter) {
       var path = pathRewriter(req.url, req)
 
@@ -180,9 +181,9 @@ function HttpProxyMiddleware(context, opts) {
     }
   }
 
-  function logError(err, req, res) {
+  logError(err, req, res) {
     var hostname = (req.headers && req.headers.host) || (req.hostname || req.host) // (websocket) || (node0.10 || node 4/5)
-    var target = proxyOptions.target.host || proxyOptions.target
+    var target = this.proxyOptions.target.host || this.proxyOptions.target
     var errorMessage = '[HPM] Error occurred while trying to proxy request %s from %s to %s (%s) (%s)'
     var errReference = 'https://nodejs.org/api/errors.html#errors_common_system_errors' // link to Node Common Systems Errors page
 
@@ -194,7 +195,7 @@ function HttpProxyMiddleware(context, opts) {
    * @param {String} filePath 需要遍历的文件路径
    * @param {Boolean} recursive 是否向下递归
    */
-  function fetchFiles(filePath, recursive) {
+  fetchFiles(filePath, recursive) {
     let fileNames = []
     try {
       //根据文件路径读取文件，返回文件列表
@@ -221,4 +222,40 @@ function HttpProxyMiddleware(context, opts) {
 
     return fileNames
   }
+
+
+  changeContext(newContext) {
+    this.context = newContext
+  }
+
+  HttpProxyMiddleware(context, opts) {
+    // https://github.com/chimurai/http-proxy-middleware/issues/57
+    this.wsUpgradeDebounced = _.debounce(this.handleUpgrade)
+    this.wsInitialized = false
+    this.opts = opts
+    var config = configFactory.createConfig(context, opts)
+    this.proxyOptions = config.options
+
+    this.context = config.context
+
+    // create proxy
+    this.proxy = httpProxy.createProxyServer({})
+    logger.info('[HPM] Proxy created:', config.context, ' -> ', this.proxyOptions.target)
+
+    this.pathRewriter = PathRewriter.create(this.proxyOptions.pathRewrite) // returns undefined when "pathRewrite" is not provided
+
+    // attach handler to http-proxy events
+    handlers.init(this.proxy, this.proxyOptions)
+
+    // log errors for debug purpose
+    this.proxy.on('error', this.logError)
+
+    // https://github.com/chimurai/http-proxy-middleware/issues/19
+    // expose function to upgrade externally
+    this.middleware.upgrade = this.wsUpgradeDebounced
+
+    return this.middleware
+  }
 }
+
+exports = module.exports = new ProxyContainer()

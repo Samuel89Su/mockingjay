@@ -1,5 +1,5 @@
 const express = require('express')
-const { changeTarget } = require('./defaultConfig')
+const { changeContext } = require('./lib/index')
 
 const router = express.Router()
 
@@ -7,7 +7,7 @@ router.use(express.json())
 router.use(express.urlencoded({ extended: false }))
 
 router.all('/', function(req, res, next) {
-  changeTarget(req.body.target)
+  changeContext(req.body.context)
   res.send('respond with a resource')
 })
 
