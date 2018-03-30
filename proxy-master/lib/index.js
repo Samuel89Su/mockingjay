@@ -23,7 +23,6 @@ class ProxyContainer {
     this.__applyPathRewrite = this.__applyPathRewrite.bind(this)
     this.logError = this.logError.bind(this)
     this.fetchFiles = this.fetchFiles.bind(this)
-    this.changeContext = this.changeContext.bind(this)
 
     this.context = null
     this.opts = null
@@ -221,11 +220,6 @@ class ProxyContainer {
     } catch (error) {}
 
     return fileNames
-  }
-
-
-  changeContext(newContext) {
-    this.context = newContext
   }
 
   HttpProxyMiddleware(context, opts) {

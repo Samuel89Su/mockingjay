@@ -8,7 +8,7 @@ const queryString = require('query-string')
 const fs = require('fs')
 const path = require('path')
 const EventEmitter = require('events')
-const cfg = require('../defaultConfig')
+const cfg = require('./configMgr').loadConfig()
 const eventEmitter = require('./eventEmitter')
 
 const targetHost = new URL(cfg.target).host

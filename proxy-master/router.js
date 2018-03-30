@@ -1,5 +1,5 @@
 const express = require('express')
-const { changeContext } = require('./lib/index')
+const { changeContext } = require('./src/configMgr')
 
 const router = express.Router()
 
