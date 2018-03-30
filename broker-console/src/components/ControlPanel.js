@@ -52,11 +52,13 @@ class ControlPanel extends Component {
 
   render() {
     return (
-        <TextArea rows='13' autoHeight
-          value={this.state.rawConfig||''}
-          onChange={this.handleChange}
-          onBlur={this.onTextAreaBlur}
-          style={{width: '100%'}} />
+        <div>
+            <TextArea rows='13' autoHeight
+                value={this.state.rawConfig||''}
+                onChange={this.handleChange}
+                onBlur={this.onTextAreaBlur}
+                style={{width: '100%'}} />
+        </div>
     )
     }
   }
