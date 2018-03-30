@@ -1,15 +1,13 @@
-'use strict'
-
 import React, { Component } from 'react'
 
-class Loading extends Component { 
+class ControlPanel extends Component {
     constructor(props) {
         super(props)
     }
 
     render() {
-        return (<div>Loading...</div>) 
+        return (<div>Hello</div>)
     }
 }
 
-export default Loading
+export default ControlPanel
