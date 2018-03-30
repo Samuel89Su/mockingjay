@@ -59,7 +59,7 @@ function GetTargetAccordingToExtensions(req, config) {
       if (route.regExp instanceof Array) {
         let matched = false
         for (let j = 0; j < route.length; j++) {
-          const soloRegExp = route[j];
+          const soloRegExp = new RegExp(route[j])
           if (soloRegExp.constructor.name === 'RegExp' && soloRegExp.test(reqPathname)) {
             target = route.target + reqUrl
             matched = true
@@ -69,9 +69,12 @@ function GetTargetAccordingToExtensions(req, config) {
         if (matched) {
           break
         }
-      } else if (route.regExp.constructor.name === 'RegExp' && route.regExp.test(reqPathname)) {
-        target = route.target + reqUrl
-        break
+      } else {
+        let regExp = new RegExp(route.regExp)
+        if (regExp.constructor.name === 'RegExp' && regExp.test(reqPathname)) {
+          target = route.target + reqUrl
+          break
+        }
       }
     }
   }

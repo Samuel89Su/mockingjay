@@ -8,51 +8,59 @@ class ConfigMgr {
     constructor(args) {
         this.loadConfig = this.loadConfig.bind(this)
         this.dumpToFile = this.dumpToFile.bind(this)
-        this.changeContext = this.changeContext.bind(this)
-        this.changeTarget = this.changeTarget.bind(this)
+        this.updateUserConfig = this.updateUserConfig.bind(this)
 
-        this.dumpFile = './dump.data'
-        this.dummyConfig = {}
+        this.userConfig = null
+        this.userConfigFileName = './userConfig.json'
     }
 
     loadConfig() {
         // todo: load dump file
-        let dumpConfig = null
-        if (fs.existsSync(this.dumpFile)) {
-            let dumpConfig = {}
-            let stat = fs.statSync(this.dumpFile)
+        if (!this.userConfig && fs.existsSync(this.userConfigFileName)) {
+            let stat = fs.statSync(this.userConfigFileName)
             if (stat && stat.isFile()) {
-                let content = fs.readFileSync(this.dumpFile, 'utf8')
-                dumpConfig = JSON.parse(content)
+                let content = fs.readFileSync(this.userConfigFileName, 'utf8')
+                this.userConfig = JSON.parse(content)
             }
         }
 
         // todo: merge static config and dump file
 
-        let mergedConfig = this.dummyConfig = Object.assign({}, dumpConfig, staticConfig)
-
-        if (!dumpConfig) {
-            this.dumpToFile()
-        }
+        let mergedConfig = Object.assign({}, staticConfig, this.userConfig)
 
         return mergedConfig
     }
 
     dumpToFile() {
         // todo: dump config to file, overwrite
-        fs.writeFileSync(this.dumpFile, JSON.stringify(this.dummyConfig))
+        fs.writeFileSync(this.userConfigFileName, JSON.stringify(this.userConfig))
     }
 
-    changeContext(newContext) {
-        proxyContainer.context = this.dummyConfig.context = newContext
+    updateUserConfig(newConfig) {
+        if (newConfig) {
+            if (this.userConfig.context !== newConfig.context) {
+                this.userConfig.context = newConfig.context
+
+                proxyContainer.context = newConfig.context
+            }
+            if (this.userConfig.target !== newConfig.target) {
+                this.userConfig.target = newConfig.target
+
+                proxyContainer.context = newConfig.context
+            }
+            if (this.userConfig.xmlHttRequestTarget !== newConfig.xmlHttRequestTarget) {
+                this.userConfig.xmlHttRequestTarget = newConfig.xmlHttRequestTarget
+            }
+
+            this.userConfig.router = newConfig.router
+
+            this.userConfig.regExpRoutes = newConfig.regExpRoutes
+        }
+
+        proxyContainer.context = this.userConfig.context = newContext
 
         // todo: update dump file
-    }
-
-    changeTarget(newTarget) {
-        proxyContainer.target = newTarget
-
-        // todo: update dump file
+        this.dumpToFile()
     }
 }
 
