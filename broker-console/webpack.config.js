@@ -36,7 +36,7 @@ const base = {
     new HtmlWebpackPlugin({
       template: 'public/index.html',
       inject: true,
-      filename: 'index.html'
+      filename: 'mgr.html'
     })
   ]
 }

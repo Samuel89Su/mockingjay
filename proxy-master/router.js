@@ -1,12 +1,24 @@
 const express = require('express')
-const { changeContext } = require('./src/configMgr')
+const {
+  changeContext,
+  loadConfig
+} = require('./src/configMgr')
 
 const router = express.Router()
 
 router.use(express.json())
-router.use(express.urlencoded({ extended: false }))
+router.use(express.urlencoded({
+  extended: false
+}))
 
-router.all('/', function(req, res, next) {
+router.get('/fetchConfig', function (req, res) {
+  let config = loadConfig()
+  let data = {code:0, data:config}
+  res.setHeader('Content-Type', 'application/json')
+  res.send(JSON.stringify(data))
+})
+
+router.post('/', function (req, res, next) {
   changeContext(req.body.context)
   res.send('respond with a resource')
 })

@@ -38,8 +38,8 @@ module.exports = {
     port: 7000,
     historyApiFallback: true,
     proxy: [{
-      context: ['/inventory'],
-      target: 'http://127.0.0.1:8080'
+      context: ['/control'],
+      target: 'http://127.0.0.1:8700'
     }]
   }
 }
