@@ -18,7 +18,7 @@ router.get('/fetchConfig', function (req, res) {
   res.send(JSON.stringify(data))
 })
 
-router.post('/', function (req, res, next) {
+router.post('/updateContext', function (req, res, next) {
   changeContext(req.body.context)
   res.send('respond with a resource')
 })

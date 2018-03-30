@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
 import { Header, Label, Form, Input, TextArea, Checkbox, Dropdown } from 'semantic-ui-react'
+import beautify from 'js-beautify/js'
 
 class ControlPanel extends Component {
   constructor(props) {
@@ -17,10 +18,12 @@ class ControlPanel extends Component {
     fetchRemote(InventoryAPI.fetchProxyCfg)
       .then(
         (config) => {
-            this.setState({
-                proxyCfg: config,
-                rawConfig: JSON.stringify(config)
-            })
+          let rawString = JSON.stringify(config)
+          let prettyString = beautify(rawString, { indent_size: 2, space_in_empty_paren: true })
+          this.setState({
+              proxyCfg: config,
+              rawConfig: prettyString
+          })
           console.log(config)
         },
         (err) => {
@@ -29,7 +32,7 @@ class ControlPanel extends Component {
   }
 
   handleChange(e, d) {
-      this.setState({ raw: d.value })
+      this.setState({ rawConfig: d.value })
   }
 
   onTextAreaBlur(e) {
@@ -44,12 +47,16 @@ class ControlPanel extends Component {
       this.setState({ offset: pos, shadowRaw: e.target.value, expired: new Date().getTime() + 200 })
 
       let formattedRaw = beautify(e.target.value, { indent_size: 2, space_in_empty_paren: true })
-      this.setState({ raw: formattedRaw })
+      this.setState({ rawConfig: formattedRaw })
   }
 
   render() {
     return (
-        <TextArea rows='13' value={this.state.rawConfig||''} onChange={this.handleChange} onBlur={this.onTextAreaBlur} />
+        <TextArea rows='13' autoHeight
+          value={this.state.rawConfig||''}
+          onChange={this.handleChange}
+          onBlur={this.onTextAreaBlur}
+          style={{width: '100%'}} />
     )
     }
   }

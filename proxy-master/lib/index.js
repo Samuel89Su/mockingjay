@@ -96,7 +96,7 @@ class ProxyContainer {
       if (pathname.lastIndexOf('.') < pathname.lastIndexOf('/') && doProxy && this.opts.fiddleAspRoute) {
         let parentDir = pathname.substr(0, pathname.lastIndexOf('/'))
         let filePath = Path.resolve(__dirname, '../', this.opts.staticRoot, '.' + parentDir)
-        var files = fetchFiles(filePath)
+        var files = this.fetchFiles(filePath)
         if (files && files.length > 0) {
           for (let i = 0; i < files.length; i++) {
             const fileName = files[i].replace(/\\/g, '/')

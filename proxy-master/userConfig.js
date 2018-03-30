@@ -5,7 +5,7 @@ exports = module.exports = {
     // 代理配置， 参见 http-proxy-middleware
     context: ['/'],
     changeOrigin: true,
-    target: 'http://www.baidu.com',
+    target: 'http://teacher.235.mistong.com',
     router: {
         '/chimurai/http-proxy-middleware': 'https://github.com'
     },
@@ -16,5 +16,5 @@ exports = module.exports = {
             target: 'https://doc.react-china.org'
         }
     ],
-    xmlHttRequestTarget: 'http://localhost:8090' // for all request that x-request-with header is 'XMLHttpRequest'
+    // xmlHttRequestTarget: 'http://localhost:8090' // for all request that x-request-with header is 'XMLHttpRequest'
 }
