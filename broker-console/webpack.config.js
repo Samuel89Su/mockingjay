@@ -10,7 +10,7 @@ const base = {
   },
   output: {
     path: Path.resolve(__dirname, 'dist'),
-    publicPath: '/',
+    publicPath: '/'
   },
   module: {
     rules: [{

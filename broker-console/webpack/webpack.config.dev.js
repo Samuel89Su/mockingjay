@@ -35,7 +35,7 @@ module.exports = {
     inline: true,
     hot: true,
     host: '127.0.0.1',
-    port: 8100,
+    port: 7000,
     historyApiFallback: true,
     proxy: [{
       context: ['/inventory'],
