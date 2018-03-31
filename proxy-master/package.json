@@ -24,7 +24,6 @@
     "nodemon": "^1.15.1",
     "opn": "^5.2.0",
     "query-string": "^5.1.0",
-    "serve-static": "^1.13.2",
     "ws": "^4.1.0"
   },
   "devDependencies": {

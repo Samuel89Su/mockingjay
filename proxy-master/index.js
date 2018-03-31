@@ -11,7 +11,6 @@ const {
   port,
   staticRoot
 } = require('./defaultConfig')
-const serveStatic = require('serve-static')
 const ws = require('./src/ws')
 const defaultProxy = require('./src/proxy')()
 const router = require('./router')
@@ -20,12 +19,21 @@ try {
 
   const app = express()
 
-  // 添加添加静态资源服务
+  // 添加静态资源服务
   const staticRootDir = path.resolve(staticRoot)
-  const serve = serveStatic(staticRootDir, {
-    'index': ['index.html']
-  })
-  app.use(serve)
+  let options = {
+    dotfiles: 'ignore',
+    etag: false,
+    extensions: ['htm', 'html'],
+    index: 'mgr.html',
+    maxAge: '1d',
+    redirect: false,
+    fallthrough: true,
+    setHeaders: function (res, path, stat) {
+      res.set('x-timestamp', Date.now())
+    }
+  }
+  app.use(express.static(staticRootDir, options))
 
   app.use('/control', router)
 
