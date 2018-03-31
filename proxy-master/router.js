@@ -1,7 +1,7 @@
 const express = require('express')
 const {
-  changeContext,
-  loadConfig
+  loadConfig,
+  updateUserConfig
 } = require('./src/configMgr')
 
 const router = express.Router()
@@ -18,9 +18,10 @@ router.get('/fetchConfig', function (req, res) {
   res.send(JSON.stringify(data))
 })
 
-router.post('/updateContext', function (req, res, next) {
-  changeContext(req.body.context)
-  res.send('respond with a resource')
+router.post('/updateUserConfig', function (req, res, next) {
+  updateUserConfig(req.body)
+  res.setHeader('Content-Type', 'application/json')
+  res.send({code: 0})
 })
 
 module.exports = router

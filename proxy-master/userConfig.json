@@ -1,14 +1,12 @@
 {
-    "context": ["/"],
-    "target": "http://teacher.235.mistong.com",
-    "router": {
-        "/chimurai/http-proxy-middleware": "https://github.com"
-    },
-    "regExpRoutes": [
-        {
-            "regExp": "/docs/i",
-            "target": "https://doc.react-china.org"
-        }
-    ],
-    "xmlHttRequestTarget": ""
+  "context": ["/"],
+  "target": "https://www.npmjs.com",
+  "router": {
+    "/chimurai/http-proxy-middleware": "https://github.com"
+  },
+  "regExpRoutes": [{
+    "regExp": "/docs/ig",
+    "target": "https://doc.react-china.org"
+  }],
+  "xmlHttRequestTarget": ""
 }

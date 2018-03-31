@@ -2,7 +2,9 @@
 
 const fs = require('fs')
 const proxyContainer = require('../lib/index')
-const staticConfig = require('../defaultConfig')
+const defaultConfig = require('../defaultConfig')
+const configFactory = require('../lib/config-factory')
+const beautify = require('js-beautify/js')
 
 class ConfigMgr {
     constructor(args) {
@@ -26,41 +28,33 @@ class ConfigMgr {
 
         // todo: merge static config and dump file
 
-        let mergedConfig = Object.assign({}, staticConfig, this.userConfig)
+        let mergedConfig = Object.assign({}, defaultConfig, this.userConfig)
 
         return mergedConfig
     }
 
     dumpToFile() {
+        let rawString = JSON.stringify(this.userConfig)
+        let prettyString = beautify(rawString, { indent_size: 2, space_in_empty_paren: true })
         // todo: dump config to file, overwrite
-        fs.writeFileSync(this.userConfigFileName, JSON.stringify(this.userConfig))
+        fs.writeFile(this.userConfigFileName, prettyString, (err)=>{
+
+        })
     }
 
     updateUserConfig(newConfig) {
         if (newConfig) {
-            if (this.userConfig.context !== newConfig.context) {
-                this.userConfig.context = newConfig.context
+            this.userConfig = newConfig
+            proxyContainer.opts = Object.assign({}, defaultConfig, this.userConfig)
 
-                proxyContainer.context = newConfig.context
-            }
-            if (this.userConfig.target !== newConfig.target) {
-                this.userConfig.target = newConfig.target
+            let config = configFactory.createConfig(newConfig.context, newConfig)
 
-                proxyContainer.context = newConfig.context
-            }
-            if (this.userConfig.xmlHttRequestTarget !== newConfig.xmlHttRequestTarget) {
-                this.userConfig.xmlHttRequestTarget = newConfig.xmlHttRequestTarget
-            }
+            proxyContainer.context = config.context
+            proxyContainer.proxyOptions = config.options
 
-            this.userConfig.router = newConfig.router
-
-            this.userConfig.regExpRoutes = newConfig.regExpRoutes
+            // todo: update dump file
+            this.dumpToFile()
         }
-
-        proxyContainer.context = this.userConfig.context = newContext
-
-        // todo: update dump file
-        this.dumpToFile()
     }
 }
 

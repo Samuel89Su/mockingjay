@@ -1,8 +1,5 @@
 'use strict'
 
-const fs = require('fs')
-const userConfigPath = require('./src/configMgr').userConfigFileName
-
 const defaultConfig = {
     host: '0.0.0.0', // 服务绑定 IP
     port: 8700, // 服务绑定端口
@@ -22,19 +19,4 @@ const defaultConfig = {
     // xmlHttRequestTarget: 'http://localhost'      // for all request that x-request-with header is 'XMLHttpRequest'
 }
 
-let userConfig = {}
-try {
-    if (fs.existsSync(userConfigPath)) {
-        let stat = fs.statSync(userConfigPath)
-        if (stat && stat.isFile()) {
-            let content = fs.readFileSync(userConfigPath, 'utf8')
-            userConfig = JSON.parse(content)
-        }
-    }
-} catch (error) {
-
-}
-
-var mergedConfig = Object.assign({}, defaultConfig, userConfig)
-
-exports = module.exports = mergedConfig
+exports = module.exports = defaultConfig
