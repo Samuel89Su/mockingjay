@@ -5,6 +5,11 @@ const proxyContainer = require('../lib/index')
 const defaultConfig = require('../defaultConfig')
 const configFactory = require('../lib/config-factory')
 const beautify = require('js-beautify/js')
+const Ajv = require('ajv')
+const userConfigSchema = require('./userConfigSchema')
+
+const ajv = new Ajv()
+const validateUserConfig = ajv.compile(userConfigSchema)
 
 class ConfigMgr {
     constructor(args) {
@@ -44,6 +49,11 @@ class ConfigMgr {
 
     updateUserConfig(newConfig) {
         if (newConfig) {
+
+            if (!validateUserConfig(newConfig)) {
+                return { code: 400001, data: validateUserConfig.errors, msg: 'json 格式错误' }
+            }
+
             this.userConfig = newConfig
             proxyContainer.opts = Object.assign({}, defaultConfig, this.userConfig)
 
@@ -54,6 +64,8 @@ class ConfigMgr {
 
             // todo: update dump file
             this.dumpToFile()
+
+            return { code: 0, data: newConfig}
         }
     }
 }

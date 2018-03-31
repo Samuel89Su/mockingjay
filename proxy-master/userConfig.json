@@ -1,6 +1,6 @@
 {
   "context": ["/"],
-  "target": "https://www.npmjs.com",
+  "target": "https://www.npmjs.com/",
   "router": {
     "/chimurai/http-proxy-middleware": "https://github.com"
   },

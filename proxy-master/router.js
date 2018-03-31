@@ -19,9 +19,9 @@ router.get('/fetchConfig', function (req, res) {
 })
 
 router.post('/updateUserConfig', function (req, res, next) {
-  updateUserConfig(req.body)
+  let result = updateUserConfig(req.body)
   res.setHeader('Content-Type', 'application/json')
-  res.send({code: 0})
+  res.send(result)
 })
 
 module.exports = router

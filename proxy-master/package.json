@@ -17,6 +17,7 @@
   "author": "Samuel Su",
   "license": "MIT",
   "dependencies": {
+    "ajv": "^6.4.0",
     "express": "^4.16.3",
     "forever": "^0.15.3",
     "js-beautify": "^1.7.5",
