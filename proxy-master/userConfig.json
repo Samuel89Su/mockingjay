@@ -1,9 +1,8 @@
 {
   "context": ["/"],
-  "changeOrigin": false,
   "fiddleAspRoute": false,
   "regExpRoutes": [{
-    "regExp": "/docs/i",
+    "regExp": "/docs/",
     "target": "https://doc.react-china.org"
   }],
   "host": "0.0.0.0",

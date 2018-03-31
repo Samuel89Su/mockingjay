@@ -11,7 +11,7 @@ const {
   port,
   staticRoot
 } = require('./defaultConfig')
-const ws = require('./src/ws')
+// const ws = require('./src/ws')
 const defaultProxy = require('./src/proxy')()
 const router = require('./router')
 
@@ -19,16 +19,18 @@ try {
 
   const app = express()
 
+  // 添加代理中间件
+  app.use('/', defaultProxy)
+
   // 添加静态资源服务
   const staticRootDir = path.resolve(staticRoot)
   let options = {
     dotfiles: 'ignore',
     etag: false,
     extensions: ['htm', 'html'],
-    index: 'mgr.html',
+    index: false,
     maxAge: '1d',
     redirect: false,
-    fallthrough: true,
     setHeaders: function (res, path, stat) {
       res.set('x-timestamp', Date.now())
     }
@@ -36,9 +38,6 @@ try {
   app.use(express.static(staticRootDir, options))
 
   app.use('/control', router)
-
-  // 添加代理中间件
-  app.use('/', defaultProxy)
 
   http.createServer(app).listen(port, host)
 

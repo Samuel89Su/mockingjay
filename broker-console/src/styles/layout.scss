@@ -9,6 +9,20 @@ html {
     width: 90%;
     height: 100%;
     margin: 40px auto 30px auto;
+
+    .input-row {
+      width: 60%;
+      margin: 0 0 5px 0;
+    }
+
+    .input-row-half {
+      width: 35%;
+      margin: 0 5px 5px 0;
+    }
+
+    .ck-row {
+      margin: 0 0 5px 0;
+    }
   }
 
 }

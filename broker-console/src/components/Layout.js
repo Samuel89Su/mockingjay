@@ -9,7 +9,7 @@ class Layout extends Component {
         return (
             <Container>
                 <Header as="h1">
-                    Broker
+                    Broker-Mockingjay
                 </Header>
                 <div>
                     { this.props.children }

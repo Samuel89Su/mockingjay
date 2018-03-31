@@ -8,11 +8,11 @@ const queryString = require('query-string')
 const fs = require('fs')
 const path = require('path')
 const EventEmitter = require('events')
-const cfg = require('./configMgr').loadConfig()
+const config = require('./configMgr').loadConfig()
 const eventEmitter = require('./eventEmitter')
 
-const targetHost = new URL(cfg.target).host
-const port = cfg.port
+const targetHost = new URL(config.target).host
+const port = config.port
 
 function onProxyReq(proxyReq, req, res) {}
 
@@ -55,12 +55,12 @@ function getProxyResHandler() {
 }
 
 function getOpts() {
-    cfg.onProxyReq = onProxyReq
-    cfg.onProxyRes = getProxyResHandler()
+    config.onProxyReq = onProxyReq
+    config.onProxyRes = getProxyResHandler()
 
-    return cfg
+    return config
 }
 
 exports = module.exports = function createProxy() {
-    return Proxy(cfg.context, getOpts())
+    return Proxy(config.context, getOpts())
 }

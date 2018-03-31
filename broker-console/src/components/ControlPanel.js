@@ -141,31 +141,30 @@ class ControlPanel extends Component {
       }
     return (
         <div>
-            <Input label='context:' value={this.state.proxyCfg.context} name='context' onChange={this.handleChange} /><br/>
-            <Input label='target:' value={this.state.proxyCfg.target} name='target' onChange={this.handleChange} /><br/>
-            <Checkbox label='changeOrigin' toggle
-                checked={this.state.proxyCfg.changeOrigin} name='changeOrigin' onChange={this.handleChange} /><br/>
-            <Checkbox label='fiddleAspRoute' toggle
+            <Header as='h3'>General</Header>
+            <Input label='context:' value={this.state.proxyCfg.context} name='context' onChange={this.handleChange} className='input-row' /><br/>
+            <Input label='target:' value={this.state.proxyCfg.target} name='target' onChange={this.handleChange} className='input-row' /><br/>
+            <Checkbox label='fiddleAspRoute' toggle className='ck-row'
                 checked={this.state.proxyCfg.fiddleAspRoute} name='fiddleAspRoute' onChange={this.handleChange} /><br/>
-            <Input label='xmlHttRequestTarget:' value={this.state.proxyCfg.xmlHttRequestTarget} name='xmlHttRequestTarget' onChange={this.handleChange} /><br/>
-            <Header as='h3'>router</Header>
+            <Input label='xmlHttRequestTarget:' value={this.state.proxyCfg.xmlHttRequestTarget} name='xmlHttRequestTarget' onChange={this.handleChange} className='input-row' /><br/>
+            <Header as='h3'>Router</Header>
             {
                 this.state.proxyCfg.router.map((route, index)=>{
                     return (<div key={index}>
-                        <Input label='path:' value={route.path} name='router.path' data-index={index} onChange={this.handleChange} />
-                        <Input label='target:' value={route.target} name='router.target' data-index={index} onChange={this.handleChange} />
+                        <Input label='path:' value={route.path} name='router.path' data-index={index} onChange={this.handleChange} className='input-row-half' />
+                        <Input label='target:' value={route.target} name='router.target' data-index={index} onChange={this.handleChange} className='input-row-half' />
                         <Button name='router' onClick={this.removeRoute} data-index={index} style={{backgroundColor:'red'}}>Remove</Button>
                         </div>)
                 })
             }
             <Button name='router' onClick={ this.addRoute } style={{backgroundColor:'green'}}>Add</Button>
 
-            <Header as='h3'>regExpRouter</Header>
+            <Header as='h3'>RegExpRouter</Header>
             {
                 this.state.proxyCfg.regExpRoutes.map((route, index)=>{
                     return (<div key={index}>
-                        <Input label='regExp:' value={route.regExp} name='regExpRoutes.regExp' data-index={index} onChange={this.handleChange} />
-                        <Input label='target:' value={route.target} name='regExpRoutes.target' data-index={index} onChange={this.handleChange} />
+                        <Input label='regExp:' value={route.regExp} name='regExpRoutes.regExp' data-index={index} onChange={this.handleChange} className='input-row-half' />
+                        <Input label='target:' value={route.target} name='regExpRoutes.target' data-index={index} onChange={this.handleChange} className='input-row-half' />
                         <Button name='regExpRoutes' onClick={this.removeRoute} data-index={index} style={{backgroundColor:'red'}}>Remove</Button>
                         </div>)
                 })
