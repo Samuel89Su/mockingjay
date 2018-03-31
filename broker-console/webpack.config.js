@@ -9,8 +9,8 @@ const base = {
     bundle: __dirname + '/src/index.js'
   },
   output: {
-    path: Path.resolve(__dirname, 'dist'),
-    publicPath: '/'
+    path: Path.resolve(__dirname, 'dist')
+    //,publicPath: '/'
   },
   module: {
     rules: [{

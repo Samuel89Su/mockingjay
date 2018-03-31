@@ -14,7 +14,7 @@ exports = module.exports =
         },
         "xmlHttRequestTarget": {
             "type":"string",
-            "pattern": "^((http[s]?)://)?(?<=//|)(((\\w)+\\.)+\\w+)(\\:(\\d+))?$"
+            "pattern": "((http[s]?)://)?(?<=//|)(((\\w)+\\.)+\\w+)(\\:(\\d+))?$"
         },
         "context": {
             "anyOf": [
@@ -33,7 +33,7 @@ exports = module.exports =
         },
         "target": {
             "type":"string",
-            "pattern": "^((http[s]?)://)?(?<=//|)(((\\w)+\\.)+\\w+)(\\:(\\d+))?$"
+            "pattern": "((http[s]?)://)?(?<=//|)(((\\w)+\\.)+\\w+)(\\:(\\d+))?$"
         },
         "router": {
             "type":"object"
@@ -49,7 +49,7 @@ exports = module.exports =
                     },
                     "target":{
                         "type":"string",
-                        "pattern": "^((http[s]?)://)?(?<=//|)(((\\w)+\\.)+\\w+)(\\:(\\d+))?$"
+                        "pattern": "((http[s]?)://)?(?<=//|)(((\\w)+\\.)+\\w+)(\\:(\\d+))?$"
                     }
                 },
                 "required": ["regExp", "target"]

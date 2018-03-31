@@ -77,3 +77,4 @@ typings/
 proxy-master/cfg.js
 exp-prac/bin/www
 /proxy-master/dump.data
+/broker-console/dist

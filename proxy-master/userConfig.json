@@ -1,13 +1,16 @@
 {
   "context": ["/"],
-  "target": "https://www.npmjs.com",
   "changeOrigin": false,
   "fiddleAspRoute": false,
+  "regExpRoutes": [{
+    "regExp": "/docs/i",
+    "target": "https://doc.react-china.org"
+  }],
+  "host": "0.0.0.0",
+  "port": 8700,
+  "staticRoot": "./static",
+  "target": "https://www.npmjs.com",
   "router": {
     "/chimurai/http-proxy-middleware": "https://github.com"
-  },
-  "regExpRoutes": [{
-    "regExp": "/docs/ig",
-    "target": "https://doc.react-china.org"
-  }]
+  }
 }

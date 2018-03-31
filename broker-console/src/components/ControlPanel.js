@@ -46,7 +46,7 @@ class ControlPanel extends Component {
         })
   }
 
-  clickUpdateBtn(e, d) {
+  clickUpdateBtn() {
     // router process
     let dummy = Object.assign({}, this.state.proxyCfg)
     if (dummy && dummy.router && dummy.router.length > 0) {
