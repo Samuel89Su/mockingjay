@@ -11,6 +11,16 @@ const userConfigSchema = require('./userConfigSchema')
 const ajv = new Ajv()
 const validateUserConfig = ajv.compile(userConfigSchema)
 
+const defConfig = {
+    "context": ["/"],
+    "changeOrigin": false,
+    "fiddleAspRoute": false,
+    "router": {
+    },
+    "regExpRoutes": [],
+    "xmlHttRequestTarget": ""
+  }
+
 class ConfigMgr {
     constructor(args) {
         this.loadConfig = this.loadConfig.bind(this)
@@ -33,7 +43,7 @@ class ConfigMgr {
 
         // todo: merge static config and dump file
 
-        let mergedConfig = Object.assign({}, defaultConfig, this.userConfig)
+        let mergedConfig = Object.assign({}, defConfig, defaultConfig, this.userConfig)
 
         return mergedConfig
     }

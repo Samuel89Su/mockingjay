@@ -11,11 +11,11 @@ router.use(express.urlencoded({
   extended: false
 }))
 
-router.get('/fetchConfig', function (req, res) {
+router.get('/fetchUserConfig', function (req, res) {
   let config = loadConfig()
   let data = {code:0, data:config}
   res.setHeader('Content-Type', 'application/json')
-  res.send(JSON.stringify(data))
+  res.send(data)
 })
 
 router.post('/updateUserConfig', function (req, res, next) {

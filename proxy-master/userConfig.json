@@ -1,12 +1,13 @@
 {
   "context": ["/"],
-  "target": "https://www.npmjs.com/",
+  "target": "https://www.npmjs.com",
+  "changeOrigin": false,
+  "fiddleAspRoute": false,
   "router": {
     "/chimurai/http-proxy-middleware": "https://github.com"
   },
   "regExpRoutes": [{
     "regExp": "/docs/ig",
     "target": "https://doc.react-china.org"
-  }],
-  "xmlHttRequestTarget": ""
+  }]
 }

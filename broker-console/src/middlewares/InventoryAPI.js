@@ -1,12 +1,12 @@
 const contentTypeHeader = { 'Content-Type': 'application/json' }
 
 const InventoryAPI = {
-  fetchProxyCfg: {
-    url: '/control/fetchconfig',
+  fetchUserCfg: {
+    url: '/control/fetchUserConfig',
     method: 'GET'
   },
-  updateProxyCfg: {
-    url: '/control/updateProxyCfg',
+  updateUserCfg: {
+    url: '/control/updateUserConfig',
     method: 'POST',
     headers: contentTypeHeader
   }
