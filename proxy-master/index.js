@@ -11,13 +11,15 @@ const {
   port,
   staticRoot
 } = require('./defaultConfig')
-// const ws = require('./src/ws')
+const ws = require('./src/ws')
 const defaultProxy = require('./src/proxy')()
 const router = require('./router')
 
 try {
 
   const app = express()
+
+  app.use('/control', router)
 
   // 添加代理中间件
   app.use('/', defaultProxy)
@@ -36,8 +38,6 @@ try {
     }
   }
   app.use(express.static(staticRootDir, options))
-
-  app.use('/control', router)
 
   http.createServer(app).listen(port, host)
 

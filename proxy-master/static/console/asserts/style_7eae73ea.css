@@ -25,6 +25,14 @@ html {
     width: 90%;
     height: 100%;
     margin: 40px auto 30px auto; }
+    html body .input-row {
+      width: 60%;
+      margin: 0 0 5px 0; }
+    html body .input-row-half {
+      width: 35%;
+      margin: 0 5px 5px 0; }
+    html body .ck-row {
+      margin: 0 0 5px 0; }
 
 .layout-header {
   height: 80px;
