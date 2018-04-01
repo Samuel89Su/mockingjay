@@ -1,5 +1,6 @@
 {
-  "context": ["/"],
+  "context": ["/", "/docs"],
+  "changeOrigin": true,
   "fiddleAspRoute": false,
   "regExpRoutes": [{
     "regExp": "/docs/",

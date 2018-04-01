@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
-import { Header, Button, Input, Checkbox, Dropdown } from 'semantic-ui-react'
+import { Header, Button, Input, Checkbox, Dropdown, Label } from 'semantic-ui-react'
 import '../styles/btn.scss'
 
 class ControlPanel extends Component {
@@ -97,8 +97,21 @@ class ControlPanel extends Component {
   }
 
   handleChange(e, d) {
+      if (d.type === 'checkbox') {
+          d.value = d.checked
+      }
       let dummy = Object.assign({}, this.state.proxyCfg)
-      if (d.name.indexOf('oute') === -1 || d.name.startsWith('f')) {
+      if (d.name === 'context') {
+          let value = e.target.value
+          let index = d['data-index']
+          if (value.endsWith(',')) {
+            dummy.context.push('')
+          } else if (!value) {
+            dummy.context.splice(index, 1)
+          } else {
+            dummy.context[index] = value
+          }
+      } else if (d.name.indexOf('oute') === -1 || d.name.startsWith('f')) {
           dummy[d.name] = d.value
       } else if (d.name.indexOf('router') > -1) {
           let segs = d.name.split('.')
@@ -142,7 +155,23 @@ class ControlPanel extends Component {
     return (
         <div>
             <Header as='h3'>General</Header>
-            <Input label='context:' value={this.state.proxyCfg.context} name='context' onChange={this.handleChange} className='input-row' /><br/>
+            <Input labelPosition='right' name='context'>
+                <Label>context: </Label>
+                <Label basic size='mini'>[</Label>
+                {
+                    this.state.proxyCfg.context.map((ctx, index)=>{
+                        if (index < this.state.proxyCfg.context.length - 1) {
+                            return (<div className='div-inline'>
+                                        <Input className='ipt-inline' key={index} data-index={index} value={ctx} onChange={(e)=>this.handleChange(e, {'name':'context','data-index':index})}/>
+                                        <Label basic size='mini'>,</Label>
+                                    </div>)
+                        } else {
+                            return (<Input key={index} data-index={index} value={ctx} onChange={(e)=>this.handleChange(e, {'name':'context','data-index':index})} />)
+                        }
+                    })
+                }
+                <Label basic size='mini'>]</Label>
+            </Input><br/>
             <Input label='target:' value={this.state.proxyCfg.target} name='target' onChange={this.handleChange} className='input-row' /><br/>
             <Checkbox label='fiddleAspRoute' toggle className='ck-row'
                 checked={this.state.proxyCfg.fiddleAspRoute} name='fiddleAspRoute' onChange={this.handleChange} /><br/>
