@@ -112,6 +112,11 @@ class ProxyContainer {
       }
     }
 
+    // exclude embedded-console
+    if (pathname.toLowerCase().startsWith('/console')) {
+      doProxy = false
+    }
+
     if (!doProxy) {
       return doProxy
     }

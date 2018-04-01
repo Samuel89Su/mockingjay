@@ -30,7 +30,7 @@ try {
     dotfiles: 'ignore',
     etag: false,
     extensions: ['htm', 'html'],
-    index: false,
+    index: 'index.html',
     maxAge: '1d',
     redirect: false,
     setHeaders: function (res, path, stat) {
