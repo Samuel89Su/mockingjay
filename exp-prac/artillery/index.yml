@@ -1,0 +1,10 @@
+config:
+  target: 'http://127.0.0.1:8800'
+  phases:
+    - duration: 20
+      arrivalRate: 100
+  defaults:
+scenarios:
+  - flow:
+    - get:
+        url: "/"
