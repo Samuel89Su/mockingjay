@@ -8,7 +8,10 @@
             "type": "node",
             "request": "launch",
             "name": "express-prac",
-            "program": "${workspaceFolder}/bin/www"
+            "program": "${workspaceFolder}/bin/www",
+            "args":[
+                "--env=development"
+            ]
         }
     ]
 }

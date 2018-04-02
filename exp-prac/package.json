@@ -3,11 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "forever start -w --watchDirectory ./ ./bin/www",
-    "restart": "forever restart -w --watchDirectory ./ ./bin/www",
+    "start": "forever start -w --watchDirectory ./ ./bin/www --env=production",
+    "restart": "forever restart -w --watchDirectory ./ ./bin/www --env=production",
     "stop": "forever stop ./bin/www",
     "node-dev": "node ./bin/www",
-    "nodemon": "nodemon ./bin/www"
+    "nodemon": "nodemon ./bin/www --env=development",
+    "nodemon-dist": "nodemon ./bin/www --env=production"
   },
   "dependencies": {
     "cookie-parser": "~1.4.3",
