@@ -5,7 +5,8 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   let env = req.app.get('env')
   let title = 'Express on ' + env
-  res.render('index', { title: title });
+  let cdn = env === 'development' ? 'http://ewt360.com' : 'http://233.mistong.com'
+  res.render('index', { title: title, cdnHost: cdn });
 });
 
 module.exports = router;
