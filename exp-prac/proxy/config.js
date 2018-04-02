@@ -6,6 +6,8 @@ const defaultConfig = {
         context: ['/'],
         changeOrigin: true,
         ws: true,                         // proxy websockets
+        staticRoot: '../public',
+        fiddleAspRoute: true,
         target: 'http://teacher.233.mistong.com',
         router: {
             '/Teacher/PsychologyEvaluation/GetSchoolIndexEvaluationData': 'http://teacher.235.mistong.com'
