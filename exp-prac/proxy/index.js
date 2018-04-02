@@ -12,8 +12,8 @@ const contextMatcher = require('http-proxy-middleware/lib/context-matcher')
 const Router = require('http-proxy-middleware/lib/router')
 
 const opts = cfg.proxyOpts
-const context = cfg.proxyOpts.context
-delete cfg.proxyOpts.context
+const context = opts.context
+delete opts.context
 
 // extract regexp routes
 const regExpRoutes = opts.regExpRoutes || []
@@ -22,7 +22,7 @@ delete opts.regExpRoutes
 const xmlHttRequestTarget = opts.xmlHttRequestTarget
 delete opts.xmlHttRequestTarget
 
-const config = configFactory.createConfig(context, cfg.proxyOpts)
+const config = configFactory.createConfig(context, opts)
 
 const targetHost = new URL(opts.target).host
 
@@ -77,16 +77,19 @@ function getFilter(proxyEventEmitter) {
         // by pass if local
         if (req.method === 'GET' || req.method === 'HEAD') {
             if (pathname.lastIndexOf('.') > pathname.lastIndexOf('/')) {
-                let filePath = path.join(cfg.staticRoot, pathname)
+                let filePath = path.resolve(__dirname, opts.staticRoot, '.' + pathname)
                 try {
                     let stats = fs.statSync(filePath)
                     if (stats.isFile()) {
                         doProxy = false
                     }
-                } catch (error) {}
-            } else if (cfg.fiddleAspRoute) {
+                } catch (error) {
+
+                }
+            } else if (opts.fiddleAspRoute) {
                 let parentDir = pathname.substr(0, pathname.lastIndexOf('/'))
-                var files = fetchFiles(cfg.staticRoot + parentDir)
+                parentDir = path.resolve(__dirname, opts.staticRoot, '.' + parentDir)
+                var files = fetchFiles(parentDir)
                 if (files && files.length > 0) {
                     for (let i = 0; i < files.length; i++) {
                         const fileName = files[i].replace(/\\/g, '/')
