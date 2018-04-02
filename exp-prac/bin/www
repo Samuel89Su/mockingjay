@@ -7,7 +7,6 @@
 var app = require('../app');
 var debug = require('debug')('exp-prac:server');
 var http = require('http');
-var minimist = require('minimist');
 const config = require('../config')
 
 /**
@@ -16,9 +15,6 @@ const config = require('../config')
 
 var port = normalizePort(process.env.PORT || config.port);
 app.set('port', port);
-
-var args = minimist(process.argv.slice(2));
-app.set('env', args.env)
 
 /**
  * Create HTTP server.

@@ -1,21 +1,41 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const fs = require('fs')
+const rfs = require('rotating-file-stream')
+const minimist = require('minimist');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
 const { port } = require('./config')
 const ws = require('./websocket')
 
+// create app
 var app = express();
+
+// set app env
+var args = minimist(process.argv.slice(2));
+app.set('env', args.env)
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.use(logger('dev'));
+// setup logging
+var logDirectory = path.join(__dirname, 'log')
+// ensure log directory exists
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+// create a rotating write stream
+var accessLogStream = rfs('access.log', {
+  interval: '1d', // rotate daily
+  path: logDirectory
+})
+// setup the dev console logger
+args.env === 'production' || app.use(logger('dev'));
+// setup rotate file logger
+app.use(logger('combined', {stream: accessLogStream}))
 
 // body parser
 app.use(express.json());
@@ -27,7 +47,7 @@ app.use(cookieParser());
 // 默认index路由
 app.use('/', indexRouter);
 // 自定义路由
-app.use('/users', usersRouter);
+// app.use('/users', usersRouter);
 
 // 添加代理中间件
 const proxy = require('./proxy')(port)
