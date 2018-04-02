@@ -26,6 +26,8 @@ app.use('/users', usersRouter);
 // 添加代理中间件
 const proxy = require('./proxy')(port)
 app.use('/', proxy)
+
+// 静态资源服务
 app.use(express.static(path.join(__dirname, 'public')));
 
 // catch 404 and forward to error handler
