@@ -45,9 +45,12 @@ function getProxyResHandler() {
             }
         }
 
+        // emit event
         if (eventEmitter) {
             eventEmitter.emit('proxyEvent', JSON.stringify({
                 originalUrl: req.url,
+                doProxy: true,
+                target: req.target,
                 status: proxyRes.statusCode
             }))
         }
@@ -57,6 +60,7 @@ function getProxyResHandler() {
 function getOpts() {
     config.onProxyReq = onProxyReq
     config.onProxyRes = getProxyResHandler()
+    config.eventEmitter = eventEmitter
 
     return config
 }

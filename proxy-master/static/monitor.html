@@ -15,8 +15,8 @@
         open console to see proxy log.
     </p>
     <script>
-        var wsPort = parseInt(location.port) + 1;
-        var ws = new WebSocket('ws://localhost:' + wsPort);
+        var wsPort = parseInt(location.port||80) + 1;
+        var ws = new WebSocket(`ws://${location.host}:${wsPort}`);
     
         ws.onopen = function () {
             ws.send('connected')

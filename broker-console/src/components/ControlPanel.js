@@ -161,8 +161,8 @@ class ControlPanel extends Component {
                 {
                     this.state.proxyCfg.context.map((ctx, index)=>{
                         if (index < this.state.proxyCfg.context.length - 1) {
-                            return (<div className='div-inline'>
-                                        <Input className='ipt-inline' key={index} data-index={index} value={ctx} onChange={(e)=>this.handleChange(e, {'name':'context','data-index':index})}/>
+                            return (<div key={index} className='div-inline'>
+                                        <Input className='ipt-inline' data-index={index} value={ctx} onChange={(e)=>this.handleChange(e, {'name':'context','data-index':index})}/>
                                         <Label basic size='mini'>,</Label>
                                     </div>)
                         } else {
