@@ -61,7 +61,7 @@ function GetTargetAccordingToExtensions(req, config) {
         for (let j = 0; j < route.length; j++) {
           const soloRegExp = new RegExp(route[j])
           if (soloRegExp.constructor.name === 'RegExp' && soloRegExp.test(reqPathname)) {
-            target = route.target + reqUrl
+            target = route.target
             matched = true
             break
           }
@@ -72,7 +72,7 @@ function GetTargetAccordingToExtensions(req, config) {
       } else {
         let regExp = new RegExp(route.regExp)
         if (regExp.constructor.name === 'RegExp' && regExp.test(reqPathname)) {
-          target = route.target + reqUrl
+          target = route.target
           break
         }
       }
@@ -81,7 +81,7 @@ function GetTargetAccordingToExtensions(req, config) {
 
   // XMLHttpRequest rule process
   if (!target && req.headers['x-requested-with'] === 'XMLHttpRequest' && config.xmlHttRequestTarget) {
-    target = config.xmlHttRequestTarget + reqUrl
+    target = config.xmlHttRequestTarget
   }
 
   return target

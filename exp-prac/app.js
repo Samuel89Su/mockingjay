@@ -37,15 +37,8 @@ args.env === 'production' || app.use(logger('dev'));
 // setup rotate file logger
 app.use(logger('combined', {stream: accessLogStream}))
 
-// body parser
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-// cookie parser
-app.use(cookieParser());
-
 // 默认index路由
-app.use('/', indexRouter);
+// app.use('/', indexRouter);
 // 自定义路由
 // app.use('/users', usersRouter);
 

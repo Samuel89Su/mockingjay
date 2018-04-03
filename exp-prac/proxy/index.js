@@ -178,7 +178,7 @@ function getOpts(port, proxyEventEmitter) {
                         for (let j = 0; j < route.length; j++) {
                             const soloRegExp = route[j];
                             if (soloRegExp.constructor.name === 'RegExp' && soloRegExp.test(reqPathname)) {
-                                target = route.target + reqUrl
+                                target = route.target
                                 matched = true
                                 break
                             }
@@ -187,7 +187,7 @@ function getOpts(port, proxyEventEmitter) {
                             break
                         }
                     } else if (route.regExp.constructor.name === 'RegExp' && route.regExp.test(reqPathname)) {
-                        target = route.target + reqUrl
+                        target = route.target
                         break
                     }
                 }
@@ -195,7 +195,7 @@ function getOpts(port, proxyEventEmitter) {
 
             // XMLHttpRequest rule process
             if (!target && req.headers['X-Requested-With'] === 'XMLHttpRequest' && xmlHttRequestTarget) {
-                target = xmlHttRequestTarget + reqUrl
+                target = xmlHttRequestTarget
             }
         }
 

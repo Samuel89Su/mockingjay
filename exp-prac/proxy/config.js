@@ -10,7 +10,7 @@ const defaultConfig = {
         fiddleAspRoute: true,
         target: 'http://teacher.233.mistong.com',
         router: {
-            '/Teacher/PsychologyEvaluation/GetSchoolIndexEvaluationData': 'http://teacher.235.mistong.com'
+            // '/Teacher/PsychologyEvaluation/GetSchoolIndexEvaluationData': 'http://teacher.235.mistong.com'
         },
         // test path with regexp, forward to the target if matched
         // regExpRoutes: [
@@ -21,7 +21,7 @@ const defaultConfig = {
         // ],
         // xmlHttRequestTarget: 'http://localhost'      // for all request that x-request-with header is 'XMLHttpRequest',
         pathRewrite: {
-            '^/api/old-path' : '/mock/eteacher/api/new-path',     // rewrite path
+            // '^/api/old-path' : '/mock/eteacher/api/new-path',     // rewrite path
         }
     }
 }
