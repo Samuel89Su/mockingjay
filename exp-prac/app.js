@@ -7,8 +7,6 @@ const configure = require('./configure')
 const { port } = require('./config')
 const ws = require('./websocket')
 
-const session = require('./cookieSession')
-
 // create app
 var app = express()
 
@@ -18,9 +16,6 @@ configure(app)
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
-
- 
-app.use([session])
 
 // config router
 app.use('/', router)

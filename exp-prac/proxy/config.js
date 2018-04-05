@@ -8,8 +8,9 @@ const defaultConfig = {
         ws: true,                         // proxy websockets
         staticRoot: '../public',
         fiddleAspRoute: true,
-        target: 'http://teacher.233.mistong.com',
+        target: 'http://192.168.0.100:6969',
         router: {
+            'home/echo': 'http://192.168.0.100:6969'
             // '/Teacher/PsychologyEvaluation/GetSchoolIndexEvaluationData': 'http://teacher.235.mistong.com'
         },
         // test path with regexp, forward to the target if matched
