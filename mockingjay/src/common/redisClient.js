@@ -6,10 +6,7 @@ const Promise = require('bluebird')
 Promise.promisifyAll(Redis.RedisClient.prototype)
 Promise.promisifyAll(Redis.Multi.prototype)
 
-const redisConOption = {
-    host: '127.0.0.1',
-    port: '6379',
-};
+const redisConOption = require('../../defaultConfig').redisOpts
 
 const redisClient = Redis.createClient(redisConOption)
 
