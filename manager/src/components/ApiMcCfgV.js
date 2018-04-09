@@ -90,7 +90,7 @@ class ApiMcCfgV extends Component {
             return (<div>
                         <Dropdown name={namePrefix + '.reactor.type'} value={reactor.type} onChange={this.handleChange}
                             options={[{text: 'Fixed', value: 'fixed'}, {text:'Custom', value:'custom'}]} />
-                        <TextArea name={namePrefix + '.reactor.value'} value={reactor.value} onChange={this.handleChange} />
+                        <TextArea name={namePrefix + '.reactor.value'} value={reactor.value} onChange={this.handleChange} autoHeight />
                     </div>)
         } else {
             return <span></span>

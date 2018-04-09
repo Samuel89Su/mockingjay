@@ -104,7 +104,7 @@ class AppCfgV extends Component {
                 <Form id="fm_appCfg">
                     <Input name='name' label='名称:' value={appCfg.name} disabled={!this.props.register} onChange={this.handleChange} />
                     <Header as='h4'>描述</Header>
-                    <TextArea name='desc' rows='5' value={appCfg.desc} onChange={this.handleChange} placeholder='descripe this application' />
+                    <TextArea name='desc' rows='5' value={appCfg.desc} onChange={this.handleChange} placeholder='descripe this application' autoHeight />
                     <Header as='h4'>代理</Header>
                     <Button onClick={this.addTagert}>添加</Button><br/>
                     <Label size='large'>代理到: </Label>

@@ -56,6 +56,7 @@ class ApiCfgV extends Component {
     update(e) {
       this.setState({updateDisabled: true})
       let apiCfg = this.state.apiCfg
+      apiCfg.appId = parseInt(this.state.query.appId)
       this.props.onUpdateClick(apiCfg)
     }
 
@@ -88,7 +89,7 @@ class ApiCfgV extends Component {
                 <Form id="fm_apiCfg">
                     <Input name='name' label='名称:' value={apiCfg.name} onChange={this.handleChange} />
                     <Header as='h4'>描述</Header>
-                    <TextArea name="description" rows='4' value={apiCfg.description} onChange={this.handleChange} placeholder='descripe this api' />
+                    <TextArea name="description" rows='4' value={apiCfg.description} onChange={this.handleChange} placeholder='descripe this api' autoHeight />
                     
                     <Label>Method: </Label>
                     <Dropdown name='method' placeholder='Select a method'

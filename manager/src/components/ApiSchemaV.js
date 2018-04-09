@@ -370,7 +370,7 @@ class ApiSchemaV extends Component {
 
                     <Header as='h4'>Body Schema</Header>
                     <text>使用Json Schema进行数据验证</text><br/>
-                    <TextArea rows='5' name="properties.reqBody" value={apiSchema.properties.reqBody} onChange={this.handleChange} />
+                    <TextArea rows='5' name="properties.reqBody" value={apiSchema.properties.reqBody} onChange={this.handleChange} autoHeight />
                     <Header as='h3'>Response</Header>
                     <Header as='h4'>Headers</Header>
                     <text>使用正则表达式进行数据验证</text>
@@ -412,7 +412,7 @@ class ApiSchemaV extends Component {
 
                     <Header as='h4'>Body Schema</Header>
                     <text>使用Json Schema进行数据验证</text><br/>
-                    <TextArea rows='5' name="properties.resBody" value={apiSchema.properties.resBody} onChange={this.handleChange} />
+                    <TextArea rows='5' name="properties.resBody" value={apiSchema.properties.resBody} onChange={this.handleChange} autoHeight />
 
                     <input type="hidden"/>
                 </Form>

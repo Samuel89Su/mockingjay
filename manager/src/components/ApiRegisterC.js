@@ -76,7 +76,7 @@ const mapStateToProps = state => {
     description: '',
     path: '/',
     method: 'POST',
-    appId: 1,
+    appId: state.appCfg ? state.appCfg.id : 1,
     forward:  false,
     validate: false
   }

@@ -100,7 +100,7 @@ class RawSchemaEditor extends Component {
                     }
                     
                     <Form>
-                        <TextArea rows='13' value={this.state.raw} onChange={this.handleChange} onBlur={this.onTextAreaBlur} />
+                        <TextArea rows='13' value={this.state.raw} onChange={this.handleChange} onBlur={this.onTextAreaBlur} autoHeight />
                         <input type='hidden' />
                     </Form>
                 </Modal.Content>
