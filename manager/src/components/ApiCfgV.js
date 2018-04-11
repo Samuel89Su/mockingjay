@@ -87,23 +87,24 @@ class ApiCfgV extends Component {
         return (
             <div id="div_apiCfg">
                 <Form id="fm_apiCfg">
-                    <Input name='name' label='名称:' value={apiCfg.name} onChange={this.handleChange} />
+                    <Input name='name' label='名称:' value={apiCfg.name} onChange={this.handleChange} className='margin-bottom' />
                     <Header as='h4'>描述</Header>
-                    <TextArea name="description" rows='4' value={apiCfg.description} onChange={this.handleChange} placeholder='descripe this api' autoHeight />
+                    <TextArea name="description" rows='4' value={apiCfg.description} onChange={this.handleChange} placeholder='descripe this api' autoHeight className='margin-bottom' />
                     
-                    <Label>Method: </Label>
-                    <Dropdown name='method' placeholder='Select a method'
+                    <Label className='margin-bottom'>Method: </Label>
+                    <Dropdown name='method' placeholder='Select a method' className='margin-bottom'
                         selection inline options={[{text:'GET', value:'GET'}, {text:'POST', value:'POST'}]}
                         value={apiCfg.method}
                         onChange={this.handleChange} />
                     <br/>
                     
-                    <Input label='Path: ' name="path" value={apiCfg.path} onChange={this.handleChange} /><br/>
+                    <Input label='Path: ' name="path" value={apiCfg.path} onChange={this.handleChange} className='input-row margin-bottom' /><br/>
                     
-                    <Checkbox label='验证数据' name="validate" toggle checked={apiCfg.validate} onChange={this.handleChange} /><br/>
+                    <Checkbox label='验证数据' name="validate" toggle checked={apiCfg.validate} onChange={this.handleChange} className='margin-bottom' /><br/>
                     
-                    <Checkbox label="代理" name="forward" toggle checked={apiCfg.forward} onChange={this.handleChange} />
-                    <Dropdown name='forwardTarget' placeholder='Select a target, prior over app config'
+                    <Checkbox label="代理" name="forward" toggle checked={apiCfg.forward} onChange={this.handleChange} className='margin-bottom' />
+                    <Dropdown name='forwardTarget' placeholder='Select a target'
+                        className='dropdown-proxy margin-bottom'
                         selection inline
                         options={targets}
                         value={apiCfg.forwardTarget}
@@ -111,7 +112,7 @@ class ApiCfgV extends Component {
                     <Label>{targetUrl}</Label>
                     <br/>
                     
-                    <Label>Logging: </Label>
+                    <Label className='margin-bottom' >Logging: </Label>
                     <Dropdown name='logReq' placeholder='Select a log level'
                         selection inline
                         options={[{text:'Req', value:1}, {text:'Res', value:2}]}
