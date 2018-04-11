@@ -9,7 +9,9 @@ const CopyPlugin = require('copy-webpack-plugin')
 module.exports = {
     output: {
         filename: 'asserts/[name]_[hash].js',
-        chunkFilename: 'asserts/[name]_[hash].js'
+        chunkFilename: 'asserts/[name]_[hash].js',
+        path: Path.resolve(__dirname, '../../mockingjay/static'),
+        publicPath: '/'
 	},
     module: {
         rules: [
@@ -25,7 +27,7 @@ module.exports = {
     plugins: [
         new CleanPlugin(['index.html', 'asserts/*.*'], {
             // exclude: ['images'],
-            root: Path.resolve(__dirname, '../dist/')
+            root: Path.resolve(__dirname, '../../mockingjay/static/')
         }),
         new CopyPlugin([
         ]),

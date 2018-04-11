@@ -1,11 +1,14 @@
 'use strict'
 
+const Path = require('path')
 const Webpack = require('webpack')
 
 module.exports = {
   output: {
     filename: 'bundle.js',
-    chunkFilename: '[name].js'
+    chunkFilename: '[name].js',
+    path: Path.resolve(__dirname, 'dist'),
+    publicPath: '/'
   },
   module: {
     rules: [{

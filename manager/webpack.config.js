@@ -1,16 +1,11 @@
 'use strict'
 
-const Path = require('path')
 const Merge = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const base = {
   entry: {
     bundle: __dirname + '/src/index.js'
-  },
-  output: {
-    path: Path.resolve(__dirname, 'dist'),
-    publicPath: '/',
   },
   module: {
     rules: [{

@@ -3,6 +3,15 @@
 
 .details-tab .input-key {
   width: 80px !important; }
+
+.input-row {
+  width: 70%; }
+
+.dropdown-proxy {
+  width: 200px; }
+
+.margin-bottom {
+  margin-bottom: 5px; }
 /* Base Application Styles */
 html {
   width: 100%;
