@@ -54,6 +54,27 @@ exports = module.exports =
                 },
                 "required": ["regExp", "target"]
             }
+        },
+        "mockServer": {
+            "type": "string",
+            "regex": "((http[s]?)://)?(?<=//|)(((\\w)+\\.)+\\w+)(\\:(\\d+))?$"
+        },
+        "mockPrefix": {
+            "type": "string"
+        },
+        "mockPaths": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "type": "string"
+                    },
+                    "mock": {
+                        "type": "boolean"
+                    }
+                }
+            }
         }
     },
     "required": ["context","target"]

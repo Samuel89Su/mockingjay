@@ -23,6 +23,7 @@ class ProxyContainer {
     this.__applyPathRewrite = this.__applyPathRewrite.bind(this)
     this.logError = this.logError.bind(this)
     this.fetchFiles = this.fetchFiles.bind(this)
+    this.updateOptions = this.updateOptions.bind(this)
 
     this.context = null
     this.opts = null
@@ -31,7 +32,6 @@ class ProxyContainer {
     this.proxy = null
     this.wsUpgradeDebounced = null
     this.wsInitialized = null
-    this.eventEmitter = null
   }
 
 
@@ -122,16 +122,7 @@ class ProxyContainer {
       return doProxy
     }
 
-    doProxy = contextMatcher.match(context, reqPath, req)
-
-    if (!doProxy && this.eventEmitter) {
-      this.eventEmitter.emit('proxyEvent', JSON.stringify({
-        originalUrl: req.url,
-        doProxy: doProxy
-      }))
-    }
-
-    return doProxy
+    return contextMatcher.match(context, reqPath, req)
   }
 
 
@@ -163,16 +154,6 @@ class ProxyContainer {
     if (this.proxyOptions.logLevel === 'debug') {
       var arrow = getArrow(originalPath, req.url, this.proxyOptions.target, newProxyOptions.target)
       logger.debug('[HPM] %s %s %s %s', req.method, originalPath, arrow, newProxyOptions.target)
-    }
-
-    req.target = this.proxyOptions.target
-    // emit event
-    if (this.eventEmitter) {
-      this.eventEmitter.emit('proxyEvent', JSON.stringify({
-        originalUrl: originalPath,
-        doProxy: true,
-        target: this.proxyOptions.target
-      }))
     }
 
     return newProxyOptions
@@ -247,6 +228,10 @@ class ProxyContainer {
     return fileNames
   }
 
+  updateOptions() {
+    this.pathRewriter = PathRewriter.create(this.proxyOptions.pathRewrite) // returns undefined when "pathRewrite" is not provided
+  }
+
   HttpProxyMiddleware(context, opts) {
     // https://github.com/chimurai/http-proxy-middleware/issues/57
     this.wsUpgradeDebounced = _.debounce(this.handleUpgrade)
@@ -256,8 +241,6 @@ class ProxyContainer {
     this.proxyOptions = config.options
 
     this.context = config.context
-
-    this.eventEmitter = opts.eventEmitter
 
     // create proxy
     this.proxy = httpProxy.createProxyServer({})
