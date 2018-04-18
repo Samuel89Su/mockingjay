@@ -52,7 +52,7 @@ function getTargetFromProxyTable(req, table) {
 function GetTargetAccordingToExtensions(req, config) {
   let target
   let reqUrl = (req.originalUrl || req.url)
-  let reqPathname = new URL('http://' + req.headers.host + reqUrl).pathname
+  let reqPathname = new URL(req.protocol + '://' + req.headers.host + reqUrl).pathname
   if (config.regExpRoutes.length) {
     for (let i = 0; i < config.regExpRoutes.length; i++) {
       const route = config.regExpRoutes[i];

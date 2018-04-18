@@ -1,0 +1,16 @@
+{
+    "context": ["/"],
+    "changeOrigin": true,
+    "fiddleAspRoute": false,
+    "regExpRoutes": [],
+    "staticRoot": "./public",
+    "target": "http://teacher.233.mistong.com",
+    "mockServer": "http://127.0.0.1:3000",
+    "mockPrefix": "teacher",
+    "mockPaths": [{
+        "mock": true,
+        "path": "/echo"
+    }],
+    "router": {},
+    "pathRewrite": {}
+  }

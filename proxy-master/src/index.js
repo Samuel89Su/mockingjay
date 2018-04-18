@@ -34,7 +34,9 @@ function getProxyResHandler() {
                                 let segs = targetHost.split('.').reverse()
                                 let domain = segs.pop() + '.' + segs.pop()
                                 if (redirectUrl.host.indexOf(domain) > -1) {
-                                    query[key] = fromurl.replace(redirectUrl.host, 'localhost:' + port)
+                                    let hostName = config.domain || config.ip
+                                    let redirectHost = (port !== 80 ? `${hostName}:${port}` : hostName)
+                                    query[key] = fromurl.replace(redirectUrl.host, redirectHost)
                                     proxyRes.headers.location = proxyRes.headers.location.replace(search, '?' + queryString.stringify(query))
                                 }
                             }
@@ -45,26 +47,28 @@ function getProxyResHandler() {
             }
         }
 
-        // emit event
         if (eventEmitter) {
-            eventEmitter.emit('proxyEvent', JSON.stringify({
-                originalUrl: req.url,
-                doProxy: true,
-                target: req.target,
-                status: proxyRes.statusCode
-            }))
+            try {
+                eventEmitter.emit('proxyEvent', JSON.stringify({
+                    originalUrl: req.url,
+                    targetUrl: "",
+                    status: proxyRes.statusCode
+                }))
+            } catch (error) {
+            }
         }
     }
 }
 
-function getOpts() {
+function getOpts(env) {
     config.onProxyReq = onProxyReq
-    config.onProxyRes = getProxyResHandler()
-    config.eventEmitter = eventEmitter
+    if (!env || env !== 'production') {
+        config.onProxyRes = getProxyResHandler()
+    }
 
     return config
 }
 
-exports = module.exports = function createProxy() {
-    return Proxy(config.context, getOpts())
+exports = module.exports = function createProxy(env) {
+    return Proxy(config.context, getOpts(env))
 }

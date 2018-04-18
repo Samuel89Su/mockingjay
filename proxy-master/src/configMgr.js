@@ -1,12 +1,14 @@
 'use strict'
 
 const fs = require('fs')
+const path = require('path')
 const proxyContainer = require('../lib/index')
-const defaultConfig = require('../defaultConfig')
+const defaultConfig = require('./defaultConfig')
 const configFactory = require('../lib/config-factory')
 const beautify = require('js-beautify/js')
 const Ajv = require('ajv')
 const userConfigSchema = require('./userConfigSchema')
+const { deepClone } = require('../utils')
 
 const ajv = new Ajv()
 const validateUserConfig = ajv.compile(userConfigSchema)
@@ -15,8 +17,8 @@ const defConfig = {
     "context": ["/"],
     "changeOrigin": false,
     "fiddleAspRoute": false,
-    "router": {
-    },
+    "router": {},
+    "pathRewrite": {},
     "regExpRoutes": [],
     "xmlHttRequestTarget": ""
   }
@@ -26,13 +28,15 @@ class ConfigMgr {
         this.loadConfig = this.loadConfig.bind(this)
         this.dumpToFile = this.dumpToFile.bind(this)
         this.updateUserConfig = this.updateUserConfig.bind(this)
+        this.preProcess = this.preProcess.bind(this)
+        this.fetchUserConfig = this.fetchUserConfig.bind(this)
 
         this.userConfig = null
-        this.userConfigFileName = './userConfig.json'
+        this.userConfigFileName = path.resolve(__dirname, './userConfig.json')
     }
 
     loadConfig() {
-        // todo: load dump file
+        // load dump file
         if (!this.userConfig && fs.existsSync(this.userConfigFileName)) {
             let stat = fs.statSync(this.userConfigFileName)
             if (stat && stat.isFile()) {
@@ -41,11 +45,16 @@ class ConfigMgr {
             }
         }
 
-        // todo: merge static config and dump file
-
+        // merge static config and dump file
         let mergedConfig = Object.assign({}, defConfig, defaultConfig, this.userConfig)
 
+        mergedConfig = this.preProcess(mergedConfig)
+
         return mergedConfig
+    }
+
+    fetchUserConfig () {
+        return this.userConfig
     }
 
     dumpToFile() {
@@ -65,18 +74,36 @@ class ConfigMgr {
             }
 
             this.userConfig = newConfig
-            proxyContainer.opts = Object.assign({}, defaultConfig, this.userConfig)
 
-            let config = configFactory.createConfig(newConfig.context, newConfig)
+            let proxyCfg = this.preProcess(newConfig)
+            proxyContainer.opts = Object.assign({}, defaultConfig, proxyCfg)
+
+            let config = configFactory.createConfig(proxyCfg.context, proxyCfg)
 
             proxyContainer.context = config.context
             proxyContainer.proxyOptions = config.options
 
+            proxyContainer.updateOptions()
+
             // todo: update dump file
             this.dumpToFile()
 
-            return { code: 0, data: newConfig}
+            return { code: 0, data: this.userConfig}
         }
+    }
+
+    preProcess(config) {
+        let dummyConfig = deepClone(config)
+        if (dummyConfig.mockServer && dummyConfig.mockPaths && dummyConfig.mockPaths.length > 0) {
+            for (let i = 0; i < dummyConfig.mockPaths.length; i++) {
+                const mockPath = config.mockPaths[i]
+                if (mockPath.mock) {
+                    dummyConfig.router[mockPath.path] = config.mockServer
+                    dummyConfig.pathRewrite['^' + mockPath.path] = `/mocking/${config.mockPrefix + mockPath.path}`
+                }
+            }
+        }
+        return dummyConfig
     }
 }
 

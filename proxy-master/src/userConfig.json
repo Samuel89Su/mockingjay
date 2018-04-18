@@ -1,0 +1,9 @@
+{
+    "context": ["/"],
+    "changeOrigin": true,
+    "fiddleAspRoute": false,
+    "regExpRoutes": [],
+    "target": "http://teacher.233.mistong.com",
+    "router": {},
+    "pathRewrite": {}
+}
