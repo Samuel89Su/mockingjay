@@ -35,6 +35,7 @@ class CacheFacade {
         this.searchAppByPartialName = this.searchAppByPartialName.bind(this)
         this.searchApiByPartialPath = this.searchApiByPartialPath.bind(this)
         this.renameAppAndApiKey = this.renameAppAndApiKey.bind(this)
+        this.renameApiMockCacheKey = this.renameApiMockCacheKey.bind(this)
 
         this.redisFullyScan = this.redisFullyScan.bind(this)
         this.scanFirst = this.scanFirst.bind(this)
@@ -588,9 +589,16 @@ class CacheFacade {
      * @param {String} newPath new path
      * @returns {Promise<Boolean>} true if success
      */
-    async renameApiCacheKey(appName, id, oldPath, newPath) {
+    async renameApiCacheKey (appName, id, oldPath, newPath) {
         let oldKey = CacheKeyCombinator.buildApiDescKey(appName, id, oldPath)
         let newKey = CacheKeyCombinator.buildApiDescKey(appName, id, newPath)
+        let ok = await redisClient.renameAsync(oldKey, newKey) === 'OK'
+        return ok
+    }
+
+    async renameApiMockCacheKey (appName, oldPath, newPath) {
+        let oldKey = CacheKeyCombinator.buildMockCfgKey(appName, oldPath)
+        let newKey = CacheKeyCombinator.buildMockCfgKey(appName, newPath)
         let ok = await redisClient.renameAsync(oldKey, newKey) === 'OK'
         return ok
     }

@@ -207,7 +207,10 @@ class Steward {
         }
         let ok = true
         if (apiDesc.path && apiDesc.path !== apiData.path) {
+            // rename api desc key
             ok = await CacheFacade.renameApiCacheKey(appDesc.name, apiId, apiDesc.path, apiData.path)
+            // rename api mock key, if exists
+            await CacheFacade.renameApiMockCacheKey(appDesc.name, apiDesc.path, apiData.path)
             if (!ok) {
                 ctx.response.body = errCode.dbErr()
             }
