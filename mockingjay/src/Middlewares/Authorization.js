@@ -11,7 +11,7 @@ function Authorization(options) {
             } else if (!lowerPath.includes('login')) {
                 // check auth
                 if (!ctx.session.userId || ctx.session.userId === 0) {
-                    ctx.status = 302
+                    ctx.body = { code: 302 }
                     ctx.set('location', '/login')
                     return
                 } else {

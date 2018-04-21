@@ -33,7 +33,7 @@ class AppListV extends Component {
     }
 
     handlePaginationChange(e, data) {
-        this.setState({ 
+        this.setState({
             activePage: data.activePage
             })
         this.props.fetchData({ pageNum: data.activePage -1, partialName: this.state.partialName })

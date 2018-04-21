@@ -13,7 +13,7 @@ const router = new Router()
 
 router.use('/', handleError, Authorization())
 
-admin.bindRoutes(router)
+admin.bindRoutes(router, '/inventory')
 
 // register mocking module routes
 brokerRouter.bindRoutes(router, '/mocking')

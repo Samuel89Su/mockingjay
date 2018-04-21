@@ -25,12 +25,6 @@ const ApiListV = Loadable({
   loading: Loading
 })
 
-// routes
-const ApiRoutes = [
-    { path: '/api/register', component: ApiRegisterC },
-    { path: '/api/details', component: ApiDetailsTab }
-]
-
 // actions
 function updateApiList(pagedApis) {
   return {
@@ -66,4 +60,4 @@ const mapDispatchToProps = dispatch => {
 }
 
 const ApiListC = connect(mapStateToProps, mapDispatchToProps)(ApiListV)
-export { ApiListC, ApiRoutes }
+export default ApiListC

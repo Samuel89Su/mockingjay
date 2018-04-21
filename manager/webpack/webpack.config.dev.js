@@ -42,7 +42,7 @@ module.exports = {
     historyApiFallback: true,
     proxy: [{
       context: ['/inventory'],
-      target: 'http://10.0.11.60:6600'
+      target: 'http://127.0.0.1:3000'
     }]
   }
 }

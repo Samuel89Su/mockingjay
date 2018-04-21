@@ -3,11 +3,14 @@
 const Router = require('koa-router')
 const bodyParser = require('./common/bodyParser')
 
+const pswKey = 'gmib4p+|2^z%;*:=~o.<*n<q`<9.@,tc'
+
 module.exports.bindRoutes = bindRoutes
 
-function bindRoutes(router) {
-    router.post('/login', bodyParser, login)
-    router.post('/logout', logout)
+function bindRoutes(router, prefixPath) {
+    prefixPath = prefixPath || ''
+    router.post(prefixPath + '/login', bodyParser, login)
+    router.post(prefixPath + '/logout', logout)
 }
 
 async function login(ctx, next) {
@@ -18,15 +21,15 @@ async function login(ctx, next) {
             ctx.status = 200
             ctx.body = {
                 code: 0,
-                data: null
+                data: true
             }
         } else {
-            ctx.status = 403
+            ctx.status = 401
         }
     } else {
         ctx.body = {
             code: 0,
-            data: null
+            data: true
         }
     }
     return
@@ -36,7 +39,7 @@ async function logout(ctx, next) {
     if (ctx.session) {
         ctx.session = null
     }
-    ctx.status = 302
     ctx.set('location', '/login')
+    ctx.status = 302
     return
 }

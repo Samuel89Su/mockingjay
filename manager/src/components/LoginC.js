@@ -7,14 +7,13 @@ import InventoryAPI from '../middlewares/InventoryAPI'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import Loading from './Loading'
 
-const AppListV = Loadable({
-  loader: () => import('./AppListV'),
+const LoginV = Loadable({
+  loader: () => import('./LoginV'),
   loading: Loading
 })
 
 // actions
 const updateAppList = pagedApps => {
-  pagedApps = pagedApps || []
   return {
     type: 'UPDATE_APPLIST',
     pagedApps
@@ -34,19 +33,15 @@ function fetchRemoteAppList(dispatch, query) {
 // map state to props
 const mapStateToProps = state => {
   return {
-    pagedApps: state.pagedApps
   }
 }
 
 // map dispatch to props
 const mapDispatchToProps = dispatch => {
   return {
-    fetchData: (query) => {
-      fetchRemoteAppList(dispatch, query)
-    }
   }
 }
 
 // connect & export
-const AppListC = connect(mapStateToProps, mapDispatchToProps)(AppListV)
-export default AppListC
+const LoginC = connect(mapStateToProps, mapDispatchToProps)(LoginV)
+export default LoginC

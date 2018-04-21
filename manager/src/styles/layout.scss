@@ -13,10 +13,25 @@ html {
 
 }
 
-.layout-header {
+.layout-header-container {
   height: 80px;
   width: 100%;
-  background-color: chocolate;
-  vertical-align: middle;
+
+  background-color: rgb(189, 144, 47);
   margin: 0 auto;
+
+  padding: 20px 5px;
+}
+
+.layout-header {
+  display: inline-block;
+
+  margin: 0 auto;
+  vertical-align: middle;
+
+  font-size: 28px;
+}
+
+.btn-logout {
+  float: right;
 }

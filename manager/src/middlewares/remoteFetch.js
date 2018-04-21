@@ -3,6 +3,10 @@ const fetchJson = function (url, opts) {
     .then(res => {
       var contentType = res.headers.get('content-type')
       if (!res.ok) {
+        if (res.status === 301 || res.status === 302) {
+          !history && history.pushState(null, null, res.headers.location)
+          location.reload()
+        }
         return null
       } else if (!contentType || !contentType.includes('application/json')) {
         return null
@@ -12,7 +16,10 @@ const fetchJson = function (url, opts) {
     })
     .then(retData => {
       if (retData.code !== 0) {
-        return null
+        if (retData.code === 302) {
+          history.pushState(null, null, '/login')
+          location.reload()
+        }
       } else {
         if (retData.data) {
           return retData.data
@@ -30,9 +37,17 @@ const fetchRemote = function (api, payload) {
 }
 
 function fakeDiscard(api, payload) {
-  return new Promise((resolve, reject) => { resolve = ()=>{ return true }; reject = ()=>{ return false } })
+  return new Promise((resolve, reject) => {
+    resolve = () => {
+      return true
+    };
+    reject = () => {
+      return false
+    }
+  })
 }
 
 export {
-  fetchRemote, fakeDiscard
+  fetchRemote,
+  fakeDiscard
 }
