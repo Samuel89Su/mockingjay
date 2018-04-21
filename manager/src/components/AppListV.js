@@ -83,7 +83,7 @@ class AppListV extends Component {
                         </Table.Header>
 
                         <Table.Body>
-                        {  
+                        {
                             list.map((app, index) => {
                                 return (
                                 <Table.Row key={index}>

@@ -114,6 +114,11 @@ const InventoryAPI = {
     method: 'POST',
     ...headers,
     ...commonOpts
+  },
+  signup: {
+    url: '/inventory/signup',
+    method: 'POST',
+    ...headers
   }
 }
 

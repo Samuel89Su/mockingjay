@@ -1,5 +1,7 @@
 'use strict'
 
+const KEYPREFIX = 'mk:'
+
 class CacheKeyCombinator {
     constructor () {
 
@@ -11,12 +13,17 @@ class CacheKeyCombinator {
         this.appIdKey = 'appId'
         this.apiIdKey = 'apiId'
 
+        this.usrIdKey = KEYPREFIX + 'usrId'
+        this.usrKeyPrefix = KEYPREFIX + 'usr'
+
         this.buildAppCfgKey = this.buildAppCfgKey.bind(this)
         this.buildApiDescKey = this.buildApiDescKey.bind(this)
         this.buildApiSchemaKey = this.buildApiSchemaKey.bind(this)
         this.buildMockCfgKey = this.buildMockCfgKey.bind(this)
         this.buildApiKeyPrefix = this.buildApiKeyPrefix.bind(this)
         this.buildApiExampleKey = this.buildApiExampleKey.bind(this)
+
+        this.buildUserKey = this.buildUserKey.bind(this)
 
         this.extractAppId = this.extractId.bind(this) 
     }
@@ -111,6 +118,16 @@ class CacheKeyCombinator {
         let idPart = key.match(':\d{1,5}_')[0]
         let idRaw = idPart.match('\d{1,5}')[0]
         return parseInt(idRaw)
+    }
+
+    /**
+     * 
+     * @param {String} userName 
+     * @param {Number} userId 
+     * @returns {String} user key
+     */
+    buildUserKey (userName, userId) {
+        return `${this.usrKeyPrefix}_${(userName || '*')}_${(userId || '*')}`
     }
 }
 

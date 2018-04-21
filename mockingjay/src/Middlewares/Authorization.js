@@ -8,7 +8,7 @@ function Authorization(options) {
             let lowerPath = ctx.path.toLowerCase()
             if (lowerPath.startsWith('/mocking') || lowerPath.startsWith('weshrimpball')) {
                 await next()
-            } else if (!lowerPath.includes('login')) {
+            } else if (!(lowerPath.includes('login') || lowerPath.includes('logout') || lowerPath.includes('signup'))) {
                 // check auth
                 if (!ctx.session.userId || ctx.session.userId === 0) {
                     ctx.body = { code: 302 }

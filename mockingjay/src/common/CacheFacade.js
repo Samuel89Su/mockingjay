@@ -41,6 +41,10 @@ class CacheFacade {
         this.scanFirst = this.scanFirst.bind(this)
         this.internalGetApps = this.internalGetApps.bind(this)
         this.internalGetApis = this.internalGetApis.bind(this)
+
+        this.allocateUsrId = this.allocateUsrId.bind(this)
+        this.setUser = this.setUser.bind(this)
+        this.getUser = this.getUser.bind(this)
     }
 
     /**
@@ -688,6 +692,65 @@ class CacheFacade {
         }
 
     }
+
+    /**
+     * allocate new user id
+     * @returns {Promise<Number>}
+     */
+    async allocateUsrId() {
+        let id = await redisClient.incrAsync(CacheKeyCombinator.usrIdKey)
+        return id
+    }
+
+    /**
+     * set user
+     * @param {Object} user 
+     * @returns {Promise<Boolean>} Success
+     */
+    async setUser(user) {
+        if (!user || user === {}) {
+            throw new Error('invalid user entity')
+        }
+
+        if (!user.userName && !Number.isInteger(user.id)) {
+            throw new Error('invalid userName or userId')
+        }
+
+        if (!user.id) {
+            user.id = await this.allocateUsrId()
+        }
+
+        let key = CacheKeyCombinator.buildUserKey(user.userName, user.id)
+        let ok = await redisClient.setAsync(key, JSON.stringify(user)) === 'OK'
+        return ok
+    }
+
+    /**
+     * get user from cache
+     * @param {String} userName 
+     * @param {Number} userId 
+     * @returns {Promise<Object>} user entity
+     */
+    async getUser(userName, userId) {
+        if (!userName && !Number.isInteger(userId)) {
+            throw new Error('invalid userName or userId')
+        }
+
+        let key = CacheKeyCombinator.buildUserKey(userName, userId)
+        if (!userName || !userId) {
+            key = await this.scanFirst(key)
+        }
+
+        if (!key) {
+            return null
+        } else {
+            let raw = await redisClient.getAsync(key)
+            if (raw) {
+                return JSON.parse(raw)
+            }
+        }
+    }
+
 }
 
 exports = module.exports = new CacheFacade()

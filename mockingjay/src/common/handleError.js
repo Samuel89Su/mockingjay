@@ -12,11 +12,11 @@ async function handleError (ctx, next) {
             stack: error.stack
         })
 
-        ctx.response.body = errCode.internalErr({
+        ctx.body = errCode.internalErr({
             message: error.message,
             stack: error.stack
         })
-
+        ctx.status = 500
     } finally {
     }
 }

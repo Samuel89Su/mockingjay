@@ -1,7 +1,7 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Container, Button } from 'semantic-ui-react'
+import { Container, Button, Icon } from 'semantic-ui-react'
 import '../styles/layout.scss'
 import InventoryAPI from '../middlewares/InventoryAPI'
 import { fetchRemote } from '../middlewares/remoteFetch'
@@ -18,20 +18,21 @@ class Layout extends Component {
         .then(
             () => {
                 history.pushState(null, null, '/login')
+                location.reload()
             },
             (err)=>{})
     }
 
     render() {
         return (
-            <Container>
-                <div className='layout-header-container'>
+            <Container className='layout-header-container'>
+                <div className='header-line'>
                     <b className='layout-header'>
                         Mockingjay
                     </b>
-                    <Button basic inverted className='btn-logout'
+                    <Button Icon className='btn-logout' color='olive'
                         onClick={this.logout}>
-                    Logout
+                        <Icon name='log out' color='violet' size='teal' />
                     </Button>
                 </div>
                 

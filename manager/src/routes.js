@@ -5,6 +5,7 @@ import ApiListC from './components/ApiListC'
 import ApiRegisterC from './components/ApiRegisterC'
 import ApiDetailsTab from './components/ApiDetailsTab'
 import LoginC from './components/LoginC'
+import SignUpC from './components/SignUpC'
 
 const routes = [{
     path: '/',
@@ -49,6 +50,10 @@ const routes = [{
   {
     path: '/api/details',
     component: ApiDetailsTab
+  },
+  {
+    path: '/signup',
+    component: SignUpC
   }
 ]
 

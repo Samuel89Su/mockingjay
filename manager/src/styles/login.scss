@@ -23,14 +23,21 @@
     }
 
     .ipt_login_usrName {
-        display: block;
-
-        width: 80%;
-
         margin: 0 0 20px 0;
+
+        width: 70%;
     }
 
     .ipt_login_psw {
         margin: 0 0 20px 0;
+
+        width: 70%;
+    }
+
+    .login-label {
+        text-align: left;
+        vertical-align: middle;
+
+        font-size: 14px;
     }
 }

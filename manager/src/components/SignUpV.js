@@ -1,57 +1,54 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Segment, Divider, Button, Form, Input, Icon, Label } from 'semantic-ui-react'
+import { Segment, Button, Form, Input, Icon } from 'semantic-ui-react'
 import InventoryAPI from '../middlewares/InventoryAPI'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import '../styles/login.scss'
 import md5 from 'js-md5'
 
-class LoginV extends Component {
+class SignUpV extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
             userName: '',
             psw: '',
+            confirmPsw: '',
             displayPsw: false,
             pswInputType: 'password'
         }
 
-        this.login = this.login.bind(this)
+        this.signup = this.signup.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.showPsw = this.showPsw.bind(this)
-        this.goToSignup = this.goToSignup.bind(this)
-
-        this.pswKey = 'gmib4p+|2^z%;*:=~o.<*n<q`<9.@,tc'
     }
 
-    componentWillMount() {
-        this.login()
-    }
-
-    login() {
-        let cooktail = !this.state.psw ? '' : md5(md5(this.state.psw) + this.pswKey)
+    signup() {
+        if (!this.state.userName || !this.state.psw) {
+            alert('need user name and password')
+            return
+        }
+        if (!this.state.confirmPsw) {
+            alert('confirm password first')
+            return
+        }
         let payload = {
             userName: this.state.userName,
-            psw: cooktail
+            psw: md5(this.state.psw)
         }
         let json = JSON.stringify(payload)
-        fetchRemote(InventoryAPI.login, json)
+        fetchRemote(InventoryAPI.signup, json)
         .then(
             (data)=>{
                 if (data) {
-                    this.props.history.push('/app')
+                    this.props.history.push('/login')
                 } else {
                 }
             },
             (err)=>{
                 alert(err.message)
             })
-    }
-
-    goToSignup() {
-        this.props.history.push('/signup')
     }
 
     showPsw() {
@@ -65,6 +62,15 @@ class LoginV extends Component {
     handleChange(evt, data) {
         let newState = {}
         newState[data.name] = data.value
+        if (data.name === 'confirmPsw') {
+            if (data.value.length > this.state.psw.length) {
+                alert('the password must same value')
+                return
+            } else if (!this.state.psw.startsWith(data.value)) {
+                alert('the password must same value')
+                return
+            }
+        }
         this.setState(newState)
     }
 
@@ -76,25 +82,26 @@ class LoginV extends Component {
                         <Form>
                             <Input placeholder='user name' name='userName'
                                 className='ipt_login_usrName'
-                                value={this.state.userName} onChange={this.handleChange}>
-                                <Label className='login-label'>UserName: </Label>
-                                <input />
-                            </Input>
-                            <br/>
-                            <Input action name='psw' placeholder='password'
+                                value={this.state.userName} onChange={this.handleChange} />
+                            <Input action name='psw'
                                 className='ipt_login_psw'
                                 value={this.state.psw} onChange={this.handleChange}>
-                                <Label className='login-label'>Password: </Label>
-                                <input type={this.state.pswInputType}/>
+                                <input placeholder='password' type={this.state.pswInputType}/>
+                                <Button icon inverted={this.state.displayPsw} onClick={this.showPsw}>
+                                    <Icon name='eye' color='blue' />
+                                </Button>
+                            </Input><br/>
+                            <Input action name='confirmPsw'
+                                className='ipt_login_psw'
+                                value={this.state.confirmPsw} onChange={this.handleChange}>
+                                <input placeholder='confirm password' type={this.state.pswInputType}/>
                                 <Button icon inverted={this.state.displayPsw} onClick={this.showPsw}>
                                     <Icon name='eye' color='blue' />
                                 </Button>
                             </Input>
                             <input type='hidden'/>
                         </Form>
-                        <Button primary fluid onClick={this.login}>Login</Button>
-                        <Divider horizontal>Or</Divider>
-                        <Button secondary fluid onClick={this.goToSignup}>Sign Up Now</Button>
+                        <Button primary fluid onClick={this.signup}>Sign up</Button>
                     </Segment>
                 </div>
             </div>
@@ -102,4 +109,4 @@ class LoginV extends Component {
     }
 }
 
-export default LoginV
+export default SignUpV
