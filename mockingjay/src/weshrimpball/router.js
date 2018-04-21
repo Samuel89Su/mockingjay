@@ -1,16 +1,15 @@
 'use strict'
 
 const Router = require('koa-router')
-const commonBodyParser = require('../common/bodyParser')
-const handleError = require('../common/handleError')
 const verifyWeChatSign = require('./verifySign')
 const receiveMessage = require('./messageReceiver')
 
-const router = new Router()
+module.exports.bindRoutes = bindRoutes;
 
-router.use('/', handleError)
+function bindRoutes(router, prefixPath) {
+    prefixPath = prefixPath || ''
 
-router.get('/', verifyWeChatSign)
-router.post('/', receiveMessage)
 
-exports = module.exports = router
+    router.get(prefixPath + '/', verifyWeChatSign)
+    router.post(prefixPath + '/', receiveMessage)
+}

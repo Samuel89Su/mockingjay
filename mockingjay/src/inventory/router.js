@@ -3,19 +3,13 @@
 const Router = require('koa-router')
 const appSteward = require('./appSteward')
 const apiSteward = require('./apiSteward')
-const handleError = require('../common/handleError')
 
-const router = new Router()
+module.exports.bindRoutes = bindRoutes;
 
-router.use('/*', handleError)
+function bindRoutes(router, prefixPath) {
+    prefixPath = prefixPath || ''
 
-// register app inventory routes
-const appRouter = appSteward.getRouter()
-router.use('/app', appRouter.routes(), appRouter.allowedMethods())
+    appSteward.bindRoutes(router, prefixPath + '/app')
 
-// register api inventory routes
-const apiRouter = apiSteward.getRouter()
-router.use('/api', apiRouter.routes(), apiRouter.allowedMethods())
-
-
-exports = module.exports = router
+    apiSteward.bindRoutes(router, prefixPath + '/api')
+}

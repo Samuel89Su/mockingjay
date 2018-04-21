@@ -21,8 +21,6 @@ const validate = ajv.compile(appSchema)
 
 class steward {
     constructor(arg) {
-        this.router = new Router()
-
         this.list = this.list.bind(this)
         this.get = this.get.bind(this)
         this.register = this.register.bind(this)
@@ -33,21 +31,21 @@ class steward {
         this.recursivePostmanItem = this.recursivePostmanItem.bind(this)
     }
 
-    getRouter() {
-        this.router.use('/*', bodyParser)
+    bindRoutes(router, prefixPath) {
+        prefixPath = prefixPath || ''
 
-        this.router.get(['/', '/echo'], (ctx, next) => {
+        router.use(prefixPath + '/*', bodyParser)
+
+        router.get([prefixPath + '/', prefixPath + '/echo'], (ctx, next) => {
             ctx.response.body = 'you are in app inventory now.'
         })
-        this.router.get('/list', this.list)
-        this.router.get('/get', this.get)
-        this.router.post('/register', this.register)
-        this.router.post('/update', this.update)
-        this.router.post('/discard', this.discard)
-        // this.router.post('/cahceKeyLenCheck', this.cahceKeyLenCheck)
-        this.router.post('/importPostmanCollection', this.importPostmanCollection)
-
-        return this.router
+        router.get(prefixPath + '/list', this.list)
+        router.get(prefixPath + '/get', this.get)
+        router.post(prefixPath + '/register', this.register)
+        router.post(prefixPath + '/update', this.update)
+        router.post(prefixPath + '/discard', this.discard)
+        // router.post('/cahceKeyLenCheck', this.cahceKeyLenCheck)
+        router.post(prefixPath + '/importPostmanCollection', this.importPostmanCollection)
     }
 
     /**

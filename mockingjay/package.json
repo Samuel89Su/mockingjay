@@ -2,13 +2,13 @@
   "name": "mockingjay",
   "version": "0.0.1",
   "description": "A mock server for http.",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "forever-start": "forever start -w --watchDirectory src server.js",
-    "restart": "forever restart -w --watchDirectory src server.js",
-    "forever-stop": "forever stop server.js",
-    "nodemon": "nodemon server.js",
+    "start": "node index.js",
+    "forever-start": "forever start -w --watchDirectory src index.js",
+    "restart": "forever restart -w --watchDirectory src index.js",
+    "forever-stop": "forever stop index.js",
+    "nodemon": "nodemon index.js",
     "test": "mocha --recursive"
   },
   "keywords": [
@@ -40,6 +40,7 @@
     "koa-bodyparser": "^4.2.0",
     "koa-router": "^7.3.0",
     "koa-send": "^4.1.2",
+    "koa-session": "^5.8.1",
     "koa-static": "^4.0.2",
     "query-string": "^5.1.0",
     "redis": "^2.8.0",

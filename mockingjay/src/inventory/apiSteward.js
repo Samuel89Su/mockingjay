@@ -17,7 +17,6 @@ const apiSchemaValidate = ajv.compile(apiRegistrationSchema)
 
 class Steward {
     constructor(arg) {
-        this.router = new Router()
         this.list = this.list.bind(this)
         this.register = this.register.bind(this)
         this.update = this.update.bind(this)
@@ -33,25 +32,24 @@ class Steward {
         this.updateExample = this.updateExample.bind(this)
     }
 
-    getRouter() {
-        this.router.use('/*', commonBodyParser)
-        this.router.get(['/', '/echo'], (ctx, next) => {
+    bindRoutes(router, prefixPath) {
+        prefixPath = prefixPath || ''
+        router.use(prefixPath + '/*', commonBodyParser)
+        router.get([prefixPath + '/', prefixPath + '/echo'], (ctx, next) => {
             ctx.response.body = 'you are in api inventory now.'
         })
-        this.router.get('/list', this.list)
-        this.router.get('/get', this.get)
-        this.router.post('/register', this.register)
-        this.router.post('/update', this.update)
-        this.router.post('/discard', this.discard)
-        this.router.post('/updateschema', this.updateSchema)
-        this.router.post('/updatemockcfg', this.updateMockCfg)
-        this.router.post('/removemockcfg', this.removeMockCfg)
-        this.router.post('/getapischema', this.getApiSchema)
-        this.router.post('/getmockcfg', this.getApiMockCfg)
-        this.router.post('/getexample', this.getExample)
-        this.router.post('/updateexample', this.updateExample)
-
-        return this.router
+        router.get(prefixPath + '/list', this.list)
+        router.get(prefixPath + '/get', this.get)
+        router.post(prefixPath + '/register', this.register)
+        router.post(prefixPath + '/update', this.update)
+        router.post(prefixPath + '/discard', this.discard)
+        router.post(prefixPath + '/updateschema', this.updateSchema)
+        router.post(prefixPath + '/updatemockcfg', this.updateMockCfg)
+        router.post(prefixPath + '/removemockcfg', this.removeMockCfg)
+        router.post(prefixPath + '/getapischema', this.getApiSchema)
+        router.post(prefixPath + '/getmockcfg', this.getApiMockCfg)
+        router.post(prefixPath + '/getexample', this.getExample)
+        router.post(prefixPath + '/updateexample', this.updateExample)
     }
 
     // retrieve api list by app id

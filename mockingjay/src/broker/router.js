@@ -3,11 +3,12 @@
 const Router = require('koa-router');
 const broker = require('./broker');
 
-const router = new Router();
+module.exports.bindRoutes = bindRoutes;
 
-router.use('/*', broker)
-router.all('/*', async function (ctx, next) {
-    return // await next();
-});
-
-exports = module.exports = router;
+function bindRoutes (router, prefixPath) {
+    prefixPath = prefixPath || ''
+    router.use(prefixPath + '/*', broker)
+    router.all(prefixPath + '/*', async function (ctx, next) {
+        return // await next();
+    });
+}
