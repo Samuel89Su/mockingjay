@@ -24,8 +24,10 @@ class CacheKeyCombinator {
         this.buildApiExampleKey = this.buildApiExampleKey.bind(this)
 
         this.buildUserKey = this.buildUserKey.bind(this)
+        this.buildUserAppMapKey = this.buildUserAppMapKey.bind(this)
+        this.buildUserAppHashKey = this.buildUserAppHashKey.bind(this)
 
-        this.extractAppId = this.extractId.bind(this) 
+        this.extractAppId = this.extractId.bind(this)
     }
 
     /**
@@ -128,6 +130,28 @@ class CacheKeyCombinator {
      */
     buildUserKey (userName, userId) {
         return `${this.usrKeyPrefix}_${(userName || '*')}_${(userId || '*')}`
+    }
+
+    /**
+     * 构建用户应用列表的key
+     * @param {Number} userId
+     * @returns {String} user app list key
+     */
+    buildUserAppMapKey (userId) {
+        return `${KEYPREFIX}usrapplst_${userId}`
+    }
+
+    /**
+     * 构建用户应用列表中的 hashkey
+     * @param {String} appName 应用名称
+     * @param {Number} appId 应用ID
+     * @returns {String} 缓存key
+     */
+    buildUserAppHashKey (appName, appId) {
+        if (appId && Number.isInteger(appId)) {
+            appId = appId.toString().padStart(4, '0')
+        }
+        return `${(appId || '*')}_${(appName || '*')}`
     }
 }
 

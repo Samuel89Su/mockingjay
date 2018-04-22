@@ -71,9 +71,9 @@ class steward {
 
         let page = null
         if (partialname) {
-            page = await CacheFacade.searchAppByPartialName(partialname, pageNum)
+            page = await CacheFacade.searchAppByPartialName(ctx.session.userId, partialname, pageNum)
         } else {
-            page = await CacheFacade.getAppList(pageNum)
+            page = await CacheFacade.getAppList(ctx.session.userId, pageNum)
         }
 
         ctx.response.body = errCode.success(page)
@@ -118,6 +118,9 @@ class steward {
             // set/update cache
             let ok = await CacheFacade.setApp(appDesc.name, id, appDesc)
             if (ok) {
+                //  绑定用户
+                await CacheFacade.bindUsrApp(ctx.session.userId, appDesc.name, id)
+
                 appDesc.id = id
                 ctx.response.body = errCode.success(appDesc)
             } else {

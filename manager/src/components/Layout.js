@@ -30,9 +30,9 @@ class Layout extends Component {
                     <b className='layout-header'>
                         Mockingjay
                     </b>
-                    <Button Icon className='btn-logout' color='olive'
+                    <Button icon className='btn-logout' color='olive'
                         onClick={this.logout}>
-                        <Icon name='log out' color='violet' size='teal' />
+                        <Icon name='log out' color='violet' />
                     </Button>
                 </div>
                 

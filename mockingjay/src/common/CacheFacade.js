@@ -45,6 +45,8 @@ class CacheFacade {
         this.allocateUsrId = this.allocateUsrId.bind(this)
         this.setUser = this.setUser.bind(this)
         this.getUser = this.getUser.bind(this)
+
+        //this.bindUsrApp = this.bindUsrApp.bind(this)
     }
 
     /**
@@ -70,14 +72,31 @@ class CacheFacade {
      * @param {Number} pageNum page number
      * @returns {Promise<Array>}
      */
-    async getAppList(pageNum) {
+    async getAppList(userId, pageNum) {
         if (!pageNum) {
             pageNum = 0
         }
 
-        let keyPattern = CacheKeyCombinator.appInventoryPrefix + ':*'
+        // get user's app
+        let key = CacheKeyCombinator.buildUserAppMapKey(userId)
+        let usrApps = await redisClient.hgetallAsync(key)
+        let appKeys = Object.keys(usrApps)
+        appKeys.sort()
+        let total = appKeys.length
 
-        let page = await this.internalGetApps(keyPattern, pageNum)
+        let startIdx = pageNum * pageSize
+        appKeys = appKeys.slice(startIdx, startIdx + pageSize)
+        let apps = []
+        while(appKeys && appKeys.length > 0) {
+            let appKey = CacheKeyCombinator.appInventoryPrefix + ':' + appKeys.shift()
+            let rawApp = await redisClient.getAsync(appKey)
+            apps.push(JSON.parse(rawApp))
+        }
+
+        // let keyPattern = CacheKeyCombinator.appInventoryPrefix + ':*'
+
+        let page = assemblePagination(pageNum, pageSize, total, apps)
+        //let page = await this.internalGetApps(keyPattern, pageNum)
 
         return page
     }
@@ -88,7 +107,7 @@ class CacheFacade {
      * @param {Number} pageNum page num
      * @returns {Promise<Object>} { pageNum: {Number}, pageSize: {Number}, total: {Number}, pageCnt: {Number}, records: {Array<Object>} }
      */
-    async searchAppByPartialName(partialName, pageNum) {
+    async searchAppByPartialName(userId, partialName, pageNum) {
         if (typeof partialName !== 'string' || !partialName) {
             throw new Error('invalid arguments')
         }
@@ -179,6 +198,27 @@ class CacheFacade {
 
         let key = CacheKeyCombinator.buildAppCfgKey(name, id)
         let ok = await redisClient.setAsync(key, JSON.stringify(appDesc)) === 'OK'
+        return ok
+    }
+
+    /**
+     * 添加用户应用
+     * @param {Number} userId 用户ID
+     * @param {String} appName app名称
+     * @param {Number} appId app ID
+     * @param {Array<Number>} shareList 分享用户列表
+     * @returns {Promise<Boolean>}
+     */
+    async bindUsrApp(userId, appName, appId, shareList) {
+        if (!userId) {
+            throw new Error('invalid userId')
+        } else if (!appName || !appId) {
+            throw new Error('invalid appName or appId')
+        }
+
+        let key = CacheKeyCombinator.buildUserAppMapKey(userId)
+        let hashKey = CacheKeyCombinator.buildUserAppHashKey(appName, appId)
+        let ok = await redisClient.hsetAsync(key, hashKey, JSON.stringify(shareList || []))
         return ok
     }
 

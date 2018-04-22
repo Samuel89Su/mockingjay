@@ -1,33 +1,32 @@
-@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin);.details-tab .sp-inline-form {
-  margin: 0 0 0 80px; }
-
-.details-tab .input-key {
-  width: 80px !important; }
-
-.input-row {
-  width: 70%; }
-
-.dropdown-proxy {
-  width: 200px; }
-
-.margin-bottom {
-  margin-bottom: 5px; }
-/* Base Application Styles */
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin);/* Base Application Styles */
 html {
   width: 100%;
   height: 100%;
   background-color: white; }
   html body {
-    width: 90%;
+    width: 100%;
     height: 100%;
-    margin: 40px auto 30px auto; }
+    margin: 0 auto 30px auto; }
+
+.layout-header-container {
+  height: 56px;
+  width: 100%;
+  background-color: #bd902f;
+  margin: 0;
+  padding: 10px 5px; }
+
+.header-line {
+  height: 56px;
+  width: 100%; }
 
 .layout-header {
-  height: 80px;
-  width: 100%;
-  background-color: chocolate;
+  display: inline-block;
+  margin: 0 auto;
   vertical-align: middle;
-  margin: 0 auto; }
+  font-size: 28px; }
+
+.btn-logout {
+  float: right; }
 @charset "UTF-8";
 /*
  * # Semantic UI - 2.2.14
@@ -23168,3 +23167,17 @@ body.pushable > .pusher {
   100% {
     -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1); } }
+.details-tab .sp-inline-form {
+  margin: 0 0 0 80px; }
+
+.details-tab .input-key {
+  width: 80px !important; }
+
+.input-row {
+  width: 70%; }
+
+.dropdown-proxy {
+  width: 200px; }
+
+.margin-bottom {
+  margin-bottom: 5px; }
