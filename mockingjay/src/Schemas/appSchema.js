@@ -9,7 +9,8 @@ const schema = {
         "name": {
             "type": "string",
             "minLength": 2,
-            "maxLength": 30
+            "maxLength": 30,
+            "regex": "^[A-Za-z0-9]{2,30}$"
         },
         "desc": {
             "type":"string",
