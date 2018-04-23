@@ -9,16 +9,14 @@ const path = require('path')
 const config = require('./config')
 const ws = require('./src/ws')
 const defaultProxy = require('./src')()
-const router = require('./router')
+const { controlRouter, consoleRouter } = require('./router')
 
 try {
 
   const app = express()
 
-  app.use('/control', router)
-
-  // 添加代理中间件
-  app.use('/', defaultProxy)
+  app.use('/control', controlRouter)
+  app.use('/console', consoleRouter)
 
   // 添加静态资源服务
   const staticRootDir = path.resolve(config.static)
@@ -34,6 +32,9 @@ try {
     }
   }
   app.use(express.static(staticRootDir, options))
+
+  // 添加代理中间件
+  app.use('/', defaultProxy)
 
   http.createServer(app).listen(config.port, config.host)
 

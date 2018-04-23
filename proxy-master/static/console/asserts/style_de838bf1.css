@@ -22,14 +22,14 @@ html {
   height: 100%;
   background-color: white; }
   html body {
-    width: 90%;
+    width: 96%;
     height: 100%;
     margin: 40px auto 30px auto; }
     html body .input-row {
-      width: 60%;
-      margin: 0 0 5px 0; }
+      width: 70%;
+      margin: 0 5px 5px 0; }
     html body .input-row-half {
-      width: 35%;
+      width: 40%;
       margin: 0 5px 5px 0; }
     html body .ck-row {
       margin: 0 0 5px 0; }
@@ -4646,7 +4646,7 @@ a.ui.inverted.grey.header:hover {
 @font-face {
   font-family: Icons;
   src: url(./674f50d287a8c48dc19ba404d20fe713.eot);
-  src: url(./674f50d287a8c48dc19ba404d20fe713.eot?#iefix) format("embedded-opentype"), url(./af7ae505a9eed503f8b8e6982036873e.woff2) format("woff2"), url(./fee66e712a8a08eef5805a46892932ad.woff) format("woff"), url(./b06871f281fee6b241d60582ae9369b9.ttf) format("truetype"), url(./912ec66d7572ff821749319396470bde.svg#icons) format("svg");
+  src: url(./674f50d287a8c48dc19ba404d20fe713.eot?#iefix) format("embedded-opentype"), url(./af7ae505a9eed503f8b8e6982036873e.woff2) format("woff2"), url(./fee66e712a8a08eef5805a46892932ad.woff) format("woff"), url(./b06871f281fee6b241d60582ae9369b9.ttf) format("truetype"), url(./acf3dcb7ff752b5296ca23ba2c7c2606.svg#icons) format("svg");
   font-style: normal;
   font-weight: 400;
   font-variant: normal;

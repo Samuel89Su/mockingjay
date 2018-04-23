@@ -10,6 +10,7 @@ const path = require('path')
 const EventEmitter = require('events')
 const config = require('./configMgr').loadConfig()
 const eventEmitter = require('./eventEmitter')
+const localMock = require('./localMock')
 
 const targetHost = new URL(config.target).host
 const port = config.port
@@ -70,5 +71,5 @@ function getOpts(env) {
 }
 
 exports = module.exports = function createProxy(env) {
-    return Proxy(config.context, getOpts(env))
+    return [localMock, Proxy(config.context, getOpts(env))]
 }

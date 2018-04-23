@@ -5,5 +5,11 @@
     "regExpRoutes": [],
     "target": "http://teacher.233.mistong.com",
     "router": {},
-    "pathRewrite": {}
+    "pathRewrite": {},
+    "mockServer": "localhost",
+    "mockPrefix": "teacher",
+    "mockPaths": [{
+        "mock": true,
+        "path": "/echo"
+    }]
 }

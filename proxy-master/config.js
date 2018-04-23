@@ -3,7 +3,7 @@
 const path = require('path')
 
 const config = {
-    port: 80,
+    port: 8300,
     host: '0.0.0.0',
     ip: '172.16.211.106',
     domain: '',
