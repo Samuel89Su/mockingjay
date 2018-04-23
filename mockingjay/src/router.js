@@ -2,6 +2,7 @@
 
 const Router = require('koa-router')
 const send = require('koa-send')
+const path = require('path')
 const brokerRouter = require('./broker/router')
 const inventoryRouter = require('./inventory/router')
 const weShrimpballRouter = require('./weshrimpball/router')
@@ -28,7 +29,7 @@ weShrimpballRouter.bindRoutes(router, '/weshrimpball')
 
 const regexp = /.(js|css)$/i
 const htmlRegexp = /.(html|htm)$/i
-router.get(/^\/(index|app|api|weshrimpball)/i, async (ctx, next) => {
+router.get(/^\/(login|index|app|api|weshrimpball)/i, async (ctx, next) => {
     if (/^\/(index).(htm|html)/i.test(ctx.path)) {
         ctx.set('location', '/')
         ctx.status = 302
@@ -39,7 +40,7 @@ router.get(/^\/(index|app|api|weshrimpball)/i, async (ctx, next) => {
         await next()
     } else {
         await send(ctx, 'index.html', {
-            root: __dirname + '/static'
+            root: path.resolve(__dirname, '../static')
         })
     }
 })

@@ -51,8 +51,8 @@ class ApiListV extends Component {
     }
 
     render() {
-        let pagedApis = this.props.pagedApis
-        let list = this.props.pagedApis.records
+        let pagedApis = this.props.pagedApis || { records: [] }
+        let list = pagedApis.records || []
         if (!list || !(list instanceof Array) ) {
             return (<div>has no state</div>)
         }

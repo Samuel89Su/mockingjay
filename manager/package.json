@@ -56,6 +56,7 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "webpack-dev-server --open --config ./webpack.config.js --env=dev",
-    "build": "webpack --env=prod"
+    "build": "webpack --env=prod",
+    "build-debug": "webpack --env=debug"
   }
 }

@@ -17,10 +17,15 @@ class AppListV extends Component {
     }
 
     componentWillMount() {
-        if (!this.props.pagedApps || this.props.pagedApps.records
-            || !(this.props.pagedApps.records instanceof Array)
-            || this.props.pagedApps.records.length === 0) {
-            this.props.fetchData({ pageNum: this.state.activePage -1 })
+        try {
+            if (!this.props.pagedApps
+                || !this.props.pagedApps.records
+                || !(this.props.pagedApps.records instanceof Array)
+                || this.props.pagedApps.records.length === 0) {
+                this.props.fetchData({ pageNum: this.state.activePage -1 })
+            }
+        } catch (error) {
+            console.log(this.props.pagedApps)
         }
     }
 
@@ -46,8 +51,8 @@ class AppListV extends Component {
     }
 
     render() {
-        let pagedResult = this.props.pagedApps
-        let list = this.props.pagedApps.records
+        let pagedResult = this.props.pagedApps || { records: [] }
+        let list = pagedResult.records || []
         if (!list || !(list instanceof Array) ) {
             return (<div>has no state</div>)
         }
