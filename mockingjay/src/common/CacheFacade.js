@@ -752,7 +752,7 @@ class CacheFacade {
             throw new Error('invalid user entity')
         }
 
-        if (!user.userName && !Number.isInteger(user.id)) {
+        if (!user.name && !Number.isInteger(user.id)) {
             throw new Error('invalid userName or userId')
         }
 
@@ -760,7 +760,7 @@ class CacheFacade {
             user.id = await this.allocateUsrId()
         }
 
-        let key = CacheKeyCombinator.buildUserKey(user.userName, user.id)
+        let key = CacheKeyCombinator.buildUserKey(user.name, user.id)
         let ok = await redisClient.setAsync(key, JSON.stringify(user)) === 'OK'
         return ok
     }
