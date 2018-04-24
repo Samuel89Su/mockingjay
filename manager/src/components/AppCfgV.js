@@ -97,7 +97,7 @@ class AppCfgV extends Component {
 
         return (
             <div id="div_appCfg">
-                <Header as='h2'>App details</Header>
+                <Header as='h2'>详情</Header>
                 <div>
                     <Button onClick={()=>this.props.history.push('/')} >返回应用列表</Button>
                 </div>
@@ -141,7 +141,7 @@ class AppCfgV extends Component {
                     <input type="hidden"/>
                 </Form>
 
-                <Btns applyAction={this.update} applyDisabled={this.state.updateDisabled && Boolean(this.state.updateDisabled)} hideDiscard={this.props.register} discardAction={this.discard} />
+                <Btns applyAction={this.update} applyDisabled={this.state.updateDisabled && !!this.state.updateDisabled} hideDiscard={this.props.register} discardAction={this.discard} />
                 
             </div>
         )

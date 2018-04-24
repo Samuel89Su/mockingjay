@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import queryString from 'query-string'
 import '../styles/appList.scss'
 import { Table, Header, Button, Pagination, Search } from 'semantic-ui-react'
 
@@ -22,7 +23,7 @@ class AppListV extends Component {
                 || !this.props.pagedApps.records
                 || !(this.props.pagedApps.records instanceof Array)
                 || this.props.pagedApps.records.length === 0) {
-                this.props.fetchData({ pageNum: this.state.activePage -1 })
+                this.props.fetchData({ owned: this.props.owned, pageNum: this.state.activePage -1 })
             }
         } catch (error) {
             console.log(this.props.pagedApps)
@@ -31,6 +32,17 @@ class AppListV extends Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({isSearching: false})
+        // 切换 tab 刷新数据
+        if (this.props.owned ^ nextProps.owned) {
+            let search = (this.props.location && this.props.location.search)
+                            ? this.props.location.search
+                            : window.location.search
+            let query = queryString.parse(search)
+            query.owned = nextProps.owned
+            this.setState({ query: query })
+            query.pageNum = 0
+            this.props.fetchData(query)
+        }
     }
 
     register(event, data) {
@@ -41,13 +53,13 @@ class AppListV extends Component {
         this.setState({
             activePage: data.activePage
             })
-        this.props.fetchData({ pageNum: data.activePage -1, partialName: this.state.partialName })
+        this.props.fetchData({ owned: this.props.owned, pageNum: data.activePage -1, partialName: this.state.partialName })
     }
 
     search(e, data) {
         this.setState({isSearching: true, partialName: data.value})
 
-        this.props.fetchData({ pageNum: this.state.activePage -1, partialName: data.value })
+        this.props.fetchData({ owned: this.props.owned, pageNum: this.state.activePage -1, partialName: data.value })
     }
 
     render() {
@@ -63,7 +75,9 @@ class AppListV extends Component {
             <div id='app-list'>
                 <Header as='h2'>应用</Header>
                 <div>
-                    <Button onClick={this.register} >创建应用</Button>
+                    {
+                        this.props.owned ? (<Button onClick={this.register} >创建应用</Button>) : ''
+                    }
                     <div className='div-search'>
                         <Search loading={isSearching}
                             open={false}
@@ -106,7 +120,7 @@ class AppListV extends Component {
                     </Table>
                     
                     <div>
-                        <Pagination floated='right' activePage={ this.state.activePage } onPageChange={ this.handlePaginationChange } totalPages={ pagedResult.pageCnt } />
+                        <Pagination floated='right' activePage={ this.state.activePage } onPageChange={ this.handlePaginationChange } totalPages={ pagedResult.pageCnt || 0 } />
                     </div>
                 </div>
             </div>

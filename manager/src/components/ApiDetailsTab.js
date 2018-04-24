@@ -29,7 +29,7 @@ class ApiDetailsTab extends Component {
                 <div>
                     <Button onClick={()=>this.props.history.push(`/app/apilist?appId=${this.state.query.appId}&appName=${this.state.query.appName}`)} >返回接口列表</Button>
                 </div>
-                <Tab menu={{ color: 'olive', inverted: true, attached: false, tabular: false }} 
+                <Tab menu={{ color: 'olive', inverted: true, attached: false, tabular: false }}
                     panes={[
                         { menuItem: '详情', render: () => <Tab.Pane attached={false}><ApiCfgC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> },
                         { menuItem: '数据定义', render: () => <Tab.Pane attached={false}><ApiSchemaC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> },

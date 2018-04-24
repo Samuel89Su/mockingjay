@@ -117,7 +117,7 @@ class ApiListV extends Component {
                     </Table>
 
                     <div>
-                        <Pagination floated='right' activePage={ this.state.activePage } onPageChange={ this.handlePaginationChange } totalPages={ pagedApis.pageCnt } />
+                        <Pagination floated='right' activePage={ this.state.activePage } onPageChange={ this.handlePaginationChange } totalPages={ pagedApis.pageCnt || 0 } />
                     </div>
                 </div>
                 

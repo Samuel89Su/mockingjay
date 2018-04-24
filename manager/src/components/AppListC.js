@@ -23,7 +23,8 @@ const updateAppList = pagedApps => {
 
 // dispatchers
 function fetchRemoteAppList(dispatch, query) {
-  let opts = Object.assign({}, InventoryAPI.appList)
+  let api = query.owned ? InventoryAPI.appList : InventoryAPI.sharedAppList
+  let opts = Object.assign({}, api)
   opts.url = opts.url + '?' + queryString.stringify(query)
   return fetchRemote(opts)
   .then(

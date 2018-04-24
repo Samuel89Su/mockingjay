@@ -28,6 +28,11 @@ const InventoryAPI = {
     method: 'GET',
     ...commonOpts
   },
+  sharedAppList: {
+    url: '/inventory/app/listgrantedapp',
+    method: 'GET',
+    ...commonOpts
+  },
   appGet: {
     url: '/inventory/app/get',
     method: 'GET',

@@ -6,6 +6,7 @@ import ApiRegisterC from './components/ApiRegisterC'
 import ApiDetailsTab from './components/ApiDetailsTab'
 import LoginC from './components/LoginC'
 import SignUpC from './components/SignUpC'
+import AppListTab from './components/AppListTab'
 
 const routes = [{
     path: '/',
@@ -18,7 +19,7 @@ const routes = [{
     options: {
       exact: true
     },
-    component: AppListC
+    component: AppListTab
   },{
     path: '/app/list',
     options: {

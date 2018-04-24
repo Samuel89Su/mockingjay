@@ -22,6 +22,7 @@ const validate = ajv.compile(appSchema)
 class steward {
     constructor(arg) {
         this.list = this.list.bind(this)
+        this.listGrantedApp = this.listGrantedApp.bind(this)
         this.get = this.get.bind(this)
         this.register = this.register.bind(this)
         this.update = this.update.bind(this)
@@ -29,6 +30,7 @@ class steward {
         this.cahceKeyLenCheck = this.cahceKeyLenCheck.bind(this)
         this.importPostmanCollection = this.importPostmanCollection.bind(this)
         this.recursivePostmanItem = this.recursivePostmanItem.bind(this)
+        this.grantUser = this.grantUser.bind(this)
     }
 
     bindRoutes(router, prefixPath) {
@@ -40,12 +42,14 @@ class steward {
             ctx.response.body = 'you are in app inventory now.'
         })
         router.get(prefixPath + '/list', this.list)
+        router.get(prefixPath + '/listgrantedapp', this.listGrantedApp)
         router.get(prefixPath + '/get', this.get)
         router.post(prefixPath + '/register', this.register)
         router.post(prefixPath + '/update', this.update)
         router.post(prefixPath + '/discard', this.discard)
         // router.post('/cahceKeyLenCheck', this.cahceKeyLenCheck)
         router.post(prefixPath + '/importPostmanCollection', this.importPostmanCollection)
+        router.post(prefixPath + '/grantUser', this.grantUser)
     }
 
     /**
@@ -71,9 +75,35 @@ class steward {
 
         let page = null
         if (partialname) {
-            page = await CacheFacade.searchAppByPartialName(ctx.session.userId, partialname, pageNum)
+            page = await CacheFacade.searchAppByPartialName(ctx.session.userId, partialname, pageNum, 0)
         } else {
             page = await CacheFacade.getAppList(ctx.session.userId, pageNum)
+        }
+
+        ctx.response.body = errCode.success(page)
+        await next()
+    }
+
+    async listGrantedApp(ctx, next) {
+        let pageNum = 0
+        let partialname = ''
+        if (ctx.query) {
+            for (const key in ctx.query) {
+                let lowercaseKey = key.toLowerCase()
+                let value = ctx.query[key]
+                if (lowercaseKey === 'pagenum') {
+                    pageNum = parseInt(value)
+                } else if (lowercaseKey === 'partialname') {
+                    partialname = value
+                }
+            }
+        }
+
+        let page = null
+        if (partialname) {
+            page = await CacheFacade.searchAppByPartialName(ctx.session.userId, partialname, pageNum, 1)
+        } else {
+            page = await CacheFacade.getAuthedAppList(ctx.session.userId, pageNum)
         }
 
         ctx.response.body = errCode.success(page)
@@ -325,6 +355,33 @@ class steward {
         }
 
         return allApi
+    }
+
+    /**
+     * 授予用户APP编辑权限
+     * @param {Object} ctx 
+     * @param {Function} next 
+     */
+    async grantUser(ctx, next) {
+        let data = ctx.request.body
+        if (!data || !data.appId || !data.users || !data.users.length === 0) {
+            ctx.response.status = 400
+            ctx.response.body = errCode.invalidArguments
+            return
+        }
+
+        // validate app
+        let app = await CacheFacade.getApp('', data.appId)
+        if (!app) {
+            ctx.response.status = 400
+            ctx.response.body = errCode.invalidArguments
+            return
+        }
+
+        if (CacheFacade.grantAppToUsers(ctx.session.userId, app.name, app.id, data.users)) {
+            ctx.response.status = 200
+            ctx.response.body = errCode.success
+        }
     }
 }
 
