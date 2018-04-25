@@ -1,4 +1,5 @@
-import AppListC from './components/AppListC'
+'use strict'
+
 import AppRegisterC from './components/AppRegisterC'
 import AppCfgC from './components/AppCfgC'
 import ApiListC from './components/ApiListC'
@@ -6,30 +7,33 @@ import ApiRegisterC from './components/ApiRegisterC'
 import ApiDetailsTab from './components/ApiDetailsTab'
 import LoginC from './components/LoginC'
 import SignUpC from './components/SignUpC'
-import AppListTab from './components/AppListTab'
+import AppList from './components/AppListTab'
 
 const routes = [{
     path: '/',
     options: {
-      exact: true
+      exact: true,
+      hideHeader: true
     },
     component: LoginC
-  },{
+  }, {
+    path: '/login',
+    component: LoginC,
+    options: {
+      hideHeader: true
+    }
+  }, {
     path: '/app',
     options: {
       exact: true
     },
-    component: AppListTab
-  },{
+    component: AppList
+  }, {
     path: '/app/list',
     options: {
       exact: true
     },
-    component: AppListC
-  },
-  {
-    path: '/login',
-    component: LoginC
+    component: AppList
   },
   {
     path: '/app/register',

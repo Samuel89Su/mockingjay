@@ -1,43 +1,4 @@
-.dv_login {
-    position: relative;
-    margin-top: 30px;
-
-    height: 80%;
-    width: 100%;
-}
-
-.seg-login {
-    position: relative;
-    margin: auto;
-
-    top: 80px;
-    right: 0;
-    bottom: 0;
-    left: 0;
-
-    height: 400px;
-    width: 500px;
-
-    .seg-login-content {
-        height: 80%;
-    }
-
-    .ipt_login_usrName {
-        margin: 0 0 20px 0;
-
-        width: 70%;
-    }
-
-    .ipt_login_psw {
-        margin: 0 0 20px 0;
-
-        width: 70%;
-    }
-
-    .login-label {
-        text-align: left;
-        vertical-align: middle;
-
-        font-size: 14px;
-    }
+.login-form {
+    height: 100%;
+    margin-top: 200px;
 }

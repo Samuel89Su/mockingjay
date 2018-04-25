@@ -1,42 +1,12 @@
-/* Base Application Styles */
-
-html {
-  width: 100%;
-  height: 100%;
-  background-color: white;
-
-  body {
-    width: 100%;
+.layout {
+    margin: 0 auto;
     height: 100%;
-    margin: 0 auto 30px auto;
-  }
-
 }
 
-.layout-header-container {
-  height: 56px;
-  width: 100%;
+.main {
+    margin: 18px auto;
 
-  background-color: rgb(189, 144, 47);
-  margin: 0;
+    width: 76%;
+    height: 100%;
 
-  padding: 10px 5px;
-}
-
-.header-line {
-  height: 56px;
-  width: 100%;
-}
-
-.layout-header {
-  display: inline-block;
-
-  margin: 0 auto;
-  vertical-align: middle;
-
-  font-size: 28px;
-}
-
-.btn-logout {
-  float: right;
 }

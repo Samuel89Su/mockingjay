@@ -1,0 +1,27 @@
+/* Base Application Styles */
+
+.layout-header-container {
+  height: 56px;
+  width: 100%;
+
+  background-color: rgb(189, 144, 47);
+  margin: 0 auto;
+
+  padding: 10px 5px;
+}
+
+.header-line {
+  height: 56px;
+  width: 100%;
+
+  margin: 0 auto;
+}
+
+.layout-header {
+  display: inline-block;
+
+  margin: 0 auto;
+  vertical-align: middle;
+
+  font-size: 28px;
+}

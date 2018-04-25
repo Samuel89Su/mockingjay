@@ -1,7 +1,8 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Segment, Divider, Button, Form, Input, Icon, Label } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import { Segment, Button, Form, Grid, Header, Image, Message } from 'semantic-ui-react'
 import InventoryAPI from '../middlewares/InventoryAPI'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import '../styles/login.scss'
@@ -69,36 +70,42 @@ class LoginV extends Component {
     }
 
     render() {
-        return (
-            <div className='dv_login'>
-                <div className='seg-login'>
-                    <Segment padded className='seg-login-content'>
-                        <Form>
-                            <Input placeholder='user name' name='userName'
-                                className='ipt_login_usrName'
-                                value={this.state.userName} onChange={this.handleChange}>
-                                <Label className='login-label'>UserName: </Label>
-                                <input />
-                            </Input>
-                            <br/>
-                            <Input action name='psw' placeholder='password'
-                                className='ipt_login_psw'
-                                value={this.state.psw} onChange={this.handleChange}>
-                                <Label className='login-label'>Password: </Label>
-                                <input type={this.state.pswInputType}/>
-                                <Button icon inverted={this.state.displayPsw} onClick={this.showPsw}>
-                                    <Icon name='eye' color='blue' />
-                                </Button>
-                            </Input>
-                            <input type='hidden'/>
-                        </Form>
-                        <Button primary fluid onClick={this.login}>Login</Button>
-                        <Divider horizontal>Or</Divider>
-                        <Button secondary fluid onClick={this.goToSignup}>Sign Up Now</Button>
-                    </Segment>
-                </div>
-            </div>
-        )
+        return (<div className='login-form'>
+            <Grid
+            textAlign='center'
+            style={{ height: '100%' }}
+            verticalAlign='middle'
+            >
+            <Grid.Column style={{ maxWidth: 450 }}>
+                <Header as='h2' color='teal' textAlign='center'>
+                <Image src='/logo.png' />{' '}Log-in to your account
+                </Header>
+                <Form size='large'>
+                <Segment stacked>
+                    <Form.Input name='userName'
+                        fluid
+                        icon='user'
+                        iconPosition='left'
+                        placeholder='User Name'
+                        onChange={this.handleChange} />
+                    <Form.Input name='psw'
+                        fluid
+                        icon='lock'
+                        iconPosition='left'
+                        placeholder='Password'
+                        type='password'
+                        onChange={this.handleChange} />
+                    <input type='hidden'/>
+
+                    <Button color='teal' fluid size='large' onClick={this.login}>Login</Button>
+                </Segment>
+                </Form>
+                <Message>New to us?
+                    <Link to={'/signup'}>Sign Up</Link>
+                </Message>
+            </Grid.Column>
+            </Grid>
+        </div>)
     }
 }
 
