@@ -1,25 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin);.details-tab .sp-inline-form {
-  margin: 0 0 0 80px; }
-
-.details-tab .input-key {
-  width: 80px !important; }
-/* Base Application Styles */
-html {
-  width: 100%;
-  height: 100%;
-  background-color: white; }
-  html body {
-    width: 90%;
-    height: 100%;
-    margin: 40px auto 30px auto; }
-
-.layout-header {
-  height: 80px;
-  width: 100%;
-  background-color: chocolate;
-  vertical-align: middle;
-  margin: 0 auto; }
-@charset "UTF-8";
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin);@charset "UTF-8";
 /*
  * # Semantic UI - 2.2.14
  * https://github.com/Semantic-Org/Semantic-UI
@@ -3352,7 +3331,7 @@ i.flag:not(.icon) {
 i.flag:not(.icon):before {
   display: inline-block;
   content: '';
-  background: url(/9c74e172f87984c48ddf5c8108cabe67.png) no-repeat -108px -1976px;
+  background: url(/images/flags.png) no-repeat -108px -1976px;
   width: 16px;
   height: 11px; }
 
@@ -4620,8 +4599,8 @@ a.ui.inverted.grey.header:hover {
  */
 @font-face {
   font-family: Icons;
-  src: url(/674f50d287a8c48dc19ba404d20fe713.eot);
-  src: url(/674f50d287a8c48dc19ba404d20fe713.eot?#iefix) format("embedded-opentype"), url(/af7ae505a9eed503f8b8e6982036873e.woff2) format("woff2"), url(/fee66e712a8a08eef5805a46892932ad.woff) format("woff"), url(/b06871f281fee6b241d60582ae9369b9.ttf) format("truetype"), url(/acf3dcb7ff752b5296ca23ba2c7c2606.svg#icons) format("svg");
+  src: url(/images/icons.eot);
+  src: url(/images/icons.eot?#iefix) format("embedded-opentype"), url(/images/icons.woff2) format("woff2"), url(/images/icons.woff) format("woff"), url(/images/icons.ttf) format("truetype"), url(/images/icons.svg#icons) format("svg");
   font-style: normal;
   font-weight: 400;
   font-variant: normal;
@@ -23159,3 +23138,54 @@ body.pushable > .pusher {
   100% {
     -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1); } }
+/* Base Application Styles */
+html {
+  width: 100%;
+  height: 100%;
+  background-color: white; }
+  html body {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto 30px auto; }
+.details-tab .sp-inline-form {
+  margin: 0 0 0 80px; }
+
+.details-tab .input-key {
+  width: 80px !important; }
+
+.input-row {
+  width: 70%; }
+
+.dropdown-proxy {
+  width: 200px; }
+
+.margin-bottom {
+  margin-bottom: 5px; }
+.btn-logout {
+  float: right; }
+/* Base Application Styles */
+.layout-header-container {
+  height: 56px;
+  width: 100%;
+  background-color: #bd902f;
+  margin: 0 auto;
+  padding: 10px 5px; }
+
+.header-line {
+  height: 56px;
+  width: 100%;
+  margin: 0 auto; }
+
+.layout-header {
+  display: inline-block;
+  margin: 0 auto;
+  vertical-align: middle;
+  font-size: 28px; }
+.layout {
+  margin: 0 auto;
+  height: 100%; }
+
+.main {
+  margin: 18px auto;
+  width: 76%;
+  height: 100%; }

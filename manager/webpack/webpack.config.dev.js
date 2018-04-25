@@ -41,7 +41,7 @@ module.exports = {
     port: 8100,
     historyApiFallback: true,
     proxy: [{
-      context: ['/inventory'],
+      context: ['/inventory','/admin'],
       target: 'http://127.0.0.1:3000'
     }]
   }

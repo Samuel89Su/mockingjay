@@ -109,19 +109,19 @@ const InventoryAPI = {
     ...commonOpts
   },
   login: {
-    url: '/inventory/login',
+    url: '/admin/login',
     method: 'POST',
     ...headers,
     ...commonOpts
   },
   logout: {
-    url: '/inventory/logout',
+    url: '/admin/logout',
     method: 'POST',
     ...headers,
     ...commonOpts
   },
   signup: {
-    url: '/inventory/signup',
+    url: '/admin/signup',
     method: 'POST',
     ...headers
   }

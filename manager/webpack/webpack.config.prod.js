@@ -25,7 +25,7 @@ module.exports = {
         ]
     },
     plugins: [
-        new CleanPlugin(['index.html', 'asserts/*.*'], {
+        new CleanPlugin(['index.html', 'asserts/*.*', 'images/*.*'], {
             // exclude: ['images'],
             root: Path.resolve(__dirname, '../../mockingjay/static/')
         }),

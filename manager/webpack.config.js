@@ -18,11 +18,12 @@ const base = {
       exclude: /node_modules/,
       use: 'babel-loader'
     }, {
-      test: /\.(png|jpg|woff|woff2|eot|ttf|svg)$/,
+      test: /\.(png|jpg|jpeg|woff|woff2|eot|ttf|svg)$/,
       use: [{
         loader: 'url-loader',
         options: {
-          limit: 8192
+          limit: 8192,
+          name: 'images/[name].[ext]'
         }
       }]
     }]
