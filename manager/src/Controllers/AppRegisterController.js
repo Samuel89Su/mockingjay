@@ -1,16 +1,11 @@
 'use strict'
 
 import { connect } from 'react-redux'
-import Loadable from 'react-loadable'
-// import AppCfgV from './AppCfgV'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
-import Loading from '../Views/Loading'
+import Loadable from '../Components/LoadableComponent'
 
-const AppCfgV = Loadable({
-  loader: () => import('../Views/AppCfgV'),
-  loading: Loading
-})
+const AppCfgV = Loadable(import('../Views/AppCfg'))
 
 // actions
 const updateAppCfg = appCfg => {

@@ -7,7 +7,7 @@ import Btns from './BtnApplyDiscard'
 import queryString from 'query-string'
 import beautify from 'js-beautify/js'
 
-class ApiMcCfgV extends Component {
+class ApiMcCfg extends Component {
     constructor(props) {
         super(props)
 
@@ -237,4 +237,4 @@ class ApiMcCfgV extends Component {
     }
 }
 
-export default ApiMcCfgV
+export default ApiMcCfg

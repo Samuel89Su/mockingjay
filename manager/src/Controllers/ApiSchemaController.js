@@ -2,16 +2,11 @@
 
 import { connect } from 'react-redux'
 import queryString from 'query-string'
-import Loadable from 'react-loadable'
-// import ApiSchemaV  from './ApiSchemaV'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
-import Loading from '../Views/Loading'
+import Loadable from '../Components/LoadableComponent'
 
-const ApiSchemaV = Loadable({
-  loader: () => import('../Views/ApiSchemaV'),
-  loading: Loading
-})
+const ApiSchemaV = Loadable(import('../Views/ApiSchema'))
 
 // actions
 const updateApiSchema = apiSchema => {

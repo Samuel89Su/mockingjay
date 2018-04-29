@@ -8,7 +8,7 @@ import { fetchRemote } from '../middlewares/remoteFetch'
 import '../styles/login.scss'
 import md5 from 'js-md5'
 
-class LoginV extends Component {
+class Login extends Component {
     constructor(props) {
         super(props)
 
@@ -72,41 +72,42 @@ class LoginV extends Component {
     render() {
         return (<div className='login-form'>
             <Grid
-            textAlign='center'
-            style={{ height: '100%' }}
-            verticalAlign='middle'
-            >
-            <Grid.Column style={{ maxWidth: 450 }}>
-                <Header as='h2' color='teal' textAlign='center'>
-                <Image src={require('../images/login.png')} />{' '}Log-in to your account
-                </Header>
-                <Form size='large'>
-                <Segment stacked>
-                    <Form.Input name='userName'
-                        fluid
-                        icon='user'
-                        iconPosition='left'
-                        placeholder='User Name'
-                        onChange={this.handleChange} />
-                    <Form.Input name='psw'
-                        fluid
-                        icon='lock'
-                        iconPosition='left'
-                        placeholder='Password'
-                        type='password'
-                        onChange={this.handleChange} />
-                    <input type='hidden'/>
+                textAlign='center'
+                style={{ height: '100%' }}
+                verticalAlign='middle' >
+                <Grid.Column style={{ maxWidth: 450 }}>
+                    <Header as='h2' color='teal' textAlign='center'>
+                    <Image src={require('../images/login.png')} />{' '}Log-in to your account
+                    </Header>
+                    <Form size='large'>
+                    <Segment stacked>
+                        <Form.Input name='userName'
+                            fluid
+                            icon='user'
+                            iconPosition='left'
+                            placeholder='User Name'
+                            value={this.state.userName}
+                            onChange={this.handleChange} />
+                        <Form.Input name='psw'
+                            fluid
+                            icon='lock'
+                            iconPosition='left'
+                            placeholder='Password'
+                            type='password'
+                            value={this.state.psw}
+                            onChange={this.handleChange} />
+                        <input type='hidden'/>
 
-                    <Button color='teal' fluid size='large' onClick={this.login}>Login</Button>
-                </Segment>
-                </Form>
-                <Message>New to us?
-                    <Link to={'/signup'}>Sign Up</Link>
-                </Message>
-            </Grid.Column>
+                        <Button color='teal' fluid size='large' onClick={this.login}>Login</Button>
+                    </Segment>
+                    </Form>
+                    <Message>New to us?
+                        <Link to={'/signup'}>Sign Up</Link>
+                    </Message>
+                </Grid.Column>
             </Grid>
         </div>)
     }
 }
 
-export default LoginV
+export default Login

@@ -3,10 +3,10 @@
 import React, { Component } from 'react'
 import { Tab } from 'semantic-ui-react'
 import queryString from 'query-string'
-import AppListC from '../Controllers/AppListC'
-import AppCfg from '../Controllers/AppCfgC'
+import AppCfg from '../Controllers/AppCfgController'
+import UserList from '../Controllers/UserListController'
 
-class AppListTab extends Component {
+class AppDetailsTab extends Component {
     constructor(props) {
         super(props)
     }
@@ -30,11 +30,11 @@ class AppListTab extends Component {
                         },
                         {
                             menuItem: '共享用户',
-                            render: () => <Tab.Pane attached={false}><AppListC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane>
+                            render: () => <Tab.Pane attached={false}><UserList location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane>
                         }
                 ]} />
             </div>)
     }
 }
 
-export default AppListTab
+export default AppDetailsTab

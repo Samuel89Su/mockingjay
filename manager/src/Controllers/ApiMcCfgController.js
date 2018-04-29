@@ -2,15 +2,11 @@
 
 import { connect } from 'react-redux'
 import queryString from 'query-string'
-import Loadable from 'react-loadable'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
-import Loading from '../Views/Loading'
+import Loadable from '../Components/LoadableComponent'
 
-const ApiMcCfgV = Loadable({
-  loader: () => import('../Views/ApiMcCfgV'),
-  loading: Loading
-})
+const ApiMcCfgV = Loadable(import('../Views/ApiMcCfg'))
 
 // actions
 const updateApiMcCfg = apiMcCfg => {

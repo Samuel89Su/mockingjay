@@ -7,7 +7,7 @@ import queryString from 'query-string'
 import Btns from './BtnApplyDiscard'
 import RawSchemaEditor from './RawSchemaEditor'
 
-class ApiSchemaV extends Component {
+class ApiSchema extends Component {
     constructor(props) {
         super(props)
 
@@ -423,4 +423,4 @@ class ApiSchemaV extends Component {
     }
 }
 
-export default ApiSchemaV
+export default ApiSchema

@@ -7,7 +7,7 @@ import { Header, Button, Input, Label, TextArea, Form, Dropdown } from 'semantic
 import Btns from './BtnApplyDiscard'
 import UsrSearchModal from './UsrSearchModal'
 
-class AppCfgV extends Component {
+class AppCfg extends Component {
     constructor(props) {
         super(props)
 
@@ -147,7 +147,7 @@ class AppCfgV extends Component {
                     <input type="hidden"/>
                 </Form>
 
-                <UsrSearchModal open={this.state.openShareModal}/>
+                <UsrSearchModal open={this.state.openShareModal} appId={appCfg.id}/>
 
                 <Btns applyAction={this.update} applyDisabled={this.state.updateDisabled && !!this.state.updateDisabled}
                     showShare shareAction={this.showShareModal} />
@@ -157,4 +157,4 @@ class AppCfgV extends Component {
     }
 }
 
-export default AppCfgV
+export default AppCfg

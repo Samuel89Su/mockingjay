@@ -6,7 +6,7 @@ import { deepClone, updateByPath } from '../utils'
 import { Header, Label, Form, Input, TextArea, Checkbox, Dropdown } from 'semantic-ui-react'
 import Btns from './BtnApplyDiscard'
 
-class ApiCfgV extends Component {
+class ApiCfg extends Component {
     constructor(props) {
         super(props)
 
@@ -128,4 +128,4 @@ class ApiCfgV extends Component {
     }
 }
 
-export default ApiCfgV
+export default ApiCfg

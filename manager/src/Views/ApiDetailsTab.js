@@ -2,12 +2,12 @@
 
 import React, { Component } from 'react'
 import { Tab } from 'semantic-ui-react'
-import ApiCfgC from '../Controllers/ApiCfgC'
-import ApiSchemaC from '../Controllers/ApiSchemaC'
-import ApiMcCfgC from '../Controllers/ApiMcCfgC'
+import ApiCfg from '../Controllers/ApiCfgController'
+import ApiSchemaC from '../Controllers/ApiSchemaController'
+import ApiMcCfgC from '../Controllers/ApiMcCfgController'
 import queryString from 'query-string'
 import { Button } from 'semantic-ui-react'
-import ApiExampleC from '../Controllers/ApiExampleC'
+import ApiExampleC from '../Controllers/ApiExampleController'
 import '../styles/details-tab.scss'
 
 class ApiDetailsTab extends Component {
@@ -31,7 +31,7 @@ class ApiDetailsTab extends Component {
                 </div>
                 <Tab menu={{ color: 'olive', inverted: true, attached: false, tabular: false }}
                     panes={[
-                        { menuItem: '详情', render: () => <Tab.Pane attached={false}><ApiCfgC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> },
+                        { menuItem: '详情', render: () => <Tab.Pane attached={false}><ApiCfg location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> },
                         { menuItem: '数据定义', render: () => <Tab.Pane attached={false}><ApiSchemaC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> },
                         { menuItem: 'Mock 规则', render: () => <Tab.Pane attached={false}><ApiMcCfgC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> },
                         { menuItem: '示例', render: () => <Tab.Pane attached={false}><ApiExampleC location={this.props.location} history={this.props.history} match={this.props.match}/></Tab.Pane> }

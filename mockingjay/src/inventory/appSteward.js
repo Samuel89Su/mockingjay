@@ -31,6 +31,7 @@ class steward {
         this.importPostmanCollection = this.importPostmanCollection.bind(this)
         this.recursivePostmanItem = this.recursivePostmanItem.bind(this)
         this.grantUser = this.grantUser.bind(this)
+        this.bindRoutes = this.bindRoutes.bind(this)
     }
 
     bindRoutes(router, prefixPath) {
@@ -50,6 +51,7 @@ class steward {
         // router.post('/cahceKeyLenCheck', this.cahceKeyLenCheck)
         router.post(prefixPath + '/importPostmanCollection', this.importPostmanCollection)
         router.post(prefixPath + '/grantUser', this.grantUser)
+        router.post(prefixPath + '/getappuserlist', this.getUserListOfApp)
     }
 
     /**
@@ -380,8 +382,29 @@ class steward {
 
         if (CacheFacade.grantAppToUsers(ctx.session.userId, app.name, app.id, data.users)) {
             ctx.response.status = 200
-            ctx.response.body = errCode.success
+            ctx.response.body = errCode.success()
         }
+    }
+
+    async getUserListOfApp(ctx, next) {
+        let data = ctx.request.body
+        if (!data || !data.appId) {
+            ctx.response.status = 400
+            ctx.response.body = errCode.invalidArguments
+            return
+        }
+
+        // validate app
+        let app = await CacheFacade.getApp('', data.appId)
+        if (!app) {
+            ctx.response.status = 400
+            ctx.response.body = errCode.invalidArguments
+            return
+        }
+
+        let users = await CacheFacade.sharedUserOfApp(ctx.session.userId, app.id, app.name)
+        ctx.response.status = 200
+        ctx.response.body = errCode.success(users)
     }
 }
 

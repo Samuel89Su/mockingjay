@@ -14,6 +14,7 @@ function bindRoutes(router, prefixPath) {
     router.post(prefixPath + '/login', bodyParser, login)
     router.post(prefixPath + '/logout', logout)
     router.post(prefixPath + '/signup', bodyParser, signup)
+    router.post(prefixPath + '/searchUser', bodyParser, searchUser)
 }
 
 async function login(ctx, next) {
@@ -98,5 +99,21 @@ async function signup(ctx, next) {
     ctx.body = {
         code: 0,
         data: ok
+    }
+}
+
+async function searchUser(ctx, next) {
+    if (!ctx.request.body.userName) {
+        ctx.body = {
+            code: 401,
+            msg: 'invalid userName'
+        }
+        ctx.status = 200
+        return
+    }
+    let users = await CacheFacade.searchUserByUserName(ctx.request.body.userName, 0)
+    ctx.body = {
+        code: 0,
+        data: users
     }
 }

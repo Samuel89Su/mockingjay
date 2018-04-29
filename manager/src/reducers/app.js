@@ -16,7 +16,17 @@ const appCfg = (state = {}, action) => {
   }
 }
 
+const appSharedUsers = (state=[], action) => {
+  switch (action.type) {
+    case 'UPDATE_APPSHAREDUSERS':
+      return action.appSharedUsers
+    default:
+      return state
+  }
+}
+
 export {
   pagedApps,
-  appCfg
+  appCfg,
+  appSharedUsers
 }

@@ -124,6 +124,24 @@ const InventoryAPI = {
     url: '/admin/signup',
     method: 'POST',
     ...headers
+  },
+  searchUser: {
+    url: '/admin/searchuser',
+    method: 'POST',
+    ...headers,
+    ...commonOpts
+  },
+  grantUser: {
+    url: '/inventory/app/grantuser',
+    method: 'POST',
+    ...headers,
+    ...commonOpts
+  },
+  getappuserlist: {
+    url: '/inventory/app/getappuserlist',
+    method: 'POST',
+    ...headers,
+    ...commonOpts
   }
 }
 

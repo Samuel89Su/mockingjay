@@ -2,15 +2,11 @@
 
 import { connect } from 'react-redux'
 import queryString from 'query-string'
-import Loadable from 'react-loadable'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
-import Loading from '../Views/Loading'
+import Loadable from '../Components/LoadableComponent'
 
-const ApiExampleV = Loadable({
-  loader: () => import('../Views/ApiExampleV'),
-  loading: Loading
-})
+const ApiExample = Loadable(import('../Views/ApiExample'))
 
 // actions
 const updateApiExample = apiExample => {
@@ -72,4 +68,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ApiExampleV)
+export default connect(mapStateToProps, mapDispatchToProps)(ApiExample)

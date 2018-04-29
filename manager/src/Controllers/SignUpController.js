@@ -1,13 +1,9 @@
 'use strict'
 
 import { connect } from 'react-redux'
-import Loadable from 'react-loadable'
-import Loading from '../Views/Loading'
+import Loadable from '../Components/LoadableComponent'
 
-const SignUpV = Loadable({
-  loader: () => import('../Views/SignUpV'),
-  loading: Loading
-})
+const SignUpV = Loadable(import('../Views/SignUp'))
 
 // map state to props
 const mapStateToProps = state => {

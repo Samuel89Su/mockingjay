@@ -2,15 +2,11 @@
 
 import { connect } from 'react-redux'
 import queryString from 'query-string'
-import Loadable from 'react-loadable'
 import InventoryAPI from '../middlewares/InventoryAPI'
 import { fetchRemote } from '../middlewares/remoteFetch'
-import Loading from '../Views/Loading'
+import Loadable from '../Components/LoadableComponent'
 
-const LoginV = Loadable({
-  loader: () => import('../Views/LoginV'),
-  loading: Loading
-})
+const LoginV = Loadable(import('../Views/Login'))
 
 // actions
 const updateAppList = pagedApps => {

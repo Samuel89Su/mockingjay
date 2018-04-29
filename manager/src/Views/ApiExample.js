@@ -8,7 +8,7 @@ import queryString from 'query-string'
 import RawSchemaEditor from './RawSchemaEditor'
 import beautify from 'js-beautify/js'
 
-class ApiExampleV extends Component {
+class ApiExample extends Component {
     constructor(props) {
         super(props)
         this.update = this.update.bind(this)
@@ -288,4 +288,4 @@ class ApiExampleV extends Component {
     }
 }
 
-export default ApiExampleV
+export default ApiExample

@@ -62,7 +62,7 @@ function compression(options) {
             request
         } = ctx
         if (!body) return
-        if (ctx.length < threshold) return
+        if (ctx.length && ctx.length < threshold) return
 
         const encoding = response.get('Content-Encoding') || 'identity'
         if (encoding !== 'identity') return

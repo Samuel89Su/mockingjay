@@ -6,7 +6,7 @@ import queryString from 'query-string'
 import '../styles/appList.scss'
 import { Table, Header, Button, Pagination, Search } from 'semantic-ui-react'
 
-class AppListV extends Component {
+class AppList extends Component {
     constructor(props) {
         super(props)
 
@@ -128,4 +128,4 @@ class AppListV extends Component {
     }
 }
 
-export default AppListV
+export default AppList

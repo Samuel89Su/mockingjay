@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { Tab } from 'semantic-ui-react'
 import queryString from 'query-string'
-import AppListC from '../Controllers/AppListC'
+import AppListC from '../Controllers/AppListController'
 import '../styles/details-tab.scss'
 
 class AppListTab extends Component {
