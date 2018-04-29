@@ -122,7 +122,8 @@ class ApiCfg extends Component {
                     <input type="hidden" />
               </Form>
 
-              <Btns applyAction={this.update} applyDisabled={this.state.updateDisabled && Boolean(this.state.updateDisabled)} hideDiscard={this.props.register} discardAction={this.discard} />
+              <Btns applyAction={this.update} applyDisabled={this.state.updateDisabled && !!this.state.updateDisabled} 
+                hideDiscard={this.props.register} discardAction={this.discard} />
             </div>
         )
     }

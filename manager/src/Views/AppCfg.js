@@ -18,7 +18,8 @@ class AppCfg extends Component {
         this.discardTarget = this.discardTarget.bind(this)
         this.showShareModal = this.showShareModal.bind(this)
 
-        this.state = { appCfg: props.appCfg, updateDisabled: true }
+        let register = this.props.match.path.indexOf('register') > -1
+        this.state = { appCfg: props.appCfg, updateDisabled: true, register: register }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -30,11 +31,11 @@ class AppCfg extends Component {
     }
 
     componentWillMount() {
-        if (!this.props.register) {
+        if (!this.state.register) {
             let search = (this.props.location && this.props.location.search)
                             ? this.props.location.search
                             : window.location.search
-            this.props.onMounted(search)
+            this.props.onMounted && this.props.onMounted(search)
         }
     }
 
@@ -43,6 +44,9 @@ class AppCfg extends Component {
           this.setState({updateDisabled: false})
         }
         let oPath = data.name
+        if (data.name === 'name' && data.value && !(/^([a-zA-Z])[a-zA-Z-0-9]{0,29}$/i).test(data.value)) {
+            return
+        }
         let appCfg = updateByPath(deepClone(this.state.appCfg), oPath, data.value)
         this.setState({ appCfg: appCfg })
     }
@@ -108,7 +112,7 @@ class AppCfg extends Component {
                     <Button onClick={()=>this.props.history.push('/')} >返回应用列表</Button>
                 </div>
                 <Form id="fm_appCfg">
-                    <Input name='name' label='名称:' value={appCfg.name} disabled={!this.props.register} onChange={this.handleChange} />
+                    <Input name='name' label='名称:' value={appCfg.name} disabled={!this.state.register} onChange={this.handleChange} />
                     <Header as='h4'>描述</Header>
                     <TextArea name='desc' rows='5' value={appCfg.desc} onChange={this.handleChange} placeholder='descripe this application' autoHeight />
                     <Header as='h4'>代理</Header>
@@ -150,7 +154,7 @@ class AppCfg extends Component {
                 <UsrSearchModal open={this.state.openShareModal} appId={appCfg.id}/>
 
                 <Btns applyAction={this.update} applyDisabled={this.state.updateDisabled && !!this.state.updateDisabled}
-                    showShare shareAction={this.showShareModal} />
+                    showShare={!this.state.register} shareAction={this.showShareModal} />
                 
             </div>
         )

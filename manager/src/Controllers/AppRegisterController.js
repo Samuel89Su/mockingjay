@@ -39,8 +39,7 @@ const mapStateToProps = state => {
     appCfg = state.appCfg
   }
   return {
-    appCfg: appCfg,
-    register: appCfg.id === 0
+    appCfg: appCfg
   }
 }
   
