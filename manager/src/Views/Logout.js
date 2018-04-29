@@ -26,6 +26,7 @@ class Logout extends Component {
     return (<Button icon className = 'btn-logout'
         color = 'olive' onClick = { this.logout }>
         <Icon name = 'log out' color = 'violet' />
+        Logout
       </Button>)
   }
 }

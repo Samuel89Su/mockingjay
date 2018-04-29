@@ -4,6 +4,33 @@
   table {
     width: 100%;
     text-align: left;
+
+    
+  }
+
+  th:nth-child(1) {
+    width: 20px;
+  }
+  th:nth-child(2) {
+    width: 160px;
+  }
+  th:nth-child(3) {
+    width: 30px;
+  }
+  th:nth-child(4) {
+    width: 100px;
+  }
+  th:nth-child(5) {
+    width: 90px;
+  }
+  th:nth-child(6) {
+    width: 240px;
+  }
+  // th:nth-child(7) {
+  //   width: 150px;
+  // }
+  th:nth-child(8) {
+    width: 120px;
   }
 
   .div-search {
