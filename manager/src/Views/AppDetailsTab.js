@@ -1,7 +1,7 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Tab } from 'semantic-ui-react'
+import { Tab, Button } from 'semantic-ui-react'
 import queryString from 'query-string'
 import AppCfg from '../Controllers/AppCfgController'
 import UserList from '../Controllers/UserListController'
@@ -22,6 +22,9 @@ class AppDetailsTab extends Component {
     render() {
         return (
             <div className='details-tab'>
+                <div>
+                    <Button onClick={()=>this.props.history.push('/app/list')} >返回应用列表</Button>
+                </div>
                 <Tab menu={{ color: 'olive', inverted: true, attached: false, tabular: false }}
                     panes={[
                         {
