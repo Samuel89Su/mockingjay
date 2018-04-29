@@ -2,13 +2,12 @@
 
 import { connect } from 'react-redux'
 import Loadable from 'react-loadable'
-// import AppCfgV from './AppCfgV'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
-import Loading from './Loading'
+import Loading from '../Views/Loading'
 
 const AppCfgV = Loadable({
-  loader: () => import('./AppCfgV'),
+  loader: () => import('../Views/AppCfgV'),
   loading: Loading
 })
 

@@ -3,13 +3,12 @@
 import { connect } from 'react-redux'
 import queryString from 'query-string'
 import Loadable from 'react-loadable'
-// import ApiMcCfgV from './ApiMcCfgV'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
-import Loading from './Loading'
+import Loading from '../Views/Loading'
 
 const ApiMcCfgV = Loadable({
-  loader: () => import('./ApiMcCfgV'),
+  loader: () => import('../Views/ApiMcCfgV'),
   loading: Loading
 })
 

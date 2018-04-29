@@ -1,13 +1,13 @@
 'use strict'
 
-import AppRegisterC from './components/AppRegisterC'
-import AppCfgC from './components/AppCfgC'
-import ApiListC from './components/ApiListC'
-import ApiRegisterC from './components/ApiRegisterC'
-import ApiDetailsTab from './components/ApiDetailsTab'
-import LoginC from './components/LoginC'
-import SignUpC from './components/SignUpC'
-import AppList from './components/AppListTab'
+import AppRegisterC from './Controllers/AppRegisterC'
+import AppCfgC from './Controllers/AppCfgC'
+import ApiListC from './Controllers/ApiListC'
+import ApiRegisterC from './Controllers/ApiRegisterC'
+import ApiDetailsTab from './Views/ApiDetailsTab'
+import LoginC from './Controllers/LoginC'
+import SignUpC from './Controllers/SignUpC'
+import AppList from './Views/AppListTab'
 
 const routes = [{
     path: '/',

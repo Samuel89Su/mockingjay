@@ -2,10 +2,10 @@
 
 import { connect } from 'react-redux'
 import Loadable from 'react-loadable'
-import Loading from './Loading'
+import Loading from '../Views/Loading'
 
 const SignUpV = Loadable({
-  loader: () => import('./SignUpV'),
+  loader: () => import('../Views/SignUpV'),
   loading: Loading
 })
 

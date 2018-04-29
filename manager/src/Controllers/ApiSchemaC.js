@@ -6,10 +6,10 @@ import Loadable from 'react-loadable'
 // import ApiSchemaV  from './ApiSchemaV'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
-import Loading from './Loading'
+import Loading from '../Views/Loading'
 
 const ApiSchemaV = Loadable({
-  loader: () => import('./ApiSchemaV'),
+  loader: () => import('../Views/ApiSchemaV'),
   loading: Loading
 })
 

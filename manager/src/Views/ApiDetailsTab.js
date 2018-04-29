@@ -2,12 +2,12 @@
 
 import React, { Component } from 'react'
 import { Tab } from 'semantic-ui-react'
-import ApiCfgC from './ApiCfgC'
-import ApiSchemaC from './ApiSchemaC'
-import ApiMcCfgC from './ApiMcCfgC'
+import ApiCfgC from '../Controllers/ApiCfgC'
+import ApiSchemaC from '../Controllers/ApiSchemaC'
+import ApiMcCfgC from '../Controllers/ApiMcCfgC'
 import queryString from 'query-string'
 import { Button } from 'semantic-ui-react'
-import ApiExampleC from './ApiExampleC'
+import ApiExampleC from '../Controllers/ApiExampleC'
 import '../styles/details-tab.scss'
 
 class ApiDetailsTab extends Component {

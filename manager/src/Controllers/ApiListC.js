@@ -5,10 +5,10 @@ import queryString from 'query-string'
 import Loadable from 'react-loadable'
 import { fetchRemote } from '../middlewares/remoteFetch'
 import InventoryAPI from '../middlewares/InventoryAPI'
-import Loading from './Loading'
+import Loading from '../Views/Loading'
 
 const ApiListV = Loadable({
-  loader: () => import('./ApiListV'),
+  loader: () => import('../Views/ApiListV'),
   loading: Loading
 })
 

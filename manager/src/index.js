@@ -5,12 +5,12 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
-import { BrowserRouter as Router, Route, browserHistory } from 'react-router-dom'
+import { BrowserRouter as Router, browserHistory } from 'react-router-dom'
 import reducers from './reducers'
 import '../semantic/dist/semantic.min.css'
 import './styles/index.scss'
 import routes from './routes'
-import DefaultLayout from './components/DefaultLayout'
+import DefaultLayout from './Views/DefaultLayout'
 
 const store = createStore(reducers, applyMiddleware(thunk))
 

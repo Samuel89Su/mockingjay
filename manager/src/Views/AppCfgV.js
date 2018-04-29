@@ -5,6 +5,7 @@ import '../styles/appCfg.scss'
 import { deepClone, updateByPath } from '../utils'
 import { Header, Button, Input, Label, TextArea, Form, Dropdown } from 'semantic-ui-react'
 import Btns from './BtnApplyDiscard'
+import UsrSearchModal from './UsrSearchModal'
 
 class AppCfgV extends Component {
     constructor(props) {
@@ -15,6 +16,7 @@ class AppCfgV extends Component {
         this.handleChange = this.handleChange.bind(this)
         this.addTagert = this.addTagert.bind(this)
         this.discardTarget = this.discardTarget.bind(this)
+        this.showShareModal = this.showShareModal.bind(this)
 
         this.state = { appCfg: props.appCfg, updateDisabled: true }
     }
@@ -80,6 +82,10 @@ class AppCfgV extends Component {
       this.props.onDiscardClick(appCfg)
     }
 
+    showShareModal () {
+        this.setState({ openShareModal: true })
+    }
+
     render() {
         let appCfg = this.state.appCfg
         if (!appCfg || !appCfg.hasOwnProperty('name')) {
@@ -141,7 +147,10 @@ class AppCfgV extends Component {
                     <input type="hidden"/>
                 </Form>
 
-                <Btns applyAction={this.update} applyDisabled={this.state.updateDisabled && !!this.state.updateDisabled} hideDiscard={this.props.register} discardAction={this.discard} />
+                <UsrSearchModal open={this.state.openShareModal}/>
+
+                <Btns applyAction={this.update} applyDisabled={this.state.updateDisabled && !!this.state.updateDisabled}
+                    showShare shareAction={this.showShareModal} />
                 
             </div>
         )

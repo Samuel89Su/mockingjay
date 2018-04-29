@@ -5,16 +5,15 @@ import queryString from 'query-string'
 import Loadable from 'react-loadable'
 import InventoryAPI from '../middlewares/InventoryAPI'
 import { fetchRemote } from '../middlewares/remoteFetch'
-import Loading from './Loading'
+import Loading from '../Views/Loading'
 
-const AppListV = Loadable({
-  loader: () => import('./AppListV'),
+const LoginV = Loadable({
+  loader: () => import('../Views/LoginV'),
   loading: Loading
 })
 
 // actions
 const updateAppList = pagedApps => {
-  pagedApps = pagedApps || []
   return {
     type: 'UPDATE_APPLIST',
     pagedApps
@@ -23,8 +22,7 @@ const updateAppList = pagedApps => {
 
 // dispatchers
 function fetchRemoteAppList(dispatch, query) {
-  let api = query.owned ? InventoryAPI.appList : InventoryAPI.sharedAppList
-  let opts = Object.assign({}, api)
+  let opts = Object.assign({}, InventoryAPI.appList)
   opts.url = opts.url + '?' + queryString.stringify(query)
   return fetchRemote(opts)
   .then(
@@ -35,19 +33,15 @@ function fetchRemoteAppList(dispatch, query) {
 // map state to props
 const mapStateToProps = state => {
   return {
-    pagedApps: state.pagedApps
   }
 }
 
 // map dispatch to props
 const mapDispatchToProps = dispatch => {
   return {
-    fetchData: (query) => {
-      fetchRemoteAppList(dispatch, query)
-    }
   }
 }
 
 // connect & export
-const AppListC = connect(mapStateToProps, mapDispatchToProps)(AppListV)
-export default AppListC
+const LoginC = connect(mapStateToProps, mapDispatchToProps)(LoginV)
+export default LoginC
