@@ -11,5 +11,7 @@ exports = module.exports = {
     // resource err
     resNotFound: function () { return { code: 404, msg: 'not found', data: null } },
     
-    internalErr: (err) => { return { code: 500, msg: 'Internal Server Error', data: err } }
+    internalErr: (err) => { return { code: 500, msg: 'Internal Server Error', data: err } },
+
+    permissionDenied: (msg) => { return { code: 401, msg: msg || 'permision denied' } }
 }

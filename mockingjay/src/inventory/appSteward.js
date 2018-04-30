@@ -13,6 +13,7 @@ const getComparer = require('../utils').getComparer
 const {
     URL
 } = require('url')
+const CacheKeyCombinator = require('../common/CacheKeyCombinator')
 
 const appComparer = getComparer('id')
 
@@ -368,7 +369,7 @@ class steward {
         let data = ctx.request.body
         if (!data || !data.appId || !data.users || !data.users.length === 0) {
             ctx.response.status = 400
-            ctx.response.body = errCode.invalidArguments
+            ctx.response.body = errCode.invalidArguments()
             return
         }
 
@@ -377,6 +378,31 @@ class steward {
         if (!app) {
             ctx.response.status = 400
             ctx.response.body = errCode.invalidArguments
+            return
+        }
+
+        // validate user privilege
+        let userApps = await CacheFacade.getUserApps(ctx.session.userId)
+        if (!userApps) {
+            ctx.response.status = 200
+            ctx.response.body = errCode.resNotFound()
+            return
+        }
+
+        let valid = false
+        let hashKey = CacheKeyCombinator.buildUserAppHashKey(app.name, data.appId)
+        for (const key in userApps) {
+            if (userApps.hasOwnProperty(key)) {
+                if (key.indexOf(hashKey) === 0) {
+                    valid = !valid
+                    break
+                }
+            }
+        }
+
+        if (!valid) {
+            ctx.response.status = 200
+            ctx.response.body = errCode.permissionDenied()
             return
         }
 

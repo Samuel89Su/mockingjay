@@ -83,6 +83,17 @@ class CacheFacade {
     }
 
     /**
+     * 获取用户app列表
+     * @param {Number} userId user id
+     * @returns {Promise<Array<Object>>}
+     */
+    async getUserApps(userId) {
+        let key = CacheKeyCombinator.buildUserAppMapKey(userId)
+        let usrApps = await redisClient.hgetallAsync(key)
+        return usrApps
+    }
+
+    /**
      * search app by partial name
      * @param {String} partialName partial app name
      * @param {Number} pageNum page num
