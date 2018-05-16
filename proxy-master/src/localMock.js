@@ -20,7 +20,7 @@ const options = {
 // 拦截所有请求
 function localMock (req, res, next) {
     let config = loadConfig()
-    if (config && config.mockServer && config.mockServer === 'localhost') {
+    if (config && config.mockServer && config.mockServer === 'http://localhost') {
         var reqPath = (req.originalUrl || req.url)
         let pathname = reqPath && url.parse(reqPath).pathname
         // has no extension
@@ -50,5 +50,9 @@ function localMock (req, res, next) {
         }
     }
 
-    next()
+    try {
+        next()
+    } catch (error) {
+        console.log(error)
+    }
 }

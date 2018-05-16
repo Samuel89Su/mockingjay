@@ -42,20 +42,7 @@ module.exports = {
     port: 8100,
     historyApiFallback: true,
     after: function (app) {
-      const ws = require('../proxy/ws')(8100)
-      const defaultProxy = require('../proxy')()
-      const { controlRouter, consoleRouter } = require('../proxy/router')
-      
-      try {
-        app.use('/control', controlRouter)
-        app.use('/console', consoleRouter)
-      
-        // 添加代理中间件
-        app.use('/', defaultProxy)
-      
-      } catch (error) {
-        console.log(error)
-      }
+      require('../proxy')(app, 8100)
     }
     // proxy: [{
     //   context: ['/inventory','/admin'],

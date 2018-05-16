@@ -11,6 +11,7 @@ const EventEmitter = require('events')
 const config = require('./configMgr').loadConfig()
 const eventEmitter = require('./eventEmitter')
 const localMock = require('./localMock')
+const { controlRouter, consoleRouter } = require('./router')
 
 const targetHost = new URL(config.target).host
 const port = config.port
@@ -70,6 +71,11 @@ function getOpts(env) {
     return config
 }
 
-exports = module.exports = function createProxy(env) {
-    return [localMock, Proxy(config.context, getOpts(env))]
+exports = module.exports = function createProxy(app, port) {
+
+    const ws = require('./ws')(port)
+    app.use('/control', controlRouter)
+    app.use('/console', consoleRouter)
+
+    app.use('/', [localMock, Proxy(config.context, getOpts(app.env||'development'))])
 }
