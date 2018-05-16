@@ -1,39 +1,65 @@
-var express = require('express')
+'use strict'
+
+const express = require('express')
+const path = require('path')
+const url = require('url')
+
+const config = require('./config')
 
 const {
-    fetchUserConfig,
-    updateUserConfig,
-    loadConfig
+  loadConfig,
+  updateUserConfig
 } = require('./configMgr')
 
-function initRouter(prefixPath, router) {
-    router.use(prefixPath, express.json())
-    router.use(prefixPath, express.urlencoded({
-        extended: false
-    }))
+const controlRouter = express.Router()
 
-    router.get(prefixPath + '/fetchUserConfig', function (req, res) {
-        let config = fetchUserConfig()
-        let data = {
-            code: 0,
-            data: config
-        }
-        res.setHeader('Content-Type', 'application/json')
-        res.send(data)
-        return
-    })
+controlRouter.use('', express.json())
+controlRouter.use(express.urlencoded({
+  extended: false
+}))
 
-    router.post(prefixPath + '/updateUserConfig', function (req, res, next) {
-        let result = updateUserConfig(req.body)
-        res.setHeader('Content-Type', 'application/json')
-        res.send(result)
-    })
+controlRouter.post('/fetchUserConfig', function (req, res) {
+  let config = loadConfig()
+  let data = {
+    code: 0,
+    data: config
+  }
+  res.setHeader('Content-Type', 'application/json')
+  res.send(data)
+})
 
-    router.get(prefixPath + '/inspectConfig', (req, res, next) => {
-        let result = loadConfig()
-        res.setHeader('Content-Type', 'application/json')
-        res.send(result)
-    })
+controlRouter.post('/updateUserConfig', function (req, res) {
+  let result = updateUserConfig(req.body)
+  res.setHeader('Content-Type', 'application/json')
+  res.send(result)
+})
+
+module.exports.controlRouter = controlRouter
+
+const consoleRouter = express.Router()
+
+const options = {
+  root: config.static,
+  headers: {
+    'x-timestamp': Date.now(),
+    'content-type': 'text/html; charset=utf-8'
+  }
 }
 
-module.exports = initRouter
+consoleRouter.get('/', (req, res) => {
+  res.setHeader('location', '/console/index.html')
+  res.status(302)
+  res.send('redirect')
+})
+
+consoleRouter.get('/index', (req, res) => {
+  res.sendfile('index.html', options, (err) => {
+    if (err) {
+      next(err)
+    } else {
+      res.end()
+    }
+  })
+})
+
+module.exports.consoleRouter = consoleRouter

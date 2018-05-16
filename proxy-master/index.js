@@ -6,10 +6,10 @@
 const http = require('http')
 const express = require('express')
 const path = require('path')
-const config = require('./config')
-const ws = require('./src/ws')
+const config = require('./src/config')
+const ws = require('./src/ws')(config.port)
 const defaultProxy = require('./src')()
-const { controlRouter, consoleRouter } = require('./router')
+const { controlRouter, consoleRouter } = require('./src/router')
 
 try {
 

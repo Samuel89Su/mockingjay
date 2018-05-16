@@ -14,13 +14,13 @@ const ajv = new Ajv()
 const validateUserConfig = ajv.compile(userConfigSchema)
 
 const defConfig = {
-    "context": ["/"],
-    "changeOrigin": false,
-    "fiddleAspRoute": false,
-    "router": {},
-    "pathRewrite": {},
-    "regExpRoutes": [],
-    "xmlHttRequestTarget": ""
+    'context': ['/'],
+    'changeOrigin': false,
+    'fiddleAspRoute': false,
+    'router': {},
+    'pathRewrite': {},
+    'regExpRoutes': [],
+    'xmlHttRequestTarget': ''
   }
 
 class ConfigMgr {

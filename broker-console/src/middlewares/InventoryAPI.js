@@ -3,7 +3,7 @@ const contentTypeHeader = { 'Content-Type': 'application/json' }
 const InventoryAPI = {
   fetchUserCfg: {
     url: '../control/fetchUserConfig',
-    method: 'GET'
+    method: 'POST'
   },
   updateUserCfg: {
     url: '../control/updateUserConfig',

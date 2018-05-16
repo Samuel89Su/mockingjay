@@ -4,10 +4,12 @@ const express = require('express')
 const path = require('path')
 const url = require('url')
 
+const config = require('./config')
+
 const {
   loadConfig,
   updateUserConfig
-} = require('./src/configMgr')
+} = require('./configMgr')
 
 const controlRouter = express.Router()
 
@@ -16,7 +18,7 @@ controlRouter.use(express.urlencoded({
   extended: false
 }))
 
-controlRouter.get('/fetchUserConfig', function (req, res) {
+controlRouter.post('/fetchUserConfig', function (req, res) {
   let config = loadConfig()
   let data = {
     code: 0,
@@ -37,7 +39,7 @@ module.exports.controlRouter = controlRouter
 const consoleRouter = express.Router()
 
 const options = {
-  root: path.resolve(__dirname, './static/console'),
+  root: config.static,
   headers: {
     'x-timestamp': Date.now(),
     'content-type': 'text/html; charset=utf-8'

@@ -5,7 +5,7 @@
   "regExpRoutes": [],
   "lanIP": "127.0.0.1",
   "domain": "",
-  "port": 8300,
+  "port": 8100,
   "staticRoot": "/Users/samuel/Development/mockingjay/proxy-master/static",
   "target": "http://teacher.ewt360.com",
   "mockServer": "localhost",
@@ -15,7 +15,9 @@
     "path": "/echo"
   }],
   "router": {
+    "/echo": "localhost"
   },
   "pathRewrite": {
+    "^/echo": "/mocking/teacher/echo"
   }
 }

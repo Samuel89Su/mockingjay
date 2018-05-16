@@ -2,6 +2,7 @@
 
 const Path = require('path')
 const Webpack = require('webpack')
+const express = require('express')
 
 module.exports = {
   output: {
@@ -40,9 +41,25 @@ module.exports = {
     host: '127.0.0.1',
     port: 8100,
     historyApiFallback: true,
-    proxy: [{
-      context: ['/inventory','/admin'],
-      target: 'http://127.0.0.1:3000'
-    }]
+    after: function (app) {
+      const ws = require('../proxy/ws')(8100)
+      const defaultProxy = require('../proxy')()
+      const { controlRouter, consoleRouter } = require('../proxy/router')
+      
+      try {
+        app.use('/control', controlRouter)
+        app.use('/console', consoleRouter)
+      
+        // 添加代理中间件
+        app.use('/', defaultProxy)
+      
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    // proxy: [{
+    //   context: ['/inventory','/admin'],
+    //   target: 'http://139.196.103.143'
+    // }]
   }
 }
