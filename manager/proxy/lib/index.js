@@ -219,7 +219,7 @@ class ProxyContainer {
             fileNames.push(filedir)
           }
           if (isDir && recursive) {
-            fileNames.push(fetchFiles(filedir)); //递归，如果是文件夹，就继续遍历该文件夹下面的文件
+            fileNames.push(this.fetchFiles(filedir)); //递归，如果是文件夹，就继续遍历该文件夹下面的文件
           }
         } catch (error) {}
       })

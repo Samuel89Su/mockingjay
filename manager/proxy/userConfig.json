@@ -1,5 +1,5 @@
 {
-  "context": ["/api"],
+  "context": ["/inventory", "/admin"],
   "changeOrigin": true,
   "fiddleAspRoute": false,
   "regExpRoutes": [],
@@ -7,7 +7,7 @@
   "domain": "",
   "port": 8100,
   "staticRoot": "/Users/samuel/Development/mockingjay/proxy-master/static",
-  "target": "http://teacher.ewt360.com",
+  "target": "http://localhost:8300",
   "mockServer": "http://localhost",
   "mockPrefix": "teacher",
   "mockPaths": [],

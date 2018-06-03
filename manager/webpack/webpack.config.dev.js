@@ -42,11 +42,11 @@ module.exports = {
     port: 8100,
     historyApiFallback: true,
     after: function (app) {
-      require('../proxy')(app, 8100)
-    }
-    // proxy: [{
-    //   context: ['/inventory','/admin'],
-    //   target: 'http://139.196.103.143'
-    // }]
+      //require('../proxy')(app, 8100)
+    },
+    proxy: [{
+      context: ['/inventory','/admin'],
+      target: 'http://139.196.103.143'
+    }]
   }
 }

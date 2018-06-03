@@ -8,6 +8,8 @@ import LoginC from './Controllers/LoginController'
 import SignUpC from './Controllers/SignUpController'
 import AppList from './Views/AppListTab'
 import AppDetailsTab from './Views/AppDetailsTab'
+import AtomEditor from './Components/AtomEditor'
+import JsonSchemaEditor from './Views/JsonSchemaEditor'
 
 const routes = [{
     path: '/',
@@ -34,31 +36,27 @@ const routes = [{
       exact: true
     },
     component: AppList
-  },
-  {
+  },{
     path: '/app/register',
     component: AppRegisterC
-  },
-  {
+  },{
     path: '/app/details',
     component: AppDetailsTab
-  },
-  {
+  },{
     path: '/app/apilist',
     component: ApiList
-  },
-
-  {
+  },{
     path: '/api/register',
     component: ApiRegisterC
-  },
-  {
+  },{
     path: '/api/details',
     component: ApiDetailsTab
-  },
-  {
+  },{
     path: '/signup',
     component: SignUpC
+  },{
+    path: '/atomeditor',
+    component: JsonSchemaEditor
   }
 ]
 

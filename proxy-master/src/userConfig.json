@@ -7,7 +7,7 @@
   "domain": "",
   "port": 8300,
   "staticRoot": "/Users/samuel/Development/mockingjay/proxy-master/static",
-  "target": "http://teacher.ewt360.com",
+  "target": "http://139.196.103.143",
   "mockServer": "http://localhost",
   "mockPrefix": "teacher",
   "mockPaths": [],
